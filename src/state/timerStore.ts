@@ -62,15 +62,15 @@ const useTimerStore = create<TimerStore>((set, get) => ({
 
   decrementTime: () => {
     const state = get();
-    if (state.seconds === 0) {
-      if (state.minutes === 0) {
-        // Timer complete - handled by screens
-        return;
-      }
-      set({ minutes: state.minutes - 1, seconds: 59 });
-    } else {
+
+    if (state.seconds > 0) {
+      // Just decrement seconds
       set({ seconds: state.seconds - 1 });
+    } else if (state.minutes > 0) {
+      // Seconds are 0, decrement minutes and set seconds to 59
+      set({ minutes: state.minutes - 1, seconds: 59 });
     }
+    // If both are 0, do nothing (timer complete - handled by screens)
   },
 }));
 

@@ -61,12 +61,15 @@ const HomeScreen = () => {
   useEffect(() => {
     if (isTimerRunning) {
       timerIntervalRef.current = setInterval(() => {
-        decrementTime();
-        // Check if timer is complete
         const state = useTimerStore.getState();
+
+        // Check if timer is complete BEFORE decrementing
         if (state.minutes === 0 && state.seconds === 0) {
           handleTimerComplete();
+          return;
         }
+
+        decrementTime();
       }, 1000);
     } else {
       if (timerIntervalRef.current) {
