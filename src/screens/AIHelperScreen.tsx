@@ -87,10 +87,7 @@ const AIHelperScreen = () => {
   };
 
   return (
-    <LinearGradient
-      colors={theme.backgroundGradient as [string, string, ...string[]]}
-      className="flex-1"
-    >
+    <View style={{ flex: 1, backgroundColor: "#E8F5E9" }}>
     <SafeAreaView className="flex-1" edges={["top"]}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -258,7 +255,7 @@ const AIHelperScreen = () => {
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
-    </LinearGradient>
+    </View>
   );
 };
 

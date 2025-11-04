@@ -129,9 +129,9 @@ const MusicPlayerScreen = () => {
   const currentTrack = musicService.getCurrentTrack();
 
   return (
-    <LinearGradient colors={theme.backgroundGradient.filter((c): c is string => c !== undefined) as [string, string, ...string[]]} className="flex-1">
-      <SafeAreaView className="flex-1" edges={["top"]}>
-        {/* Header */}
+    <View style={{ flex: 1, backgroundColor: "#E8F5E9" }}>
+      <SafeAreaView style={{ flex: 1 }} edges={["top"]}>
+        {/* Music Player Header */}
         <View className="px-6 py-4">
           <Text className="text-3xl font-bold text-gray-800">
             {t("musicPlayer")}
@@ -350,8 +350,8 @@ const MusicPlayerScreen = () => {
           presentationStyle="pageSheet"
           onRequestClose={() => setShowDownloadModal(false)}
         >
-          <LinearGradient colors={theme.backgroundGradient.filter((c): c is string => c !== undefined) as [string, string, ...string[]]} className="flex-1">
-            <SafeAreaView className="flex-1" edges={["top", "bottom"]}>
+          <View style={{ flex: 1, backgroundColor: "#E8F5E9" }}>
+            <SafeAreaView style={{ flex: 1 }} edges={["top", "bottom"]}>
               <View className="px-6 py-4">
                 <Text className="text-2xl font-bold text-gray-900 mb-2">
                   {selectedTrack?.title}
@@ -424,10 +424,10 @@ const MusicPlayerScreen = () => {
                 </Pressable>
               </View>
             </SafeAreaView>
-          </LinearGradient>
+          </View>
         </Modal>
       </SafeAreaView>
-    </LinearGradient>
+    </View>
   );
 };
 

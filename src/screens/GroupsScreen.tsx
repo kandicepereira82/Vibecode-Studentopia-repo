@@ -105,10 +105,7 @@ const GroupsScreen = () => {
   const groupTasks = selectedGroup ? getGroupTasks(selectedGroup.id) : [];
 
   return (
-    <LinearGradient
-      colors={theme.backgroundGradient as [string, string, ...string[]]}
-      className="flex-1"
-    >
+    <View style={{ flex: 1, backgroundColor: "#E8F5E9" }}>
       <SafeAreaView className="flex-1">
         {/* Header */}
         <View className="px-6 pt-4 pb-2 flex-row items-center justify-between">
@@ -410,7 +407,7 @@ const GroupsScreen = () => {
           </SafeAreaView>
         </Modal>
       </SafeAreaView>
-    </LinearGradient>
+    </View>
   );
 };
 

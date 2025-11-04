@@ -118,11 +118,8 @@ const TimerScreen = () => {
     : [theme.secondary, theme.primaryDark];
 
   return (
-    <LinearGradient
-      colors={theme.backgroundGradient as [string, string, ...string[]]}
-      className="flex-1"
-    >
-      <SafeAreaView className="flex-1">
+    <View style={{ flex: 1, backgroundColor: "#E8F5E9" }}>
+      <SafeAreaView style={{ flex: 1 }}>
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         {/* Header */}
         <View className="px-6 pt-4 pb-2">
@@ -328,7 +325,7 @@ const TimerScreen = () => {
         </View>
       </ScrollView>
       </SafeAreaView>
-    </LinearGradient>
+    </View>
   );
 };
 

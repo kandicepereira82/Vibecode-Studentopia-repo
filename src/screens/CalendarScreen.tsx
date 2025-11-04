@@ -53,11 +53,8 @@ const CalendarScreen = () => {
   console.log("[CalendarScreen] Rendering. User:", user ? "exists" : "null");
 
   return (
-    <LinearGradient
-      colors={theme.backgroundGradient as [string, string, ...string[]]}
-      className="flex-1"
-    >
-      <SafeAreaView className="flex-1">
+    <View style={{ flex: 1, backgroundColor: "#E8F5E9" }}>
+      <SafeAreaView style={{ flex: 1 }}>
         {/* Debug Banner */}
         <View style={{ backgroundColor: "green", padding: 10 }}>
           <Text style={{ color: "white", fontSize: 16, fontWeight: "bold" }}>
@@ -246,7 +243,7 @@ const CalendarScreen = () => {
         </View>
       </ScrollView>
       </SafeAreaView>
-    </LinearGradient>
+    </View>
   );
 };
 

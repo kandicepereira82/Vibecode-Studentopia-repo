@@ -146,11 +146,8 @@ const TasksScreen = () => {
   console.log("[TasksScreen] Rendering. User:", user ? "exists" : "null", "Tasks count:", tasks.length);
 
   return (
-    <LinearGradient
-      colors={theme.backgroundGradient as [string, string, ...string[]]}
-      className="flex-1"
-    >
-      <SafeAreaView className="flex-1">
+    <View style={{ flex: 1, backgroundColor: "#E8F5E9" }}>
+      <SafeAreaView style={{ flex: 1 }}>
         {/* Debug Banner */}
         <View style={{ backgroundColor: "blue", padding: 10 }}>
           <Text style={{ color: "white", fontSize: 16, fontWeight: "bold" }}>
@@ -446,7 +443,7 @@ const TasksScreen = () => {
         taskTitle={completedTaskTitle}
       />
       </SafeAreaView>
-    </LinearGradient>
+    </View>
   );
 };
 

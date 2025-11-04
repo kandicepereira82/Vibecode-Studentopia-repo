@@ -69,11 +69,8 @@ const HomeScreen = () => {
     .slice(0, 5);
 
   return (
-    <LinearGradient
-      colors={theme.backgroundGradient as [string, string, ...string[]]}
-      className="flex-1"
-    >
-      <SafeAreaView className="flex-1">
+    <View style={{ flex: 1, backgroundColor: "#E8F5E9" }}>
+      <SafeAreaView style={{ flex: 1 }}>
         {/* Debug Banner - Remove after testing */}
         <View style={{ backgroundColor: "red", padding: 10 }}>
           <Text style={{ color: "white", fontSize: 16, fontWeight: "bold" }}>
@@ -299,7 +296,7 @@ const HomeScreen = () => {
           )}
         </ScrollView>
       </SafeAreaView>
-    </LinearGradient>
+    </View>
   );
 };
 

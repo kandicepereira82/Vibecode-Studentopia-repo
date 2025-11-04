@@ -198,10 +198,7 @@ const StudyTipsScreen = () => {
   };
 
   return (
-    <LinearGradient
-      colors={theme.backgroundGradient as [string, string, ...string[]]}
-      className="flex-1"
-    >
+    <View style={{ flex: 1, backgroundColor: "#E8F5E9" }}>
       <SafeAreaView className="flex-1">
         {/* Header */}
         <View className="px-6 pt-4 pb-2">
@@ -280,7 +277,7 @@ const StudyTipsScreen = () => {
           <View className="h-6" />
         </ScrollView>
       </SafeAreaView>
-    </LinearGradient>
+    </View>
   );
 };
 
