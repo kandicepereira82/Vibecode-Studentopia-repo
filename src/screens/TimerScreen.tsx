@@ -194,8 +194,17 @@ const TimerScreen = () => {
                 style={{ opacity: 0.1 }}
               />
               <View className="absolute w-64 h-64 rounded-full items-center justify-center" style={{ backgroundColor: theme.cardBackground }}>
-                <Text className="text-6xl font-bold" style={{ letterSpacing: 4, color: theme.textPrimary }}>
-                  {String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
+                <Text
+                  numberOfLines={1}
+                  ellipsizeMode="clip"
+                  style={{
+                    fontSize: 56,
+                    fontFamily: 'Poppins_700Bold',
+                    letterSpacing: 4,
+                    color: theme.textPrimary,
+                    textAlign: 'center'
+                  }}>
+                  {`${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`}
                 </Text>
                 <Text
                   className="text-base font-medium mt-2"
