@@ -30,11 +30,28 @@ const openai_api_key = Constants.expoConfig.extra.apikey;
 
 export default function App() {
   const user = useUserStore((s) => s.user);
-  const [showOnboarding, setShowOnboarding] = useState(!user);
+  const [isReady, setIsReady] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(true);
 
   useEffect(() => {
-    setShowOnboarding(!user);
-  }, [user]);
+    // Give Zustand time to hydrate from AsyncStorage
+    const timer = setTimeout(() => {
+      setIsReady(true);
+      setShowOnboarding(!user);
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (isReady) {
+      setShowOnboarding(!user);
+    }
+  }, [user, isReady]);
+
+  if (!isReady) {
+    return null; // Or a loading screen
+  }
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
