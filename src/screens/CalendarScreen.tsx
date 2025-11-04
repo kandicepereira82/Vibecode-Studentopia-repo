@@ -67,13 +67,20 @@ const CalendarScreen = () => {
     setSelectedDate(date);
   };
 
-  const handleDateLongPress = (date: Date) => {
+  const handleDateTap = (date: Date) => {
     setSelectedDate(date);
     setTaskDate(date);
     setTitle("");
     setDescription("");
     setCategory("homework");
     setModalVisible(true);
+  };
+
+  const getTasksForWeek = () => {
+    return tasks.filter((task) => {
+      const taskDateObj = new Date(task.dueDate);
+      return taskDateObj >= weekStart && taskDateObj <= weekEnd;
+    }).sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
   };
 
   const handleSaveTask = () => {
@@ -227,8 +234,7 @@ const CalendarScreen = () => {
                     return (
                       <Pressable
                         key={day.toString()}
-                        onPress={() => handleDateSelect(day)}
-                        onLongPress={() => handleDateLongPress(day)}
+                        onPress={() => handleDateTap(day)}
                         className="w-[14.28%] aspect-square p-1"
                       >
                         <View
@@ -293,8 +299,7 @@ const CalendarScreen = () => {
                     return (
                       <Pressable
                         key={day.toString()}
-                        onPress={() => handleDateSelect(day)}
-                        onLongPress={() => handleDateLongPress(day)}
+                        onPress={() => handleDateTap(day)}
                         style={{ flex: 1, alignItems: 'center', padding: 8 }}
                       >
                         <View
@@ -338,67 +343,138 @@ const CalendarScreen = () => {
           </View>
         </View>
 
-        {/* Selected Date Tasks */}
+        {/* Selected Date Tasks or Week Tasks */}
         <View className="px-6 py-4">
-          <Text className="text-lg font-bold mb-3" style={{ color: theme.textPrimary }}>
-            {format(selectedDate, "EEEE, MMMM d, yyyy")}
-          </Text>
-          {selectedDateTasks.length === 0 ? (
-            <View className="rounded-2xl p-8 items-center" style={{ backgroundColor: theme.cardBackground }}>
-              <Ionicons name="calendar-outline" size={48} color={theme.textSecondary} />
-              <Text className="text-center mt-3" style={{ color: theme.textSecondary }}>
-                No tasks scheduled for this day
+          {viewMode === "week" ? (
+            <>
+              <Text className="text-lg font-bold mb-3" style={{ color: theme.textPrimary, fontFamily: 'Poppins_700Bold' }}>
+                Week of {format(weekStart, "MMM d")} - {format(weekEnd, "MMM d")}
               </Text>
-            </View>
-          ) : (
-            <View className="gap-3 pb-8">
-              {selectedDateTasks.map((task) => (
-                <View
-                  key={task.id}
-                  className="rounded-2xl p-4"
-                  style={{ backgroundColor: theme.cardBackground }}
-                >
-                  <View className="flex-row items-start">
-                    <Ionicons
-                      name={
-                        task.status === "completed"
-                          ? "checkmark-circle"
-                          : "ellipse-outline"
-                      }
-                      size={24}
-                      color={
-                        task.status === "completed" ? theme.secondary : theme.textSecondary
-                      }
-                      style={{ marginRight: 12, marginTop: 2 }}
-                    />
-                    <View className="flex-1">
-                      <Text
-                        className={cn(
-                          "text-base font-semibold",
-                          task.status === "completed" && "line-through"
-                        )}
-                        style={{ color: theme.textPrimary }}
-                      >
-                        {task.title}
-                      </Text>
-                      {task.description && (
-                        <Text className="text-sm mt-1" style={{ color: theme.textSecondary }}>
-                          {task.description}
-                        </Text>
-                      )}
-                      <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
-                        <Text className="text-xs capitalize" style={{ color: theme.textSecondary }}>
-                          {t(task.category)}
-                        </Text>
-                        <Text className="text-xs" style={{ color: theme.textSecondary, marginLeft: 8 }}>
-                          • {new Date(task.dueDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                        </Text>
+              {getTasksForWeek().length === 0 ? (
+                <View className="rounded-2xl p-8 items-center" style={{ backgroundColor: 'white', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2 }}>
+                  <Ionicons name="calendar-outline" size={48} color={theme.textSecondary} />
+                  <Text className="text-center mt-3" style={{ color: theme.textSecondary, fontFamily: 'Poppins_400Regular' }}>
+                    No tasks scheduled for this week
+                  </Text>
+                </View>
+              ) : (
+                <View className="gap-3 pb-8">
+                  {getTasksForWeek().map((task) => (
+                    <View
+                      key={task.id}
+                      className="rounded-2xl p-4"
+                      style={{ backgroundColor: 'white', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2 }}
+                    >
+                      <View className="flex-row items-start">
+                        <Ionicons
+                          name={
+                            task.status === "completed"
+                              ? "checkmark-circle"
+                              : "ellipse-outline"
+                          }
+                          size={24}
+                          color={
+                            task.status === "completed" ? theme.secondary : theme.textSecondary
+                          }
+                          style={{ marginRight: 12, marginTop: 2 }}
+                        />
+                        <View className="flex-1">
+                          <Text
+                            className={cn(
+                              "text-base",
+                              task.status === "completed" && "line-through"
+                            )}
+                            style={{ color: theme.textPrimary, fontFamily: 'Poppins_600SemiBold' }}
+                          >
+                            {task.title}
+                          </Text>
+                          {task.description && (
+                            <Text className="text-sm mt-1" style={{ color: theme.textSecondary, fontFamily: 'Poppins_400Regular' }}>
+                              {task.description}
+                            </Text>
+                          )}
+                          <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
+                            <Ionicons name="calendar-outline" size={14} color={theme.textSecondary} />
+                            <Text className="text-xs" style={{ color: theme.textSecondary, marginLeft: 4, fontFamily: 'Poppins_400Regular' }}>
+                              {format(new Date(task.dueDate), "EEE, MMM d")}
+                            </Text>
+                            <Text className="text-xs" style={{ color: theme.textSecondary, marginLeft: 8, fontFamily: 'Poppins_400Regular' }}>
+                              • {new Date(task.dueDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            </Text>
+                            <Text className="text-xs capitalize" style={{ color: theme.textSecondary, marginLeft: 8, fontFamily: 'Poppins_400Regular' }}>
+                              • {t(task.category)}
+                            </Text>
+                          </View>
+                        </View>
                       </View>
                     </View>
-                  </View>
+                  ))}
                 </View>
-              ))}
-            </View>
+              )}
+            </>
+          ) : (
+            <>
+              <Text className="text-lg font-bold mb-3" style={{ color: theme.textPrimary, fontFamily: 'Poppins_700Bold' }}>
+                {format(selectedDate, "EEEE, MMMM d, yyyy")}
+              </Text>
+              {selectedDateTasks.length === 0 ? (
+                <View className="rounded-2xl p-8 items-center" style={{ backgroundColor: 'white', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2 }}>
+                  <Ionicons name="calendar-outline" size={48} color={theme.textSecondary} />
+                  <Text className="text-center mt-3" style={{ color: theme.textSecondary, fontFamily: 'Poppins_400Regular' }}>
+                    No tasks scheduled for this day
+                  </Text>
+                </View>
+              ) : (
+                <View className="gap-3 pb-8">
+                  {selectedDateTasks.map((task) => (
+                    <View
+                      key={task.id}
+                      className="rounded-2xl p-4"
+                      style={{ backgroundColor: 'white', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2 }}
+                    >
+                      <View className="flex-row items-start">
+                        <Ionicons
+                          name={
+                            task.status === "completed"
+                              ? "checkmark-circle"
+                              : "ellipse-outline"
+                          }
+                          size={24}
+                          color={
+                            task.status === "completed" ? theme.secondary : theme.textSecondary
+                          }
+                          style={{ marginRight: 12, marginTop: 2 }}
+                        />
+                        <View className="flex-1">
+                          <Text
+                            className={cn(
+                              "text-base",
+                              task.status === "completed" && "line-through"
+                            )}
+                            style={{ color: theme.textPrimary, fontFamily: 'Poppins_600SemiBold' }}
+                          >
+                            {task.title}
+                          </Text>
+                          {task.description && (
+                            <Text className="text-sm mt-1" style={{ color: theme.textSecondary, fontFamily: 'Poppins_400Regular' }}>
+                              {task.description}
+                            </Text>
+                          )}
+                          <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
+                            <Text className="text-xs capitalize" style={{ color: theme.textSecondary, fontFamily: 'Poppins_400Regular' }}>
+                              {t(task.category)}
+                            </Text>
+                            <Text className="text-xs" style={{ color: theme.textSecondary, marginLeft: 8, fontFamily: 'Poppins_400Regular' }}>
+                              • {new Date(task.dueDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            </Text>
+                          </View>
+                        </View>
+                      </View>
+                    </View>
+                  ))}
+                </View>
+              )}
+            </>
           )}
         </View>
       </ScrollView>
