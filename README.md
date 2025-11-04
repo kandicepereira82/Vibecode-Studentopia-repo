@@ -4,6 +4,9 @@ StudyPal is a comprehensive mobile productivity app designed for students to sta
 
 ## ✨ Latest Updates
 
+- ✅ **Fixed Blank Screen Issue** - Improved app initialization to properly detect and handle invalid user data
+- ✅ **Enhanced Debugging** - Added console logging throughout the app for easier troubleshooting
+- ✅ **Automatic Error Recovery** - App now automatically shows onboarding if user data is corrupted
 - ✅ **14 Languages Supported** - Full multilingual support: English, Spanish, French, German, Chinese, Japanese, Arabic, Korean, Portuguese (BR), Hindi, Italian, Turkish, Russian, and Indonesian
 - ✅ **Music Player** - Calming classical music from Pixabay with full playback controls, mood filters, and volume adjustment
 - ✅ **20 Animal Companions** - Choose from cat, bunny, bear, dog, fox, panda, koala, owl, penguin, lion, tiger, monkey, elephant, giraffe, hamster, raccoon, hedgehog, deer, duck, or frog
@@ -243,6 +246,28 @@ API keys are pre-configured in the Vibecode environment:
 - Memoized calculations for progress bars
 - Optimized FlatList/ScrollView rendering
 - AsyncStorage for fast local data persistence
+
+## Troubleshooting
+
+### Blank Screens Issue
+If you see blank/white screens on tabs:
+1. **Close and reopen the app** - The app will automatically detect invalid user data and show onboarding
+2. **Check the Profile tab** - If visible, look for the "Set Up Profile" button
+3. **View logs** - Check the LOGS tab in Vibecode or `expo.log` file for debug information
+
+**See [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) for detailed solutions.**
+
+### Settings Not Visible
+Settings is not a separate tab - it's a modal:
+1. Go to **Profile** tab
+2. Tap the **gear icon (⚙️)** in the top-right corner
+3. Settings modal opens with notification and calendar options
+
+### Common Issues
+- **App shows onboarding repeatedly**: User data not saving - check AsyncStorage permissions
+- **Some translations missing**: Check `src/utils/translations.ts` for the key
+- **Study Pal not animating**: Toggle animations in Profile → Study Pal section
+- **Music not playing**: Check device volume and audio permissions
 
 ## Getting Started
 

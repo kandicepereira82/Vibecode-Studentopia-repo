@@ -35,30 +35,53 @@ export default function App() {
   const [showOnboarding, setShowOnboarding] = useState(true);
 
   useEffect(() => {
-    // Force clear storage if user is corrupted/undefined
+    // Wait for Zustand to hydrate from AsyncStorage
     const initializeApp = async () => {
-      // If we're in a bad state (no user but not showing onboarding), reset
-      if (!user) {
-        logout(); // This will clear AsyncStorage
+      // Give Zustand time to hydrate
+      await new Promise(resolve => setTimeout(resolve, 200));
+
+      // Check if user is properly initialized (has required fields)
+      const isValidUser = user && user.id && user.username && user.language;
+
+      console.log("[App] Initialization check:", {
+        hasUser: !!user,
+        hasId: !!user?.id,
+        hasUsername: !!user?.username,
+        hasLanguage: !!user?.language,
+        isValidUser,
+      });
+
+      if (!isValidUser) {
+        // Clear corrupted/partial user data
+        console.log("[App] Invalid/missing user data - showing onboarding");
+        logout();
+        setShowOnboarding(true);
+      } else {
+        console.log("[App] Valid user found - showing main app");
+        setShowOnboarding(false);
       }
 
-      setTimeout(() => {
-        setIsReady(true);
-        setShowOnboarding(!user);
-      }, 100);
+      setIsReady(true);
     };
 
     initializeApp();
   }, []);
 
+  // React to user changes after initial load
   useEffect(() => {
     if (isReady) {
-      setShowOnboarding(!user);
+      const isValidUser = user && user.id && user.username && user.language;
+      console.log("[App] User state changed:", {
+        hasUser: !!user,
+        isValidUser,
+        showingOnboarding: !isValidUser,
+      });
+      setShowOnboarding(!isValidUser);
     }
   }, [user, isReady]);
 
   if (!isReady) {
-    return null; // Or a loading screen
+    return null; // Wait for initialization
   }
 
   return (
