@@ -73,10 +73,38 @@ const ProfileScreen = () => {
   if (!user) {
     return (
       <SafeAreaView className="flex-1 bg-gray-50 dark:bg-gray-900">
-        <View className="flex-1 items-center justify-center">
-          <Text className="text-gray-600 dark:text-gray-400">
+        <View className="flex-1 items-center justify-center p-6">
+          <Text className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-4">
             No user profile found
           </Text>
+          <Text className="text-center text-gray-600 dark:text-gray-400 mb-8">
+            Tap below to set up your profile
+          </Text>
+          <Pressable
+            onPress={() => {
+              // Create a default user with English (UK)
+              const userId = Date.now().toString();
+              const newUser = {
+                id: userId,
+                username: "Student",
+                role: "student" as const,
+                language: "en" as const,
+                themeColor: "nature" as const,
+                studyPalConfig: {
+                  name: "Buddy",
+                  animal: "cat" as const,
+                  animationsEnabled: true,
+                },
+                notificationEnabled: true,
+                createdAt: new Date(),
+              };
+              useUserStore.getState().setUser(newUser);
+              useStatsStore.getState().initStats(userId);
+            }}
+            className="bg-blue-500 px-8 py-4 rounded-2xl"
+          >
+            <Text className="text-white font-bold text-lg">Set Up Profile</Text>
+          </Pressable>
         </View>
       </SafeAreaView>
     );

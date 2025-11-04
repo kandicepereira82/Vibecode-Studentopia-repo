@@ -30,17 +30,25 @@ const openai_api_key = Constants.expoConfig.extra.apikey;
 
 export default function App() {
   const user = useUserStore((s) => s.user);
+  const logout = useUserStore((s) => s.logout);
   const [isReady, setIsReady] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(true);
 
   useEffect(() => {
-    // Give Zustand time to hydrate from AsyncStorage
-    const timer = setTimeout(() => {
-      setIsReady(true);
-      setShowOnboarding(!user);
-    }, 100);
+    // Force clear storage if user is corrupted/undefined
+    const initializeApp = async () => {
+      // If we're in a bad state (no user but not showing onboarding), reset
+      if (!user) {
+        logout(); // This will clear AsyncStorage
+      }
 
-    return () => clearTimeout(timer);
+      setTimeout(() => {
+        setIsReady(true);
+        setShowOnboarding(!user);
+      }, 100);
+    };
+
+    initializeApp();
   }, []);
 
   useEffect(() => {
