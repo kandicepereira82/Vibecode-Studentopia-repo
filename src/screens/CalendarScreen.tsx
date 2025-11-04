@@ -31,6 +31,12 @@ const CalendarScreen = () => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
 
+  // Explanation modal state
+  const [showExplanation, setShowExplanation] = useState(false);
+
+  // Double tap detection
+  const [lastTap, setLastTap] = useState<{ date: string; time: number } | null>(null);
+
   const { t } = useTranslation(user?.language || "en");
   const theme = getTheme(user?.themeColor);
 
@@ -68,12 +74,23 @@ const CalendarScreen = () => {
   };
 
   const handleDateTap = (date: Date) => {
-    setSelectedDate(date);
-    setTaskDate(date);
-    setTitle("");
-    setDescription("");
-    setCategory("homework");
-    setModalVisible(true);
+    const now = Date.now();
+    const dateString = date.toISOString();
+    const DOUBLE_TAP_DELAY = 300; // milliseconds
+
+    if (lastTap && lastTap.date === dateString && now - lastTap.time < DOUBLE_TAP_DELAY) {
+      // Double tap detected - open task creation modal
+      setLastTap(null);
+      setTaskDate(date);
+      setTitle("");
+      setDescription("");
+      setCategory("homework");
+      setModalVisible(true);
+    } else {
+      // Single tap - just select the date to view tasks
+      setLastTap({ date: dateString, time: now });
+      setSelectedDate(date);
+    }
   };
 
   const getTasksForWeek = () => {
@@ -116,7 +133,7 @@ const CalendarScreen = () => {
     <View style={{ flex: 1, backgroundColor: theme.backgroundGradient[0] }}>
       <SafeAreaView style={{ flex: 1 }}>
         {/* Header with Poppins */}
-        <View style={{ paddingHorizontal: 24, paddingTop: 16, paddingBottom: 8 }}>
+        <View style={{ paddingHorizontal: 24, paddingTop: 16, paddingBottom: 8, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
           <Text style={{
             fontSize: 32,
             fontFamily: 'Poppins_700Bold',
@@ -124,6 +141,24 @@ const CalendarScreen = () => {
           }}>
             {t("calendar")}
           </Text>
+          <Pressable
+            onPress={() => setShowExplanation(true)}
+            style={{
+              width: 40,
+              height: 40,
+              borderRadius: 20,
+              backgroundColor: 'white',
+              alignItems: 'center',
+              justifyContent: 'center',
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.06,
+              shadowRadius: 4,
+              elevation: 2
+            }}
+          >
+            <Ionicons name="help-circle-outline" size={24} color={theme.primary} />
+          </Pressable>
         </View>
 
       {/* View Mode Toggle */}
@@ -633,6 +668,133 @@ const CalendarScreen = () => {
               )}
             </ScrollView>
           </KeyboardAvoidingView>
+        </SafeAreaView>
+      </Modal>
+
+      {/* Explanation Modal */}
+      <Modal
+        visible={showExplanation}
+        animationType="slide"
+        presentationStyle="pageSheet"
+        onRequestClose={() => setShowExplanation(false)}
+      >
+        <SafeAreaView className="flex-1" style={{ backgroundColor: theme.backgroundGradient[0] }}>
+          {/* Modal Header */}
+          <View className="px-6 py-4 flex-row items-center justify-between" style={{ borderBottomWidth: 1, borderBottomColor: theme.textSecondary + "20" }}>
+            <View style={{ width: 60 }} />
+            <Text className="text-xl" style={{ color: theme.textPrimary, fontFamily: 'Poppins_700Bold' }}>
+              How to Use Calendar
+            </Text>
+            <Pressable onPress={() => setShowExplanation(false)}>
+              <Ionicons name="close" size={28} color={theme.textPrimary} />
+            </Pressable>
+          </View>
+
+          <ScrollView className="flex-1 px-6 py-6" showsVerticalScrollIndicator={false}>
+            {/* Month View */}
+            <View className="mb-6">
+              <View className="flex-row items-center mb-3">
+                <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: theme.primary, alignItems: 'center', justifyContent: 'center', marginRight: 12 }}>
+                  <Ionicons name="calendar" size={20} color="white" />
+                </View>
+                <Text className="text-lg" style={{ color: theme.textPrimary, fontFamily: 'Poppins_600SemiBold' }}>
+                  Month View
+                </Text>
+              </View>
+              <View className="rounded-2xl p-4 mb-3" style={{ backgroundColor: 'white', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2 }}>
+                <Text className="text-base mb-2" style={{ color: theme.textPrimary, fontFamily: 'Poppins_600SemiBold' }}>
+                  • Single Tap
+                </Text>
+                <Text className="text-sm" style={{ color: theme.textSecondary, fontFamily: 'Poppins_400Regular' }}>
+                  Tap once on any date to view all tasks scheduled for that specific day. The tasks will appear below the calendar.
+                </Text>
+              </View>
+              <View className="rounded-2xl p-4" style={{ backgroundColor: 'white', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2 }}>
+                <Text className="text-base mb-2" style={{ color: theme.textPrimary, fontFamily: 'Poppins_600SemiBold' }}>
+                  • Double Tap
+                </Text>
+                <Text className="text-sm" style={{ color: theme.textSecondary, fontFamily: 'Poppins_400Regular' }}>
+                  Quickly tap twice on any date to create a new task for that day. A task creation form will appear.
+                </Text>
+              </View>
+            </View>
+
+            {/* Week View */}
+            <View className="mb-6">
+              <View className="flex-row items-center mb-3">
+                <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: theme.secondary, alignItems: 'center', justifyContent: 'center', marginRight: 12 }}>
+                  <Ionicons name="calendar-outline" size={20} color="white" />
+                </View>
+                <Text className="text-lg" style={{ color: theme.textPrimary, fontFamily: 'Poppins_600SemiBold' }}>
+                  Week View
+                </Text>
+              </View>
+              <View className="rounded-2xl p-4 mb-3" style={{ backgroundColor: 'white', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2 }}>
+                <Text className="text-base mb-2" style={{ color: theme.textPrimary, fontFamily: 'Poppins_600SemiBold' }}>
+                  • View All Week Tasks
+                </Text>
+                <Text className="text-sm" style={{ color: theme.textSecondary, fontFamily: 'Poppins_400Regular' }}>
+                  See all tasks for the entire week listed below the calendar, sorted by date and time. Perfect for planning your week ahead!
+                </Text>
+              </View>
+              <View className="rounded-2xl p-4 mb-3" style={{ backgroundColor: 'white', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2 }}>
+                <Text className="text-base mb-2" style={{ color: theme.textPrimary, fontFamily: 'Poppins_600SemiBold' }}>
+                  • Navigate Weeks
+                </Text>
+                <Text className="text-sm" style={{ color: theme.textSecondary, fontFamily: 'Poppins_400Regular' }}>
+                  Use the left and right arrows to move between weeks and see your upcoming tasks.
+                </Text>
+              </View>
+              <View className="rounded-2xl p-4" style={{ backgroundColor: 'white', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2 }}>
+                <Text className="text-base mb-2" style={{ color: theme.textPrimary, fontFamily: 'Poppins_600SemiBold' }}>
+                  • Single/Double Tap
+                </Text>
+                <Text className="text-sm" style={{ color: theme.textSecondary, fontFamily: 'Poppins_400Regular' }}>
+                  Same as month view - single tap to view tasks for a day, double tap to create a new task.
+                </Text>
+              </View>
+            </View>
+
+            {/* Task Indicators */}
+            <View className="mb-6">
+              <View className="flex-row items-center mb-3">
+                <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: theme.accentColor, alignItems: 'center', justifyContent: 'center', marginRight: 12 }}>
+                  <Ionicons name="ellipse" size={20} color="white" />
+                </View>
+                <Text className="text-lg" style={{ color: theme.textPrimary, fontFamily: 'Poppins_600SemiBold' }}>
+                  Task Indicators
+                </Text>
+              </View>
+              <View className="rounded-2xl p-4" style={{ backgroundColor: 'white', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2 }}>
+                <Text className="text-sm" style={{ color: theme.textSecondary, fontFamily: 'Poppins_400Regular' }}>
+                  Small colored dots appear below dates that have tasks scheduled. This helps you quickly see which days are busy at a glance.
+                </Text>
+              </View>
+            </View>
+
+            {/* Tips */}
+            <View className="mb-8">
+              <View className="flex-row items-center mb-3">
+                <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: '#FFB800', alignItems: 'center', justifyContent: 'center', marginRight: 12 }}>
+                  <Ionicons name="bulb" size={20} color="white" />
+                </View>
+                <Text className="text-lg" style={{ color: theme.textPrimary, fontFamily: 'Poppins_600SemiBold' }}>
+                  Pro Tips
+                </Text>
+              </View>
+              <View className="rounded-2xl p-4" style={{ backgroundColor: 'white', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2 }}>
+                <Text className="text-sm mb-3" style={{ color: theme.textSecondary, fontFamily: 'Poppins_400Regular' }}>
+                  • Switch between Month and Week views using the toggle buttons at the top
+                </Text>
+                <Text className="text-sm mb-3" style={{ color: theme.textSecondary, fontFamily: 'Poppins_400Regular' }}>
+                  {"• Today's date is highlighted with a special border"}
+                </Text>
+                <Text className="text-sm" style={{ color: theme.textSecondary, fontFamily: 'Poppins_400Regular' }}>
+                  • Each task shows its category, date, and time for easy reference
+                </Text>
+              </View>
+            </View>
+          </ScrollView>
         </SafeAreaView>
       </Modal>
       </SafeAreaView>
