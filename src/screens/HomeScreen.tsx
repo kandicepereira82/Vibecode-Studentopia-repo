@@ -740,18 +740,21 @@ const HomeScreen = () => {
                 backgroundColor: theme.primary + '10',
                 borderRadius: 20,
                 paddingVertical: 20,
-                paddingHorizontal: 40,
-                marginBottom: 16
+                paddingHorizontal: 50,
+                marginBottom: 16,
+                minWidth: 200
               }}>
                 <Text
                   numberOfLines={1}
+                  ellipsizeMode="clip"
                   style={{
                     fontSize: 48,
                     fontFamily: 'Poppins_700Bold',
                     color: theme.primary,
-                    letterSpacing: 2
+                    letterSpacing: 2,
+                    textAlign: 'center'
                   }}>
-                  {String(timerMinutes).padStart(2, "0")}:{String(timerSeconds).padStart(2, "0")}
+                  {`${String(timerMinutes).padStart(2, "0")}:${String(timerSeconds).padStart(2, "0")}`}
                 </Text>
               </View>
               <Text style={{
