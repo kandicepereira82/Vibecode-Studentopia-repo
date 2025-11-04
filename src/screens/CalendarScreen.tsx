@@ -263,9 +263,14 @@ const CalendarScreen = () => {
                           {task.description}
                         </Text>
                       )}
-                      <Text className="text-xs mt-2 capitalize" style={{ color: theme.textSecondary }}>
-                        {t(task.category)}
-                      </Text>
+                      <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
+                        <Text className="text-xs capitalize" style={{ color: theme.textSecondary }}>
+                          {t(task.category)}
+                        </Text>
+                        <Text className="text-xs" style={{ color: theme.textSecondary, marginLeft: 8 }}>
+                          • {new Date(task.dueDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </Text>
+                      </View>
                     </View>
                   </View>
                 </View>

@@ -303,15 +303,24 @@ const HomeScreen = () => {
                         >
                           {task.title}
                         </Text>
-                        <Text style={{
-                          fontSize: 12,
-                          fontFamily: 'Poppins_400Regular',
-                          color: theme.textSecondary,
-                          marginTop: 4,
-                          textTransform: 'capitalize'
-                        }}>
-                          {task.category}
-                        </Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 4 }}>
+                          <Text style={{
+                            fontSize: 12,
+                            fontFamily: 'Poppins_400Regular',
+                            color: theme.textSecondary,
+                            textTransform: 'capitalize'
+                          }}>
+                            {task.category}
+                          </Text>
+                          <Text style={{
+                            fontSize: 12,
+                            fontFamily: 'Poppins_400Regular',
+                            color: theme.textSecondary,
+                            marginLeft: 8
+                          }}>
+                            • {new Date(task.dueDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          </Text>
+                        </View>
                       </View>
                     </Pressable>
                   ))
@@ -375,14 +384,23 @@ const HomeScreen = () => {
                       }}>
                         {task.title}
                       </Text>
-                      <Text style={{
-                        fontSize: 12,
-                        fontFamily: 'Poppins_400Regular',
-                        color: theme.textSecondary,
-                        marginTop: 4
-                      }}>
-                        {new Date(task.dueDate).toLocaleDateString()}
-                      </Text>
+                      <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 4 }}>
+                        <Text style={{
+                          fontSize: 12,
+                          fontFamily: 'Poppins_400Regular',
+                          color: theme.textSecondary
+                        }}>
+                          {new Date(task.dueDate).toLocaleDateString()}
+                        </Text>
+                        <Text style={{
+                          fontSize: 12,
+                          fontFamily: 'Poppins_400Regular',
+                          color: theme.textSecondary,
+                          marginLeft: 8
+                        }}>
+                          • {new Date(task.dueDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </Text>
+                      </View>
                     </View>
                   ))
                 )}

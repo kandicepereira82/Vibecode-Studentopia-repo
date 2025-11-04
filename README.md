@@ -4,6 +4,8 @@ StudyPal is a comprehensive mobile productivity app designed for students to sta
 
 ## ✨ Latest Updates
 
+- ✅ **Task Time Selection** - Added time picker to tasks alongside date selection for precise scheduling
+- ✅ **Enhanced Task Display** - All task views now show both date and time (Home, Tasks, Calendar screens)
 - ✅ **Enhanced Home Screen** - Added week calendar view and replaced progress card with interactive Quick Timer
 - ✅ **Week Calendar Widget** - Beautiful week view showing tasks for each day with visual indicators
 - ✅ **Quick Timer on Home** - Start study sessions directly from home screen with play/pause/stop controls
@@ -27,7 +29,8 @@ StudyPal is a comprehensive mobile productivity app designed for students to sta
 ### 📝 Core Task Management
 - **Task CRUD Operations**: Add, edit, delete, and complete tasks
 - **Task Categories**: Homework, projects, exams, and other custom categories
-- **Due Dates & Reminders**: Set due dates with custom reminder notifications
+- **Due Dates & Times**: Set both date and time for precise task scheduling
+- **Reminders**: Custom reminder notifications with date and time
 - **Task Filtering**: Filter tasks by category and status
 - **Progress Tracking**: Daily and weekly progress bars with visual feedback
 - **🎉 Celebration Animations**: Animated modal with your Study Pal celebrating when tasks are completed

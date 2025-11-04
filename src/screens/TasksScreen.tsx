@@ -41,6 +41,7 @@ const TasksScreen = () => {
   const [category, setCategory] = useState<TaskCategory>("homework");
   const [dueDate, setDueDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
   const [filterCategory, setFilterCategory] = useState<TaskCategory | "all">("all");
 
   const { t } = useTranslation(user?.language || "en");
@@ -334,10 +335,14 @@ const TasksScreen = () => {
                           {t(task.category)}
                         </Text>
                       </View>
-                      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                      <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 4 }}>
                         <Ionicons name="calendar-outline" size={14} color={theme.textSecondary} />
                         <Text style={{ fontSize: 12, fontFamily: 'Poppins_400Regular', marginLeft: 4, color: theme.textSecondary }}>
                           {new Date(task.dueDate).toLocaleDateString()}
+                        </Text>
+                        <Ionicons name="time-outline" size={14} color={theme.textSecondary} style={{ marginLeft: 12 }} />
+                        <Text style={{ fontSize: 12, fontFamily: 'Poppins_400Regular', marginLeft: 4, color: theme.textSecondary }}>
+                          {new Date(task.dueDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </Text>
                       </View>
                     </View>
@@ -471,6 +476,22 @@ const TasksScreen = () => {
                 </Pressable>
               </View>
 
+              {/* Due Time */}
+              <View className="mb-4">
+                <Text className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Due Time
+                </Text>
+                <Pressable
+                  onPress={() => setShowTimePicker(true)}
+                  className="bg-white dark:bg-gray-800 rounded-xl px-4 py-3 flex-row items-center justify-between"
+                >
+                  <Text className="text-gray-800 dark:text-gray-100 text-base">
+                    {dueDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  </Text>
+                  <Ionicons name="time-outline" size={20} color="#6B7280" />
+                </Pressable>
+              </View>
+
               {showDatePicker && (
                 <DateTimePicker
                   value={dueDate}
@@ -479,7 +500,29 @@ const TasksScreen = () => {
                   onChange={(event, selectedDate) => {
                     setShowDatePicker(false);
                     if (selectedDate) {
-                      setDueDate(selectedDate);
+                      // Preserve the time when changing the date
+                      const newDate = new Date(selectedDate);
+                      newDate.setHours(dueDate.getHours());
+                      newDate.setMinutes(dueDate.getMinutes());
+                      setDueDate(newDate);
+                    }
+                  }}
+                />
+              )}
+
+              {showTimePicker && (
+                <DateTimePicker
+                  value={dueDate}
+                  mode="time"
+                  display="default"
+                  onChange={(event, selectedTime) => {
+                    setShowTimePicker(false);
+                    if (selectedTime) {
+                      // Preserve the date when changing the time
+                      const newDate = new Date(dueDate);
+                      newDate.setHours(selectedTime.getHours());
+                      newDate.setMinutes(selectedTime.getMinutes());
+                      setDueDate(newDate);
                     }
                   }}
                 />
