@@ -17,7 +17,7 @@ const GroupsScreen = () => {
 
   const groups = useGroupStore((s) => s.groups);
   const addGroup = useGroupStore((s) => s.addGroup);
-  const joinGroup = useGroupStore((s) => s.joinGroup);
+  const joinGroupWithCode = useGroupStore((s) => s.joinGroupWithCode);
   const leaveGroup = useGroupStore((s) => s.leaveGroup);
 
   const tasks = useTaskStore((s) => s.tasks);
@@ -60,16 +60,15 @@ const GroupsScreen = () => {
 
     if (!user) return;
 
-    // In a real app, this would validate the code with a backend
-    // For now, we'll just find a group by ID
-    const group = groups.find((g) => g.id === joinCode);
-    if (group) {
-      joinGroup(joinCode, user.id);
+    // Use the share code to join the group
+    const success = joinGroupWithCode(joinCode.toUpperCase(), user.id);
+    if (success) {
+      const group = groups.find((g) => g.shareCode === joinCode.toUpperCase());
       setJoinCode("");
       setShowJoinModal(false);
-      Alert.alert("Success", `Joined "${group.name}"!`);
+      Alert.alert("Success", `Joined "${group?.name}"!`);
     } else {
-      Alert.alert("Error", "Invalid group code");
+      Alert.alert("Error", "Invalid group code or you are already a member");
     }
   };
 
@@ -256,10 +255,10 @@ const GroupsScreen = () => {
                     {isTeacher && (
                       <View className="rounded-xl p-3 mb-3" style={{ backgroundColor: theme.accentColor + "15" }}>
                         <Text className="text-xs font-semibold mb-1" style={{ color: theme.textSecondary }}>
-                          Group Code (share with students):
+                          Share Code (for students to join):
                         </Text>
-                        <Text className="text-base font-bold" style={{ color: theme.primary }}>
-                          {group.id}
+                        <Text className="text-2xl font-bold tracking-wider" style={{ color: theme.primary }}>
+                          {group.shareCode}
                         </Text>
                       </View>
                     )}
@@ -414,24 +413,32 @@ const GroupsScreen = () => {
                 </Text>
                 <TextInput
                   value={joinCode}
-                  onChangeText={setJoinCode}
-                  placeholder="Enter code from your teacher"
+                  onChangeText={(text) => setJoinCode(text.toUpperCase())}
+                  placeholder="e.g., ABC123"
                   placeholderTextColor={theme.textSecondary}
                   className="rounded-xl px-4 py-3 text-base"
-                  style={{ backgroundColor: theme.cardBackground, color: theme.textPrimary }}
-                  autoCapitalize="none"
+                  style={{
+                    backgroundColor: theme.cardBackground,
+                    color: theme.textPrimary,
+                    fontSize: 20,
+                    fontFamily: 'Poppins_600SemiBold',
+                    letterSpacing: 2,
+                    textAlign: 'center'
+                  }}
+                  autoCapitalize="characters"
+                  maxLength={6}
                 />
               </View>
 
               <View className="rounded-xl p-4" style={{ backgroundColor: theme.primary + "15" }}>
                 <View className="flex-row items-center mb-2">
                   <Ionicons name="information-circle" size={20} color={theme.primary} />
-                  <Text className="ml-2 text-sm font-semibold" style={{ color: theme.primary }}>
+                  <Text className="ml-2 text-sm font-semibold" style={{ color: theme.primary, fontFamily: 'Poppins_600SemiBold' }}>
                     How to Join
                   </Text>
                 </View>
-                <Text className="text-xs" style={{ color: theme.textSecondary }}>
-                  Ask your teacher for the group code and enter it above. You will be able to see assigned tasks and collaborate with classmates.
+                <Text className="text-xs" style={{ color: theme.textSecondary, fontFamily: 'Poppins_400Regular' }}>
+                  Ask your teacher for the 6-character group code and enter it above. You will be able to see assigned tasks and collaborate with classmates.
                 </Text>
               </View>
             </ScrollView>

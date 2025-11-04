@@ -95,6 +95,7 @@ export interface Group {
   description: string;
   teacherId: string;
   studentIds: string[];
+  shareCode: string;
   createdAt: Date;
 }
 
