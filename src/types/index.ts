@@ -28,7 +28,17 @@ export type StudyPalAnimal =
 export type StudyPalMood = "happy" | "focused" | "celebrating" | "relaxed" | "neutral";
 export type TimerMode = "study" | "break";
 export type AIChatMode = "chat" | "grammar";
-export type ThemeColor = "blue" | "purple" | "pink" | "green" | "orange" | "red" | "teal" | "indigo" | "rose" | "amber";
+export type ThemeColor =
+  | "nature"
+  | "ocean"
+  | "sunset"
+  | "galaxy"
+  | "rainbow"
+  | "forest"
+  | "desert"
+  | "arctic"
+  | "autumn"
+  | "cherry";
 
 export interface Task {
   id: string;

@@ -27,20 +27,28 @@ const BottomTabNavigator = () => {
 
   const getThemeColor = () => {
     switch (user?.themeColor) {
-      case "blue":
-        return "#3B82F6";
-      case "purple":
-        return "#A855F7";
-      case "pink":
-        return "#EC4899";
-      case "green":
-        return "#10B981";
-      case "orange":
-        return "#F97316";
-      case "red":
-        return "#EF4444";
+      case "nature":
+        return "#4CAF50";
+      case "ocean":
+        return "#0288D1";
+      case "sunset":
+        return "#FF6F00";
+      case "galaxy":
+        return "#5E35B1";
+      case "rainbow":
+        return "#FBC02D";
+      case "forest":
+        return "#2E7D32";
+      case "desert":
+        return "#F57C00";
+      case "arctic":
+        return "#00796B";
+      case "autumn":
+        return "#E64A19";
+      case "cherry":
+        return "#C2185B";
       default:
-        return "#3B82F6";
+        return "#4CAF50";
     }
   };
 

@@ -20,7 +20,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
   const [username, setUsername] = useState("");
   const [studyPalName, setStudyPalName] = useState("Buddy");
   const [animal, setAnimal] = useState<StudyPalAnimal>("cat");
-  const [themeColor, setThemeColor] = useState<ThemeColor>("blue");
+  const [themeColor, setThemeColor] = useState<ThemeColor>("nature");
 
   const animals: StudyPalAnimal[] = [
     "cat", "bunny", "bear", "dog", "fox", "panda",
@@ -29,17 +29,17 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
     "duck", "frog"
   ];
 
-  const themes: { color: ThemeColor; colors: [string, string] }[] = [
-    { color: "blue", colors: ["#3B82F6", "#1D4ED8"] },
-    { color: "purple", colors: ["#A855F7", "#7C3AED"] },
-    { color: "pink", colors: ["#EC4899", "#DB2777"] },
-    { color: "green", colors: ["#10B981", "#059669"] },
-    { color: "orange", colors: ["#F97316", "#EA580C"] },
-    { color: "red", colors: ["#EF4444", "#DC2626"] },
-    { color: "teal", colors: ["#14B8A6", "#0D9488"] },
-    { color: "indigo", colors: ["#6366F1", "#4F46E5"] },
-    { color: "rose", colors: ["#F43F5E", "#E11D48"] },
-    { color: "amber", colors: ["#F59E0B", "#D97706"] },
+  const themes: { color: ThemeColor; colors: [string, string]; emoji: string; name: string }[] = [
+    { color: "nature", colors: ["#4CAF50", "#2E7D32"], emoji: "🌿", name: "Nature" },
+    { color: "ocean", colors: ["#0288D1", "#01579B"], emoji: "🌊", name: "Ocean" },
+    { color: "sunset", colors: ["#FF6F00", "#E65100"], emoji: "🌅", name: "Sunset" },
+    { color: "galaxy", colors: ["#5E35B1", "#311B92"], emoji: "🌌", name: "Galaxy" },
+    { color: "rainbow", colors: ["#FBC02D", "#F57F17"], emoji: "🌈", name: "Rainbow" },
+    { color: "forest", colors: ["#2E7D32", "#1B5E20"], emoji: "🌲", name: "Forest" },
+    { color: "desert", colors: ["#F57C00", "#E65100"], emoji: "🏜️", name: "Desert" },
+    { color: "arctic", colors: ["#00796B", "#004D40"], emoji: "❄️", name: "Arctic" },
+    { color: "autumn", colors: ["#E64A19", "#BF360C"], emoji: "🍂", name: "Autumn" },
+    { color: "cherry", colors: ["#C2185B", "#880E4F"], emoji: "🌸", name: "Cherry Blossom" },
   ];
 
   const handleComplete = () => {
@@ -178,10 +178,10 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
           {step === 4 && (
             <View>
               <Text className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">
-                Choose your theme
+                Choose your environment
               </Text>
               <Text className="text-gray-600 dark:text-gray-400 mb-6">
-                Pick your favorite color
+                Pick a theme that matches your vibe
               </Text>
               <View className="flex-row flex-wrap gap-3">
                 {themes.map((theme) => (
@@ -189,18 +189,19 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
                     key={theme.color}
                     onPress={() => setThemeColor(theme.color)}
                     className={cn(
-                      "w-[30%] aspect-square rounded-2xl items-center justify-center",
-                      themeColor === theme.color && "border-4 border-gray-800 dark:border-white"
+                      "w-[30%] bg-white dark:bg-gray-800 rounded-2xl p-3 items-center",
+                      themeColor === theme.color && "border-4 border-blue-500"
                     )}
                   >
                     <LinearGradient
                       colors={theme.colors}
-                      className="w-full h-full rounded-2xl items-center justify-center"
+                      className="w-16 h-16 rounded-2xl items-center justify-center mb-2"
                     >
-                      {themeColor === theme.color && (
-                        <Ionicons name="checkmark-circle" size={40} color="white" />
-                      )}
+                      <Text className="text-3xl">{theme.emoji}</Text>
                     </LinearGradient>
+                    <Text className="text-xs font-medium text-gray-700 dark:text-gray-300 text-center">
+                      {theme.name}
+                    </Text>
                   </Pressable>
                 ))}
               </View>

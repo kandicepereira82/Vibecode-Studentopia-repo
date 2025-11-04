@@ -35,17 +35,17 @@ const ProfileScreen = () => {
     { code: "ar", name: "العربية", flag: "🇸🇦" },
   ];
 
-  const themes: { color: ThemeColor; name: string; colors: [string, string] }[] = [
-    { color: "blue", name: "Blue", colors: ["#3B82F6", "#1D4ED8"] },
-    { color: "purple", name: "Purple", colors: ["#A855F7", "#7C3AED"] },
-    { color: "pink", name: "Pink", colors: ["#EC4899", "#DB2777"] },
-    { color: "green", name: "Green", colors: ["#10B981", "#059669"] },
-    { color: "orange", name: "Orange", colors: ["#F97316", "#EA580C"] },
-    { color: "red", name: "Red", colors: ["#EF4444", "#DC2626"] },
-    { color: "teal", name: "Teal", colors: ["#14B8A6", "#0D9488"] },
-    { color: "indigo", name: "Indigo", colors: ["#6366F1", "#4F46E5"] },
-    { color: "rose", name: "Rose", colors: ["#F43F5E", "#E11D48"] },
-    { color: "amber", name: "Amber", colors: ["#F59E0B", "#D97706"] },
+  const themes: { color: ThemeColor; name: string; colors: [string, string]; emoji: string }[] = [
+    { color: "nature", name: "Nature", colors: ["#4CAF50", "#2E7D32"], emoji: "🌿" },
+    { color: "ocean", name: "Ocean", colors: ["#0288D1", "#01579B"], emoji: "🌊" },
+    { color: "sunset", name: "Sunset", colors: ["#FF6F00", "#E65100"], emoji: "🌅" },
+    { color: "galaxy", name: "Galaxy", colors: ["#5E35B1", "#311B92"], emoji: "🌌" },
+    { color: "rainbow", name: "Rainbow", colors: ["#FBC02D", "#F57F17"], emoji: "🌈" },
+    { color: "forest", name: "Forest", colors: ["#2E7D32", "#1B5E20"], emoji: "🌲" },
+    { color: "desert", name: "Desert", colors: ["#F57C00", "#E65100"], emoji: "🏜️" },
+    { color: "arctic", name: "Arctic", colors: ["#00796B", "#004D40"], emoji: "❄️" },
+    { color: "autumn", name: "Autumn", colors: ["#E64A19", "#BF360C"], emoji: "🍂" },
+    { color: "cherry", name: "Cherry Blossom", colors: ["#C2185B", "#880E4F"], emoji: "🌸" },
   ];
 
   const animals: StudyPalAnimal[] = [
@@ -390,13 +390,15 @@ const ProfileScreen = () => {
                 )}
               >
                 <View className="flex-row items-center">
-                  <View
-                    className="w-8 h-8 rounded-full mr-3"
-                    style={{ backgroundColor: theme.colors[0] }}
-                  />
-                  <Text className="text-base font-medium text-gray-800 dark:text-gray-100">
-                    {theme.name}
-                  </Text>
+                  <Text className="text-3xl mr-3">{theme.emoji}</Text>
+                  <View>
+                    <Text className="text-base font-medium text-gray-800 dark:text-gray-100">
+                      {theme.name}
+                    </Text>
+                    <Text className="text-xs text-gray-500 dark:text-gray-400">
+                      Environmental theme
+                    </Text>
+                  </View>
                 </View>
                 {user.themeColor === theme.color && (
                   <Ionicons name="checkmark-circle" size={24} color="#3B82F6" />

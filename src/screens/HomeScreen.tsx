@@ -55,20 +55,28 @@ const HomeScreen = () => {
 
   const getThemeColors = (): [string, string] => {
     switch (user.themeColor) {
-      case "blue":
-        return ["#3B82F6", "#1D4ED8"];
-      case "purple":
-        return ["#A855F7", "#7C3AED"];
-      case "pink":
-        return ["#EC4899", "#DB2777"];
-      case "green":
-        return ["#10B981", "#059669"];
-      case "orange":
-        return ["#F97316", "#EA580C"];
-      case "red":
-        return ["#EF4444", "#DC2626"];
+      case "nature":
+        return ["#4CAF50", "#2E7D32"];
+      case "ocean":
+        return ["#0288D1", "#01579B"];
+      case "sunset":
+        return ["#FF6F00", "#E65100"];
+      case "galaxy":
+        return ["#5E35B1", "#311B92"];
+      case "rainbow":
+        return ["#FBC02D", "#F57F17"];
+      case "forest":
+        return ["#2E7D32", "#1B5E20"];
+      case "desert":
+        return ["#F57C00", "#E65100"];
+      case "arctic":
+        return ["#00796B", "#004D40"];
+      case "autumn":
+        return ["#E64A19", "#BF360C"];
+      case "cherry":
+        return ["#C2185B", "#880E4F"];
       default:
-        return ["#3B82F6", "#1D4ED8"];
+        return ["#4CAF50", "#2E7D32"];
     }
   };
 
