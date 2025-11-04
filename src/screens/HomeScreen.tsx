@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { View, Text, ScrollView, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
+import { startOfWeek, addDays, format, isSameDay, isToday } from "date-fns";
 import StudyPal from "../components/StudyPal";
 import useUserStore from "../state/userStore";
 import useTaskStore from "../state/taskStore";
@@ -22,9 +23,17 @@ const HomeScreen = () => {
   const getWeekTasks = useTaskStore((s) => s.getWeekTasks);
   const toggleTaskStatus = useTaskStore((s) => s.toggleTaskStatus);
   const stats = useStatsStore((s) => s.stats);
+  const addStudyMinutes = useStatsStore((s) => s.addStudyMinutes);
 
   const [quote, setQuote] = useState<MotivationalQuote | null>(null);
   const [tip, setTip] = useState<StudyTip | null>(null);
+  const [selectedWeekDate, setSelectedWeekDate] = useState(new Date());
+
+  // Timer state
+  const [timerMinutes, setTimerMinutes] = useState(25);
+  const [timerSeconds, setTimerSeconds] = useState(0);
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const { t } = useTranslation(user?.language || "en");
   const theme = getTheme(user?.themeColor);
@@ -36,6 +45,69 @@ const HomeScreen = () => {
     }
     console.log("[HomeScreen] Rendered. User:", user ? "exists" : "null");
   }, [user]);
+
+  // Timer effect
+  useEffect(() => {
+    if (isTimerRunning) {
+      timerIntervalRef.current = setInterval(() => {
+        setTimerSeconds((prev) => {
+          if (prev === 0) {
+            setTimerMinutes((prevMin) => {
+              if (prevMin === 0) {
+                handleTimerComplete();
+                return 0;
+              }
+              return prevMin - 1;
+            });
+            return 59;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    } else {
+      if (timerIntervalRef.current) {
+        clearInterval(timerIntervalRef.current);
+      }
+    }
+
+    return () => {
+      if (timerIntervalRef.current) {
+        clearInterval(timerIntervalRef.current);
+      }
+    };
+  }, [isTimerRunning]);
+
+  const handleTimerComplete = () => {
+    setIsTimerRunning(false);
+    addStudyMinutes(25);
+    setTimerMinutes(25);
+    setTimerSeconds(0);
+  };
+
+  const handleTimerStart = () => {
+    setIsTimerRunning(true);
+  };
+
+  const handleTimerPause = () => {
+    setIsTimerRunning(false);
+  };
+
+  const handleTimerStop = () => {
+    setIsTimerRunning(false);
+    setTimerMinutes(25);
+    setTimerSeconds(0);
+  };
+
+  const getTasksForDate = (date: Date) => {
+    return tasks.filter((task) => {
+      const taskDate = new Date(task.dueDate);
+      return isSameDay(taskDate, date);
+    });
+  };
+
+  // Week calendar data
+  const weekStart = startOfWeek(new Date(), { weekStartsOn: 0 });
+  const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
 
   if (!user) {
     console.log("[HomeScreen] No user - showing fallback");
@@ -315,6 +387,97 @@ const HomeScreen = () => {
                   ))
                 )}
               </View>
+
+              {/* Week Calendar View */}
+              <View style={{
+                backgroundColor: 'white',
+                borderRadius: 20,
+                padding: 20,
+                marginBottom: 16,
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.06,
+                shadowRadius: 8,
+                elevation: 2
+              }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
+                  <View style={{
+                    width: 32,
+                    height: 32,
+                    borderRadius: 16,
+                    backgroundColor: theme.secondary + '15',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}>
+                    <Ionicons name="calendar" size={18} style={{ color: theme.secondary }} />
+                  </View>
+                  <Text style={{
+                    marginLeft: 10,
+                    fontSize: 16,
+                    fontFamily: 'Poppins_600SemiBold',
+                    color: theme.textPrimary
+                  }}>
+                    This Week
+                  </Text>
+                </View>
+
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                  {weekDays.map((day, index) => {
+                    const dayTasks = getTasksForDate(day);
+                    const hasTasks = dayTasks.length > 0;
+                    const isSelectedDay = isSameDay(day, selectedWeekDate);
+                    const isTodayDate = isToday(day);
+
+                    return (
+                      <Pressable
+                        key={index}
+                        onPress={() => setSelectedWeekDate(day)}
+                        style={{
+                          alignItems: 'center',
+                          padding: 8,
+                          borderRadius: 12,
+                          backgroundColor: isSelectedDay ? theme.secondary + '20' : 'transparent',
+                          minWidth: 40
+                        }}
+                      >
+                        <Text style={{
+                          fontSize: 11,
+                          fontFamily: 'Poppins_500Medium',
+                          color: theme.textSecondary,
+                          marginBottom: 4
+                        }}>
+                          {format(day, 'EEE')}
+                        </Text>
+                        <View style={{
+                          width: 32,
+                          height: 32,
+                          borderRadius: 16,
+                          backgroundColor: isTodayDate ? theme.secondary : (isSelectedDay ? theme.secondary + '40' : '#F3F4F6'),
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          marginBottom: 4
+                        }}>
+                          <Text style={{
+                            fontSize: 14,
+                            fontFamily: 'Poppins_600SemiBold',
+                            color: isTodayDate ? 'white' : theme.textPrimary
+                          }}>
+                            {format(day, 'd')}
+                          </Text>
+                        </View>
+                        {hasTasks && (
+                          <View style={{
+                            width: 4,
+                            height: 4,
+                            borderRadius: 2,
+                            backgroundColor: theme.accentColor
+                          }} />
+                        )}
+                      </Pressable>
+                    );
+                  })}
+                </View>
+              </View>
             </View>
 
             {/* Right Column - Study Pal & Goals */}
@@ -520,59 +683,148 @@ const HomeScreen = () => {
             </View>
           </View>
 
-          {/* Today's Progress Card */}
-          <LinearGradient
-            colors={theme.progressGradient as [string, string]}
-            style={{
-              borderRadius: 24,
-              padding: 24,
-              marginBottom: 20,
-              shadowColor: '#000',
-              shadowOffset: { width: 0, height: 4 },
-              shadowOpacity: 0.12,
-              shadowRadius: 16,
-              elevation: 4
-            }}
-          >
-            <Text style={{
-              fontSize: 20,
-              fontFamily: 'Poppins_700Bold',
-              color: 'white',
-              marginBottom: 16
-            }}>
-              {"Today's Progress"}
-            </Text>
-            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-              <View>
-                <Text style={{
-                  fontSize: 14,
-                  fontFamily: 'Poppins_400Regular',
-                  color: 'white',
-                  opacity: 0.9
-                }}>
-                  Completed Tasks
-                </Text>
+          {/* Quick Timer Section */}
+          <View style={{
+            backgroundColor: 'white',
+            borderRadius: 24,
+            padding: 24,
+            marginBottom: 20,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.08,
+            shadowRadius: 12,
+            elevation: 3
+          }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
+              <View style={{
+                width: 40,
+                height: 40,
+                borderRadius: 20,
+                backgroundColor: theme.primary + '15',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}>
+                <Ionicons name="timer" size={20} color={theme.primary} />
+              </View>
+              <Text style={{
+                marginLeft: 12,
+                fontSize: 18,
+                fontFamily: 'Poppins_600SemiBold',
+                color: theme.textPrimary
+              }}>
+                Quick Timer
+              </Text>
+            </View>
+
+            {/* Timer Display */}
+            <View style={{ alignItems: 'center', marginBottom: 20 }}>
+              <View style={{
+                backgroundColor: theme.primary + '10',
+                borderRadius: 20,
+                paddingVertical: 20,
+                paddingHorizontal: 40,
+                marginBottom: 16
+              }}>
                 <Text style={{
                   fontSize: 48,
                   fontFamily: 'Poppins_700Bold',
-                  color: 'white',
-                  marginTop: 8
+                  color: theme.primary,
+                  letterSpacing: 2
                 }}>
-                  {todayCompleted}/{todayTasks.length > 0 ? todayTasks.length : "2"}
+                  {String(timerMinutes).padStart(2, "0")}:{String(timerSeconds).padStart(2, "0")}
                 </Text>
               </View>
-              <View style={{ alignItems: 'flex-end' }}>
-                <Text style={{
-                  fontSize: 56,
-                  fontFamily: 'Poppins_700Bold',
-                  color: 'white',
-                  opacity: 0.9
-                }}>
-                  {Math.round(todayProgress)}%
-                </Text>
-              </View>
+              <Text style={{
+                fontSize: 14,
+                fontFamily: 'Poppins_400Regular',
+                color: theme.textSecondary,
+                textAlign: 'center'
+              }}>
+                {isTimerRunning ? "Focus time! 🎯" : "Ready to study?"}
+              </Text>
             </View>
-          </LinearGradient>
+
+            {/* Timer Controls */}
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 12 }}>
+              {!isTimerRunning ? (
+                <Pressable
+                  onPress={handleTimerStart}
+                  style={{
+                    backgroundColor: theme.primary,
+                    width: 56,
+                    height: 56,
+                    borderRadius: 28,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    shadowColor: '#000',
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowOpacity: 0.15,
+                    shadowRadius: 8,
+                    elevation: 3
+                  }}
+                >
+                  <Ionicons name="play" size={24} color="white" />
+                </Pressable>
+              ) : (
+                <>
+                  <Pressable
+                    onPress={handleTimerPause}
+                    style={{
+                      backgroundColor: '#F97316',
+                      width: 56,
+                      height: 56,
+                      borderRadius: 28,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      shadowColor: '#000',
+                      shadowOffset: { width: 0, height: 2 },
+                      shadowOpacity: 0.15,
+                      shadowRadius: 8,
+                      elevation: 3
+                    }}
+                  >
+                    <Ionicons name="pause" size={24} color="white" />
+                  </Pressable>
+                  <Pressable
+                    onPress={handleTimerStop}
+                    style={{
+                      backgroundColor: '#EF4444',
+                      width: 48,
+                      height: 48,
+                      borderRadius: 24,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      shadowColor: '#000',
+                      shadowOffset: { width: 0, height: 2 },
+                      shadowOpacity: 0.15,
+                      shadowRadius: 8,
+                      elevation: 3
+                    }}
+                  >
+                    <Ionicons name="stop" size={20} color="white" />
+                  </Pressable>
+                </>
+              )}
+            </View>
+
+            {/* Quick Link to Full Timer */}
+            <Pressable
+              onPress={() => navigation.navigate("Timer" as never)}
+              style={{
+                marginTop: 16,
+                paddingVertical: 10,
+                alignItems: 'center'
+              }}
+            >
+              <Text style={{
+                fontSize: 13,
+                fontFamily: 'Poppins_500Medium',
+                color: theme.primary
+              }}>
+                Go to Full Timer →
+              </Text>
+            </Pressable>
+          </View>
 
           {/* Study Tip */}
           {tip && (

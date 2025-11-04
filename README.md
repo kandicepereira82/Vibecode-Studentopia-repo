@@ -4,6 +4,9 @@ StudyPal is a comprehensive mobile productivity app designed for students to sta
 
 ## ✨ Latest Updates
 
+- ✅ **Enhanced Home Screen** - Added week calendar view and replaced progress card with interactive Quick Timer
+- ✅ **Week Calendar Widget** - Beautiful week view showing tasks for each day with visual indicators
+- ✅ **Quick Timer on Home** - Start study sessions directly from home screen with play/pause/stop controls
 - ✅ **Consistent Modern UI Design** - All screens now feature the same beautiful Poppins font, soft rounded corners (20-24px), gentle shadows, and clean white cards
 - ✅ **Complete Design System** - HomeScreen, TasksScreen, CalendarScreen, TimerScreen, MusicPlayerScreen, AIHelperScreen, StudyTipsScreen, and GroupsScreen all updated with consistent styling
 - ✅ **Poppins Font Family** - Beautiful rounded font in Regular, Medium, SemiBold, and Bold weights throughout the entire app
