@@ -11,11 +11,17 @@ module.exports = {
   theme: {
     // NOTE to AI: You can extend the theme with custom colors or styles here.
     extend: {
-      // For example, you can add a primary or secondary color here.
-      // colors: {
-      //   primary: "#INSERT_VALID_HEX_CODE",
-      //   secondary: "#INSERT_VALID_HEX_CODE",
-      // },
+      fontFamily: {
+        sans: ['Poppins_400Regular'],
+        medium: ['Poppins_500Medium'],
+        semibold: ['Poppins_600SemiBold'],
+        bold: ['Poppins_700Bold'],
+      },
+      borderRadius: {
+        'soft': '16px',
+        'softer': '20px',
+        'softest': '24px',
+      },
       fontSize: {
         xs: "10px",
         sm: "12px",
@@ -30,6 +36,11 @@ module.exports = {
         "7xl": "64px",
         "8xl": "72px",
         "9xl": "80px",
+      },
+      boxShadow: {
+        'soft': '0 2px 8px rgba(0, 0, 0, 0.08)',
+        'softer': '0 4px 12px rgba(0, 0, 0, 0.1)',
+        'softest': '0 8px 24px rgba(0, 0, 0, 0.12)',
       },
     },
   },

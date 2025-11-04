@@ -69,65 +69,137 @@ const HomeScreen = () => {
     .slice(0, 5);
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#E8F5E9" }}>
+    <View style={{ flex: 1, backgroundColor: theme.backgroundGradient[0] }}>
       <SafeAreaView style={{ flex: 1 }}>
-        {/* Debug Banner - Remove after testing */}
-        <View style={{ backgroundColor: "red", padding: 10 }}>
-          <Text style={{ color: "white", fontSize: 16, fontWeight: "bold" }}>
-            HOME SCREEN LOADED - User: {user.username}
-          </Text>
-        </View>
-
-        {/* Header */}
-        <View className="px-6 pt-2 pb-3">
-          <Text className="text-2xl font-bold" style={{ color: theme.textPrimary }}>
+        {/* Header with Poppins */}
+        <View style={{ paddingHorizontal: 24, paddingTop: 16, paddingBottom: 20 }}>
+          <Text style={{
+            fontSize: 32,
+            fontFamily: 'Poppins_700Bold',
+            color: theme.textPrimary,
+            marginBottom: 4
+          }}>
             StudyPal
           </Text>
-          <Text className="text-sm" style={{ color: theme.textSecondary }}>
-            {t("welcomeBack")}, {user.username}!
+          <Text style={{
+            fontSize: 16,
+            fontFamily: 'Poppins_400Regular',
+            color: theme.textSecondary
+          }}>
+            {t("welcomeBack")}, {user.username}! 👋
           </Text>
         </View>
 
-        <ScrollView className="flex-1 px-6" showsVerticalScrollIndicator={false}>
-          {/* Today's Inspiration */}
+        <ScrollView style={{ flex: 1, paddingHorizontal: 24 }} showsVerticalScrollIndicator={false}>
+          {/* Today's Inspiration with soft shadow */}
           {quote && (
-            <LinearGradient
-              colors={[theme.primary, theme.primaryDark]}
-              className="rounded-2xl p-5 mb-4"
-            >
-              <View className="flex-row items-center mb-2">
-                <Ionicons name="sparkles" size={18} color="white" />
-                <Text className="ml-2 text-sm font-semibold text-white uppercase">
+            <View style={{
+              backgroundColor: 'white',
+              borderRadius: 24,
+              padding: 24,
+              marginBottom: 20,
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.08,
+              shadowRadius: 12,
+              elevation: 3
+            }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
+                <View style={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: 20,
+                  backgroundColor: theme.primary + '15',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <Ionicons name="sparkles" size={20} color={theme.primary} />
+                </View>
+                <Text style={{
+                  marginLeft: 12,
+                  fontSize: 16,
+                  fontFamily: 'Poppins_600SemiBold',
+                  color: theme.textPrimary
+                }}>
                   {"Today's Inspiration"}
                 </Text>
               </View>
-              <Text className="text-base text-white italic mb-2">{quote.text}</Text>
-              <Text className="text-sm text-white opacity-90">— {quote.author}</Text>
-            </LinearGradient>
+              <Text style={{
+                fontSize: 16,
+                fontFamily: 'Poppins_400Regular',
+                fontStyle: 'italic',
+                color: theme.textPrimary,
+                lineHeight: 24,
+                marginBottom: 12
+              }}>
+                &ldquo;{quote.text}&rdquo;
+              </Text>
+              <Text style={{
+                fontSize: 14,
+                fontFamily: 'Poppins_500Medium',
+                color: theme.textSecondary
+              }}>
+                — {quote.author}
+              </Text>
+            </View>
           )}
 
-          {/* Main Content Row */}
+          {/* Main Content Row with softer cards */}
           <View className="flex-row gap-4 mb-4">
             {/* Left Column - Tasks */}
             <View className="flex-1">
               {/* Your Tasks */}
-              <View className="rounded-2xl p-4 mb-4" style={{ backgroundColor: theme.cardBackground }}>
+              <View style={{
+                backgroundColor: 'white',
+                borderRadius: 20,
+                padding: 20,
+                marginBottom: 16,
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.06,
+                shadowRadius: 8,
+                elevation: 2
+              }}>
                 <View className="flex-row items-center justify-between mb-3">
                   <View className="flex-row items-center">
-                    <Ionicons name="checkbox-outline" size={20} style={{ color: theme.primary }} />
-                    <Text className="ml-2 text-lg font-bold" style={{ color: theme.textPrimary }}>
+                    <View style={{
+                      width: 32,
+                      height: 32,
+                      borderRadius: 16,
+                      backgroundColor: theme.primary + '15',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
+                      <Ionicons name="checkbox-outline" size={18} style={{ color: theme.primary }} />
+                    </View>
+                    <Text style={{
+                      marginLeft: 10,
+                      fontSize: 16,
+                      fontFamily: 'Poppins_600SemiBold',
+                      color: theme.textPrimary
+                    }}>
                       Your Tasks
                     </Text>
                   </View>
                   <Pressable onPress={() => navigation.navigate("Tasks" as never)}>
-                    <Text className="text-sm font-medium" style={{ color: theme.primary }}>
+                    <Text style={{
+                      fontSize: 13,
+                      fontFamily: 'Poppins_500Medium',
+                      color: theme.primary
+                    }}>
                       All Tasks
                     </Text>
                   </Pressable>
                 </View>
 
                 {todayTasks.length === 0 ? (
-                  <Text className="text-sm text-center py-4" style={{ color: theme.textSecondary }}>
+                  <Text style={{
+                    fontSize: 14,
+                    fontFamily: 'Poppins_400Regular',
+                    color: theme.textSecondary,
+                    textAlign: 'center',
+                    paddingVertical: 16
+                  }}>
                     No tasks due today
                   </Text>
                 ) : (
@@ -135,21 +207,37 @@ const HomeScreen = () => {
                     <Pressable
                       key={task.id}
                       onPress={() => toggleTaskStatus(task.id)}
-                      className="flex-row items-start py-2 border-b border-gray-100"
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'flex-start',
+                        paddingVertical: 12,
+                        borderBottomWidth: 1,
+                        borderBottomColor: '#F3F4F6'
+                      }}
                     >
                       <Ionicons
                         name={task.status === "completed" ? "checkmark-circle" : "ellipse-outline"}
-                        size={22}
-                        style={{ color: task.status === "completed" ? theme.secondary : theme.textSecondary, marginRight: 8, marginTop: 2 }}
+                        size={24}
+                        style={{ color: task.status === "completed" ? theme.secondary : theme.textSecondary, marginRight: 12, marginTop: 2 }}
                       />
                       <View className="flex-1">
                         <Text
-                          className={cn("text-base", task.status === "completed" && "line-through")}
-                          style={{ color: theme.textPrimary }}
+                          style={{
+                            fontSize: 15,
+                            fontFamily: 'Poppins_500Medium',
+                            color: theme.textPrimary,
+                            textDecorationLine: task.status === "completed" ? 'line-through' : 'none'
+                          }}
                         >
                           {task.title}
                         </Text>
-                        <Text className="text-xs mt-1 capitalize" style={{ color: theme.textSecondary }}>
+                        <Text style={{
+                          fontSize: 12,
+                          fontFamily: 'Poppins_400Regular',
+                          color: theme.textSecondary,
+                          marginTop: 4,
+                          textTransform: 'capitalize'
+                        }}>
                           {task.category}
                         </Text>
                       </View>
@@ -159,25 +247,68 @@ const HomeScreen = () => {
               </View>
 
               {/* Upcoming Tasks */}
-              <View className="rounded-2xl p-4 mb-4" style={{ backgroundColor: theme.cardBackground }}>
-                <View className="flex-row items-center mb-3">
-                  <Ionicons name="calendar-outline" size={18} style={{ color: theme.primary }} />
-                  <Text className="ml-2 font-bold" style={{ color: theme.textPrimary }}>
+              <View style={{
+                backgroundColor: 'white',
+                borderRadius: 20,
+                padding: 20,
+                marginBottom: 16,
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.06,
+                shadowRadius: 8,
+                elevation: 2
+              }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
+                  <View style={{
+                    width: 32,
+                    height: 32,
+                    borderRadius: 16,
+                    backgroundColor: theme.primary + '15',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}>
+                    <Ionicons name="calendar-outline" size={18} style={{ color: theme.primary }} />
+                  </View>
+                  <Text style={{
+                    marginLeft: 10,
+                    fontSize: 16,
+                    fontFamily: 'Poppins_600SemiBold',
+                    color: theme.textPrimary
+                  }}>
                     Upcoming Tasks
                   </Text>
                 </View>
 
                 {upcomingTasks.length === 0 ? (
-                  <Text className="text-sm text-center py-2" style={{ color: theme.textSecondary }}>
+                  <Text style={{
+                    fontSize: 14,
+                    fontFamily: 'Poppins_400Regular',
+                    color: theme.textSecondary,
+                    textAlign: 'center',
+                    paddingVertical: 16
+                  }}>
                     No upcoming tasks
                   </Text>
                 ) : (
                   upcomingTasks.map((task) => (
-                    <View key={task.id} className="py-2 border-b border-gray-100">
-                      <Text className="text-sm font-medium" style={{ color: theme.textPrimary }}>
+                    <View key={task.id} style={{
+                      paddingVertical: 12,
+                      borderBottomWidth: 1,
+                      borderBottomColor: '#F3F4F6'
+                    }}>
+                      <Text style={{
+                        fontSize: 15,
+                        fontFamily: 'Poppins_500Medium',
+                        color: theme.textPrimary
+                      }}>
                         {task.title}
                       </Text>
-                      <Text className="text-xs mt-1" style={{ color: theme.textSecondary }}>
+                      <Text style={{
+                        fontSize: 12,
+                        fontFamily: 'Poppins_400Regular',
+                        color: theme.textSecondary,
+                        marginTop: 4
+                      }}>
                         {new Date(task.dueDate).toLocaleDateString()}
                       </Text>
                     </View>
@@ -189,67 +320,200 @@ const HomeScreen = () => {
             {/* Right Column - Study Pal & Goals */}
             <View className="w-[35%]">
               {/* Study Pal */}
-              <View className="rounded-2xl p-4 mb-4 items-center" style={{ backgroundColor: theme.cardBackground }}>
-                <StudyPal
-                  animal={user.studyPalConfig.animal}
-                  name={user.studyPalConfig.name}
-                  animationsEnabled={user.studyPalConfig.animationsEnabled}
-                  size={60}
-                />
-                <Text className="text-sm font-bold mt-2 text-center" style={{ color: theme.textPrimary }}>
+              <View style={{
+                backgroundColor: 'white',
+                borderRadius: 20,
+                padding: 20,
+                marginBottom: 16,
+                alignItems: 'center',
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.06,
+                shadowRadius: 8,
+                elevation: 2
+              }}>
+                <View style={{
+                  width: 80,
+                  height: 80,
+                  borderRadius: 40,
+                  backgroundColor: theme.primary + '10',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: 12
+                }}>
+                  <StudyPal
+                    animal={user.studyPalConfig.animal}
+                    name={user.studyPalConfig.name}
+                    animationsEnabled={user.studyPalConfig.animationsEnabled}
+                    size={50}
+                  />
+                </View>
+                <Text style={{
+                  fontSize: 15,
+                  fontFamily: 'Poppins_600SemiBold',
+                  color: theme.textPrimary,
+                  textAlign: 'center'
+                }}>
                   {user.studyPalConfig.name}
                 </Text>
-                <Text className="text-xs text-center mt-1" style={{ color: theme.textSecondary }}>
+                <Text style={{
+                  fontSize: 12,
+                  fontFamily: 'Poppins_400Regular',
+                  color: theme.textSecondary,
+                  textAlign: 'center',
+                  marginTop: 4
+                }}>
                   Take a deep breath... 🌸
                 </Text>
               </View>
 
               {/* Daily Goal */}
-              <View className="rounded-2xl p-4 mb-4" style={{ backgroundColor: theme.cardBackground }}>
-                <View className="flex-row items-center mb-2">
-                  <Ionicons name="flag" size={16} style={{ color: theme.primary }} />
-                  <Text className="ml-2 text-sm font-bold" style={{ color: theme.textPrimary }}>
+              <View style={{
+                backgroundColor: 'white',
+                borderRadius: 20,
+                padding: 20,
+                marginBottom: 16,
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.06,
+                shadowRadius: 8,
+                elevation: 2
+              }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
+                  <View style={{
+                    width: 28,
+                    height: 28,
+                    borderRadius: 14,
+                    backgroundColor: theme.primary + '15',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}>
+                    <Ionicons name="flag" size={14} style={{ color: theme.primary }} />
+                  </View>
+                  <Text style={{
+                    marginLeft: 10,
+                    fontSize: 14,
+                    fontFamily: 'Poppins_600SemiBold',
+                    color: theme.textPrimary
+                  }}>
                     Daily Goal
                   </Text>
                 </View>
-                <Text className="text-2xl font-bold text-center" style={{ color: theme.primary }}>
+                <Text style={{
+                  fontSize: 28,
+                  fontFamily: 'Poppins_700Bold',
+                  color: theme.primary,
+                  textAlign: 'center'
+                }}>
                   {todayCompleted}/{todayTasks.length}
                 </Text>
-                <Text className="text-xs text-center mt-1" style={{ color: theme.textSecondary }}>
+                <Text style={{
+                  fontSize: 12,
+                  fontFamily: 'Poppins_400Regular',
+                  color: theme.textSecondary,
+                  textAlign: 'center',
+                  marginTop: 4
+                }}>
                   tasks completed
                 </Text>
-                <View className="mt-3 h-2 bg-gray-200 rounded-full overflow-hidden">
+                <View style={{
+                  marginTop: 12,
+                  height: 8,
+                  backgroundColor: '#F3F4F6',
+                  borderRadius: 4,
+                  overflow: 'hidden'
+                }}>
                   <View
-                    className="h-full rounded-full"
-                    style={{ width: `${todayProgress}%`, backgroundColor: theme.primary }}
+                    style={{
+                      height: '100%',
+                      width: `${todayProgress}%`,
+                      backgroundColor: theme.primary,
+                      borderRadius: 4
+                    }}
                   />
                 </View>
-                <Text className="text-xs text-center mt-2 font-medium" style={{ color: theme.primary }}>
+                <Text style={{
+                  fontSize: 12,
+                  fontFamily: 'Poppins_600SemiBold',
+                  color: theme.primary,
+                  textAlign: 'center',
+                  marginTop: 8
+                }}>
                   {Math.round(todayProgress)}%
                 </Text>
               </View>
 
               {/* Weekly Goal */}
-              <View className="rounded-2xl p-4" style={{ backgroundColor: theme.cardBackground }}>
-                <View className="flex-row items-center mb-2">
-                  <Ionicons name="trophy" size={16} style={{ color: theme.secondary }} />
-                  <Text className="ml-2 text-sm font-bold" style={{ color: theme.textPrimary }}>
+              <View style={{
+                backgroundColor: 'white',
+                borderRadius: 20,
+                padding: 20,
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.06,
+                shadowRadius: 8,
+                elevation: 2
+              }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
+                  <View style={{
+                    width: 28,
+                    height: 28,
+                    borderRadius: 14,
+                    backgroundColor: theme.secondary + '15',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}>
+                    <Ionicons name="trophy" size={14} style={{ color: theme.secondary }} />
+                  </View>
+                  <Text style={{
+                    marginLeft: 10,
+                    fontSize: 14,
+                    fontFamily: 'Poppins_600SemiBold',
+                    color: theme.textPrimary
+                  }}>
                     Weekly Goal
                   </Text>
                 </View>
-                <Text className="text-2xl font-bold text-center" style={{ color: theme.secondary }}>
+                <Text style={{
+                  fontSize: 28,
+                  fontFamily: 'Poppins_700Bold',
+                  color: theme.secondary,
+                  textAlign: 'center'
+                }}>
                   {weekCompleted}/{weekTasks.length}
                 </Text>
-                <Text className="text-xs text-center mt-1" style={{ color: theme.textSecondary }}>
+                <Text style={{
+                  fontSize: 12,
+                  fontFamily: 'Poppins_400Regular',
+                  color: theme.textSecondary,
+                  textAlign: 'center',
+                  marginTop: 4
+                }}>
                   tasks completed
                 </Text>
-                <View className="mt-3 h-2 bg-gray-200 rounded-full overflow-hidden">
+                <View style={{
+                  marginTop: 12,
+                  height: 8,
+                  backgroundColor: '#F3F4F6',
+                  borderRadius: 4,
+                  overflow: 'hidden'
+                }}>
                   <View
-                    className="h-full rounded-full"
-                    style={{ width: `${weekProgress}%`, backgroundColor: theme.secondary }}
+                    style={{
+                      height: '100%',
+                      width: `${weekProgress}%`,
+                      backgroundColor: theme.secondary,
+                      borderRadius: 4
+                    }}
                   />
                 </View>
-                <Text className="text-xs text-center mt-2 font-medium" style={{ color: theme.secondary }}>
+                <Text style={{
+                  fontSize: 12,
+                  fontFamily: 'Poppins_600SemiBold',
+                  color: theme.secondary,
+                  textAlign: 'center',
+                  marginTop: 8
+                }}>
                   {Math.round(weekProgress)}%
                 </Text>
               </View>
@@ -259,18 +523,51 @@ const HomeScreen = () => {
           {/* Today's Progress Card */}
           <LinearGradient
             colors={theme.progressGradient as [string, string]}
-            className="rounded-2xl p-5 mb-4"
+            style={{
+              borderRadius: 24,
+              padding: 24,
+              marginBottom: 20,
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.12,
+              shadowRadius: 16,
+              elevation: 4
+            }}
           >
-            <Text className="text-lg font-bold text-white mb-2">{"Today's Progress"}</Text>
-            <View className="flex-row items-center justify-between">
+            <Text style={{
+              fontSize: 20,
+              fontFamily: 'Poppins_700Bold',
+              color: 'white',
+              marginBottom: 16
+            }}>
+              {"Today's Progress"}
+            </Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
               <View>
-                <Text className="text-sm text-white opacity-90">Completed Tasks</Text>
-                <Text className="text-4xl font-bold text-white mt-1">
+                <Text style={{
+                  fontSize: 14,
+                  fontFamily: 'Poppins_400Regular',
+                  color: 'white',
+                  opacity: 0.9
+                }}>
+                  Completed Tasks
+                </Text>
+                <Text style={{
+                  fontSize: 48,
+                  fontFamily: 'Poppins_700Bold',
+                  color: 'white',
+                  marginTop: 8
+                }}>
                   {todayCompleted}/{todayTasks.length > 0 ? todayTasks.length : "2"}
                 </Text>
               </View>
-              <View className="items-end">
-                <Text className="text-5xl font-bold text-white opacity-90">
+              <View style={{ alignItems: 'flex-end' }}>
+                <Text style={{
+                  fontSize: 56,
+                  fontFamily: 'Poppins_700Bold',
+                  color: 'white',
+                  opacity: 0.9
+                }}>
                   {Math.round(todayProgress)}%
                 </Text>
               </View>
@@ -279,17 +576,51 @@ const HomeScreen = () => {
 
           {/* Study Tip */}
           {tip && (
-            <View className="rounded-2xl p-5 mb-6" style={{ backgroundColor: theme.cardBackground }}>
-              <View className="flex-row items-center mb-2">
-                <Ionicons name="bulb" size={20} style={{ color: theme.accentColor }} />
-                <Text className="ml-2 text-sm font-semibold" style={{ color: theme.textPrimary }}>
+            <View style={{
+              backgroundColor: 'white',
+              borderRadius: 24,
+              padding: 24,
+              marginBottom: 24,
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.08,
+              shadowRadius: 12,
+              elevation: 3
+            }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
+                <View style={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: 20,
+                  backgroundColor: theme.accentColor + '15',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <Ionicons name="bulb" size={20} style={{ color: theme.accentColor }} />
+                </View>
+                <Text style={{
+                  marginLeft: 12,
+                  fontSize: 16,
+                  fontFamily: 'Poppins_600SemiBold',
+                  color: theme.textPrimary
+                }}>
                   Study Tip
                 </Text>
               </View>
-              <Text className="text-base font-bold mb-1" style={{ color: theme.textPrimary }}>
+              <Text style={{
+                fontSize: 17,
+                fontFamily: 'Poppins_600SemiBold',
+                color: theme.textPrimary,
+                marginBottom: 8
+              }}>
                 {tip.title}
               </Text>
-              <Text className="text-sm" style={{ color: theme.textSecondary }}>
+              <Text style={{
+                fontSize: 15,
+                fontFamily: 'Poppins_400Regular',
+                color: theme.textSecondary,
+                lineHeight: 22
+              }}>
                 {tip.description}
               </Text>
             </View>

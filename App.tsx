@@ -3,6 +3,13 @@ import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import {
+  useFonts,
+  Poppins_400Regular,
+  Poppins_500Medium,
+  Poppins_600SemiBold,
+  Poppins_700Bold,
+} from "@expo-google-fonts/poppins";
 import BottomTabNavigator from "./src/navigation/BottomTabNavigator";
 import OnboardingScreen from "./src/screens/OnboardingScreen";
 import useUserStore from "./src/state/userStore";
@@ -34,9 +41,20 @@ export default function App() {
   const [isReady, setIsReady] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(true);
 
+  // Load Poppins fonts
+  const [fontsLoaded] = useFonts({
+    Poppins_400Regular,
+    Poppins_500Medium,
+    Poppins_600SemiBold,
+    Poppins_700Bold,
+  });
+
   useEffect(() => {
-    // Wait for Zustand to hydrate from AsyncStorage
+    // Wait for Zustand to hydrate from AsyncStorage and fonts to load
     const initializeApp = async () => {
+      // Wait for fonts
+      if (!fontsLoaded) return;
+
       // Give Zustand time to hydrate
       await new Promise(resolve => setTimeout(resolve, 200));
 
@@ -65,7 +83,7 @@ export default function App() {
     };
 
     initializeApp();
-  }, []);
+  }, [fontsLoaded]);
 
   // React to user changes after initial load
   useEffect(() => {
