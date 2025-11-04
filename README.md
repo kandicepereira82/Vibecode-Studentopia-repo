@@ -4,8 +4,13 @@ StudyPal is a comprehensive mobile productivity app designed for students to sta
 
 ## ✨ Latest Updates
 
+- ✅ **Group Rules & Safety** - Comprehensive rules modal covering behavior, appropriate content, privacy, and consequences
+- ✅ **Group Search** - Search groups by school, class name, teacher email, name, or description
+- ✅ **Enhanced Group Creation** - Added optional fields for school, class, and email with mandatory rules acceptance
+- ✅ **Fixed Timer Synchronization** - Timer state now shared across Home and Timer screens with centralized interval management
+- ✅ **Fixed Timer Seconds Skipping** - Eliminated duplicate intervals that caused seconds to skip (58→56→54)
 - ✅ **Calendar Week View** - Toggle between month and week views with fully functional navigation
-- ✅ **Add Tasks from Calendar** - Long-press any date to quickly create tasks for that day
+- ✅ **Add Tasks from Calendar** - Double-tap any date to quickly create tasks for that day
 - ✅ **Calendar Integration Guide** - Complete guide for syncing with Google Calendar and Apple Calendar (see CALENDAR_INTEGRATION.md)
 - ✅ **Fixed Timer Display** - Timer now displays correctly as "25:00" on a single line
 - ✅ **Task Time Selection** - Added time picker to tasks alongside date selection for precise scheduling
@@ -54,6 +59,18 @@ StudyPal is a comprehensive mobile productivity app designed for students to sta
 - **Visual Timer**: Large, optimized countdown display that fits on one line
 - **Session Modes**: Toggle between study (green) and break (blue) modes
 - **Study Tracking**: Automatically logs study minutes to your stats
+- **Synchronized State**: Timer state shared across Home and Timer screens
+- **Quick Timer**: Start study sessions directly from home screen
+
+### 👥 Groups & Collaboration
+- **Create Groups**: Both teachers and students can create groups with name, description, school, class, and teacher email
+- **Join Groups**: Students can join groups using 6-character share codes or QR codes
+- **Share Options**: Copy code to clipboard, show QR code for scanning, or regenerate code
+- **Search Groups**: Search by school name, class name, teacher email, group name, or description
+- **Group Rules**: Comprehensive safety guidelines covering respectful behavior, appropriate content, privacy, and consequences
+- **Rules Acceptance**: Mandatory rules acceptance checkbox before creating a group
+- **Task Management**: View and manage group tasks with member count tracking
+- **How-To Guide**: Built-in comprehensive guide for creating, joining, and managing groups
 
 ### 🎵 Music Player
 - **Curated Classical Music**: 6 calming, peaceful, and uplifting tracks from Pixabay
@@ -171,7 +188,8 @@ src/
 │   ├── userStore.ts           # User preferences & settings
 │   ├── taskStore.ts           # Task data management
 │   ├── statsStore.ts          # User statistics
-│   └── groupStore.ts          # Groups & collaboration (future)
+│   ├── timerStore.ts          # Centralized timer state
+│   └── groupStore.ts          # Groups & collaboration
 ├── types/
 │   ├── index.ts               # TypeScript type definitions
 │   └── ai.ts                  # AI-related types
@@ -188,7 +206,8 @@ The app uses Zustand with AsyncStorage for persistent state:
 - **User Store**: Language, theme, Study Pal config, notifications
 - **Task Store**: All tasks with CRUD operations and filtering
 - **Stats Store**: Achievements, streaks, study time tracking
-- **Group Store**: Future collaboration features
+- **Timer Store**: Centralized timer state with synchronized intervals
+- **Group Store**: Group creation, joining, search, and management
 
 ### Multi-language Support
 All UI text is translated through the `useTranslation` hook. Currently supports:
@@ -234,15 +253,16 @@ Study Pal mascots use React Native Reanimated for smooth animations:
 ## Future Enhancements
 
 ### Planned Features
-- **Groups & Collaboration**: Student and teacher group features
-- **Calendar Integration**: Sync with Google Calendar and Apple Calendar
+- **Enhanced Group Features**: Group chat, member management, and teacher assignment features
 - **Push Notifications**: Task reminders with custom alarm sounds
-- **Mindfulness Breaks**: Classical music player and guided breathing
+- **Mindfulness Breaks**: Guided breathing exercises and meditation timer
 - **Resource Library**: Video and article suggestions from AI
 - **Offline Mode**: Full functionality without internet
 - **Data Export**: Export tasks and stats to CSV/PDF
 - **Widgets**: Home screen widgets for quick task view
 - **Dark Mode**: Full dark theme support (partial implementation)
+- **Voice Commands**: Add tasks and control timer with voice
+- **Study Analytics**: Detailed charts showing productivity patterns
 
 ## Development Notes
 

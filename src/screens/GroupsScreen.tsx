@@ -29,10 +29,16 @@ const GroupsScreen = () => {
   const [showJoinModal, setShowJoinModal] = useState(false);
   const [showQRModal, setShowQRModal] = useState(false);
   const [showHowToModal, setShowHowToModal] = useState(false);
+  const [showRulesModal, setShowRulesModal] = useState(false);
   const [qrGroupCode, setQRGroupCode] = useState("");
   const [groupName, setGroupName] = useState("");
   const [groupDescription, setGroupDescription] = useState("");
+  const [school, setSchool] = useState("");
+  const [className, setClassName] = useState("");
+  const [teacherEmail, setTeacherEmail] = useState("");
+  const [acceptedRules, setAcceptedRules] = useState(false);
   const [joinCode, setJoinCode] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
 
   const isTeacher = user?.role === "teacher";
@@ -43,6 +49,11 @@ const GroupsScreen = () => {
       return;
     }
 
+    if (!acceptedRules) {
+      Alert.alert("Error", "Please accept the group rules to continue");
+      return;
+    }
+
     if (!user) return;
 
     addGroup({
@@ -50,10 +61,17 @@ const GroupsScreen = () => {
       description: groupDescription,
       teacherId: user.id,
       studentIds: [],
+      school: school.trim() || undefined,
+      className: className.trim() || undefined,
+      teacherEmail: teacherEmail.trim() || undefined,
     });
 
     setGroupName("");
     setGroupDescription("");
+    setSchool("");
+    setClassName("");
+    setTeacherEmail("");
+    setAcceptedRules(false);
     setShowCreateModal(false);
     Alert.alert("Success", "Group created successfully!");
   };
@@ -133,6 +151,20 @@ const GroupsScreen = () => {
   const myGroups = groups.filter((g) =>
     isTeacher ? g.teacherId === user?.id : g.studentIds.includes(user?.id || "")
   );
+
+  // Filter groups based on search query
+  const filteredGroups = myGroups.filter((g) => {
+    if (!searchQuery.trim()) return true;
+
+    const query = searchQuery.toLowerCase();
+    return (
+      g.name.toLowerCase().includes(query) ||
+      g.description?.toLowerCase().includes(query) ||
+      g.school?.toLowerCase().includes(query) ||
+      g.className?.toLowerCase().includes(query) ||
+      g.teacherEmail?.toLowerCase().includes(query)
+    );
+  });
 
   const selectedGroup = selectedGroupId ? groups.find((g) => g.id === selectedGroupId) : null;
   const groupTasks = selectedGroup ? getGroupTasks(selectedGroup.id) : [];
@@ -223,8 +255,45 @@ const GroupsScreen = () => {
           </View>
         </View>
 
+        {/* Search Bar */}
+        <View style={{ paddingHorizontal: 24, paddingBottom: 8 }}>
+          <View style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            backgroundColor: 'white',
+            borderRadius: 16,
+            paddingHorizontal: 16,
+            paddingVertical: 12,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.06,
+            shadowRadius: 4,
+            elevation: 2
+          }}>
+            <Ionicons name="search" size={20} color={theme.textSecondary} />
+            <TextInput
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+              placeholder="Search by school, class, email..."
+              placeholderTextColor={theme.textSecondary}
+              style={{
+                flex: 1,
+                marginLeft: 8,
+                fontSize: 14,
+                fontFamily: 'Poppins_400Regular',
+                color: theme.textPrimary
+              }}
+            />
+            {searchQuery.length > 0 && (
+              <Pressable onPress={() => setSearchQuery("")}>
+                <Ionicons name="close-circle" size={20} color={theme.textSecondary} />
+              </Pressable>
+            )}
+          </View>
+        </View>
+
         <ScrollView className="flex-1 px-6 py-2" showsVerticalScrollIndicator={false}>
-          {myGroups.length === 0 ? (
+          {filteredGroups.length === 0 ? (
             <View className="flex-1 items-center justify-center py-20">
               <View
                 className="w-20 h-20 rounded-full items-center justify-center mb-4"
@@ -241,7 +310,7 @@ const GroupsScreen = () => {
             </View>
           ) : (
             <View className="pb-6">
-              {myGroups.map((group) => {
+              {filteredGroups.map((group) => {
                 const groupTaskCount = getGroupTasks(group.id).length;
                 const completedTasks = getGroupTasks(group.id).filter(
                   (t) => t.status === "completed"
@@ -465,8 +534,8 @@ const GroupsScreen = () => {
 
             <ScrollView className="flex-1 px-6 py-4">
               <View className="mb-4">
-                <Text className="text-sm font-medium mb-2" style={{ color: theme.textSecondary }}>
-                  Group Name
+                <Text className="text-sm font-medium mb-2" style={{ color: theme.textSecondary, fontFamily: 'Poppins_500Medium' }}>
+                  Group Name *
                 </Text>
                 <TextInput
                   value={groupName}
@@ -474,12 +543,12 @@ const GroupsScreen = () => {
                   placeholder="e.g., Math Class 2025"
                   placeholderTextColor={theme.textSecondary}
                   className="rounded-xl px-4 py-3 text-base"
-                  style={{ backgroundColor: theme.cardBackground, color: theme.textPrimary }}
+                  style={{ backgroundColor: 'white', color: theme.textPrimary, fontFamily: 'Poppins_400Regular' }}
                 />
               </View>
 
               <View className="mb-4">
-                <Text className="text-sm font-medium mb-2" style={{ color: theme.textSecondary }}>
+                <Text className="text-sm font-medium mb-2" style={{ color: theme.textSecondary, fontFamily: 'Poppins_500Medium' }}>
                   Description (Optional)
                 </Text>
                 <TextInput
@@ -491,8 +560,105 @@ const GroupsScreen = () => {
                   numberOfLines={4}
                   textAlignVertical="top"
                   className="rounded-xl px-4 py-3 text-base min-h-[100px]"
-                  style={{ backgroundColor: theme.cardBackground, color: theme.textPrimary }}
+                  style={{ backgroundColor: 'white', color: theme.textPrimary, fontFamily: 'Poppins_400Regular' }}
                 />
+              </View>
+
+              <View className="mb-4">
+                <Text className="text-sm font-medium mb-2" style={{ color: theme.textSecondary, fontFamily: 'Poppins_500Medium' }}>
+                  School (Optional)
+                </Text>
+                <TextInput
+                  value={school}
+                  onChangeText={setSchool}
+                  placeholder="e.g., Lincoln High School"
+                  placeholderTextColor={theme.textSecondary}
+                  className="rounded-xl px-4 py-3 text-base"
+                  style={{ backgroundColor: 'white', color: theme.textPrimary, fontFamily: 'Poppins_400Regular' }}
+                />
+              </View>
+
+              <View className="mb-4">
+                <Text className="text-sm font-medium mb-2" style={{ color: theme.textSecondary, fontFamily: 'Poppins_500Medium' }}>
+                  Class Name (Optional)
+                </Text>
+                <TextInput
+                  value={className}
+                  onChangeText={setClassName}
+                  placeholder="e.g., Grade 10 Math"
+                  placeholderTextColor={theme.textSecondary}
+                  className="rounded-xl px-4 py-3 text-base"
+                  style={{ backgroundColor: 'white', color: theme.textPrimary, fontFamily: 'Poppins_400Regular' }}
+                />
+              </View>
+
+              <View className="mb-4">
+                <Text className="text-sm font-medium mb-2" style={{ color: theme.textSecondary, fontFamily: 'Poppins_500Medium' }}>
+                  Teacher Email (Optional)
+                </Text>
+                <TextInput
+                  value={teacherEmail}
+                  onChangeText={setTeacherEmail}
+                  placeholder="e.g., teacher@school.edu"
+                  placeholderTextColor={theme.textSecondary}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  className="rounded-xl px-4 py-3 text-base"
+                  style={{ backgroundColor: 'white', color: theme.textPrimary, fontFamily: 'Poppins_400Regular' }}
+                />
+              </View>
+
+              {/* Group Rules */}
+              <View className="mb-4 rounded-xl p-4" style={{ backgroundColor: theme.primary + "15" }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+                  <Ionicons name="shield-checkmark" size={20} color={theme.primary} />
+                  <Text style={{ color: theme.primary, marginLeft: 8, fontSize: 14, fontFamily: 'Poppins_600SemiBold' }}>
+                    Group Rules & Guidelines
+                  </Text>
+                </View>
+                <Text style={{ color: theme.textSecondary, fontSize: 12, marginBottom: 8, fontFamily: 'Poppins_400Regular' }}>
+                  By creating this group, you agree to maintain:
+                </Text>
+                <Text style={{ color: theme.textSecondary, fontSize: 12, marginBottom: 4, fontFamily: 'Poppins_400Regular' }}>
+                  • Respectful and appropriate behavior
+                </Text>
+                <Text style={{ color: theme.textSecondary, fontSize: 12, marginBottom: 4, fontFamily: 'Poppins_400Regular' }}>
+                  • Age-appropriate and educational content only
+                </Text>
+                <Text style={{ color: theme.textSecondary, fontSize: 12, marginBottom: 12, fontFamily: 'Poppins_400Regular' }}>
+                  • No bullying, harassment, or inappropriate language
+                </Text>
+
+                <Pressable
+                  onPress={() => setShowRulesModal(true)}
+                  style={{ marginBottom: 12 }}
+                >
+                  <Text style={{ color: theme.primary, fontSize: 12, fontFamily: 'Poppins_600SemiBold', textDecorationLine: 'underline' }}>
+                    Read Full Rules & Guidelines
+                  </Text>
+                </Pressable>
+
+                <Pressable
+                  onPress={() => setAcceptedRules(!acceptedRules)}
+                  style={{ flexDirection: 'row', alignItems: 'center' }}
+                >
+                  <View style={{
+                    width: 24,
+                    height: 24,
+                    borderRadius: 6,
+                    borderWidth: 2,
+                    borderColor: theme.primary,
+                    backgroundColor: acceptedRules ? theme.primary : 'white',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginRight: 8
+                  }}>
+                    {acceptedRules && <Ionicons name="checkmark" size={16} color="white" />}
+                  </View>
+                  <Text style={{ color: theme.textPrimary, fontSize: 13, fontFamily: 'Poppins_400Regular', flex: 1 }}>
+                    I agree to follow the group rules and maintain appropriate content
+                  </Text>
+                </Pressable>
               </View>
             </ScrollView>
           </SafeAreaView>
@@ -830,6 +996,189 @@ const GroupsScreen = () => {
                   </Text>
                 </View>
               </View>
+            </ScrollView>
+          </SafeAreaView>
+        </Modal>
+
+        {/* Group Rules Modal */}
+        <Modal
+          visible={showRulesModal}
+          animationType="slide"
+          presentationStyle="pageSheet"
+          onRequestClose={() => setShowRulesModal(false)}
+        >
+          <SafeAreaView className="flex-1" style={{ backgroundColor: theme.backgroundGradient[0] }}>
+            <View className="px-6 py-4 flex-row items-center justify-between" style={{ borderBottomWidth: 1, borderBottomColor: theme.textSecondary + "20" }}>
+              <View style={{ width: 60 }} />
+              <Text className="text-xl" style={{ color: theme.textPrimary, fontFamily: 'Poppins_700Bold' }}>
+                Group Rules
+              </Text>
+              <Pressable onPress={() => setShowRulesModal(false)}>
+                <Ionicons name="close" size={28} color={theme.textPrimary} />
+              </Pressable>
+            </View>
+
+            <ScrollView className="flex-1 px-6 py-6" showsVerticalScrollIndicator={false}>
+              {/* Introduction */}
+              <View className="mb-6">
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
+                  <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: theme.primary, alignItems: 'center', justifyContent: 'center', marginRight: 12 }}>
+                    <Ionicons name="shield-checkmark" size={22} color="white" />
+                  </View>
+                  <Text className="text-lg" style={{ color: theme.textPrimary, fontFamily: 'Poppins_600SemiBold' }}>
+                    Our Commitment
+                  </Text>
+                </View>
+                <View className="rounded-2xl p-4" style={{ backgroundColor: 'white', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2 }}>
+                  <Text style={{ color: theme.textSecondary, fontSize: 14, lineHeight: 22, fontFamily: 'Poppins_400Regular' }}>
+                    We are committed to providing a safe, respectful, and productive learning environment for all students and educators. These rules help ensure everyone can learn and collaborate effectively.
+                  </Text>
+                </View>
+              </View>
+
+              {/* Respectful Behavior */}
+              <View className="mb-6">
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
+                  <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: theme.secondary, alignItems: 'center', justifyContent: 'center', marginRight: 12 }}>
+                    <Ionicons name="heart" size={22} color="white" />
+                  </View>
+                  <Text className="text-lg" style={{ color: theme.textPrimary, fontFamily: 'Poppins_600SemiBold' }}>
+                    Respectful Behavior
+                  </Text>
+                </View>
+                <View className="rounded-2xl p-4 mb-3" style={{ backgroundColor: 'white', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2 }}>
+                  <Text style={{ color: theme.textPrimary, fontSize: 13, marginBottom: 6, fontFamily: 'Poppins_600SemiBold' }}>
+                    • Treat all members with kindness and respect
+                  </Text>
+                  <Text style={{ color: theme.textSecondary, fontSize: 12, marginBottom: 12, fontFamily: 'Poppins_400Regular' }}>
+                    Every group member deserves to feel safe and valued. Be considerate in your words and actions.
+                  </Text>
+
+                  <Text style={{ color: theme.textPrimary, fontSize: 13, marginBottom: 6, fontFamily: 'Poppins_600SemiBold' }}>
+                    • Zero tolerance for bullying or harassment
+                  </Text>
+                  <Text style={{ color: theme.textSecondary, fontSize: 12, marginBottom: 12, fontFamily: 'Poppins_400Regular' }}>
+                    Any form of bullying, harassment, intimidation, or discrimination is strictly prohibited and will result in immediate removal.
+                  </Text>
+
+                  <Text style={{ color: theme.textPrimary, fontSize: 13, marginBottom: 6, fontFamily: 'Poppins_600SemiBold' }}>
+                    • Use appropriate and professional language
+                  </Text>
+                  <Text style={{ color: theme.textSecondary, fontSize: 12, fontFamily: 'Poppins_400Regular' }}>
+                    Avoid profanity, offensive language, or inappropriate jokes. Keep communication educational and constructive.
+                  </Text>
+                </View>
+              </View>
+
+              {/* Appropriate Content */}
+              <View className="mb-6">
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
+                  <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: theme.accentColor, alignItems: 'center', justifyContent: 'center', marginRight: 12 }}>
+                    <Ionicons name="book" size={22} color="white" />
+                  </View>
+                  <Text className="text-lg" style={{ color: theme.textPrimary, fontFamily: 'Poppins_600SemiBold' }}>
+                    Appropriate Content
+                  </Text>
+                </View>
+                <View className="rounded-2xl p-4 mb-3" style={{ backgroundColor: 'white', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2 }}>
+                  <Text style={{ color: theme.textPrimary, fontSize: 13, marginBottom: 6, fontFamily: 'Poppins_600SemiBold' }}>
+                    • Educational and age-appropriate content only
+                  </Text>
+                  <Text style={{ color: theme.textSecondary, fontSize: 12, marginBottom: 12, fontFamily: 'Poppins_400Regular' }}>
+                    All shared content must be relevant to learning and appropriate for all ages. No adult content, violence, or disturbing material.
+                  </Text>
+
+                  <Text style={{ color: theme.textPrimary, fontSize: 13, marginBottom: 6, fontFamily: 'Poppins_600SemiBold' }}>
+                    • No spam or irrelevant material
+                  </Text>
+                  <Text style={{ color: theme.textSecondary, fontSize: 12, marginBottom: 12, fontFamily: 'Poppins_400Regular' }}>
+                    Keep group content focused on its educational purpose. Avoid off-topic discussions or spam.
+                  </Text>
+
+                  <Text style={{ color: theme.textPrimary, fontSize: 13, marginBottom: 6, fontFamily: 'Poppins_600SemiBold' }}>
+                    • Respect intellectual property
+                  </Text>
+                  <Text style={{ color: theme.textSecondary, fontSize: 12, fontFamily: 'Poppins_400Regular' }}>
+                    Do not share copyrighted material without permission. Give credit when using others work.
+                  </Text>
+                </View>
+              </View>
+
+              {/* Privacy & Safety */}
+              <View className="mb-6">
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
+                  <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: '#E91E63', alignItems: 'center', justifyContent: 'center', marginRight: 12 }}>
+                    <Ionicons name="lock-closed" size={22} color="white" />
+                  </View>
+                  <Text className="text-lg" style={{ color: theme.textPrimary, fontFamily: 'Poppins_600SemiBold' }}>
+                    Privacy & Safety
+                  </Text>
+                </View>
+                <View className="rounded-2xl p-4 mb-3" style={{ backgroundColor: 'white', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2 }}>
+                  <Text style={{ color: theme.textPrimary, fontSize: 13, marginBottom: 6, fontFamily: 'Poppins_600SemiBold' }}>
+                    • Protect personal information
+                  </Text>
+                  <Text style={{ color: theme.textSecondary, fontSize: 12, marginBottom: 12, fontFamily: 'Poppins_400Regular' }}>
+                    Do not share personal addresses, phone numbers, or other sensitive information. Keep share codes secure.
+                  </Text>
+
+                  <Text style={{ color: theme.textPrimary, fontSize: 13, marginBottom: 6, fontFamily: 'Poppins_600SemiBold' }}>
+                    • Report concerns immediately
+                  </Text>
+                  <Text style={{ color: theme.textSecondary, fontSize: 12, fontFamily: 'Poppins_400Regular' }}>
+                    If you see inappropriate behavior or content, report it to your teacher or group administrator immediately.
+                  </Text>
+                </View>
+              </View>
+
+              {/* Consequences */}
+              <View className="mb-8">
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
+                  <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: '#FF5722', alignItems: 'center', justifyContent: 'center', marginRight: 12 }}>
+                    <Ionicons name="warning" size={22} color="white" />
+                  </View>
+                  <Text className="text-lg" style={{ color: theme.textPrimary, fontFamily: 'Poppins_600SemiBold' }}>
+                    Consequences
+                  </Text>
+                </View>
+                <View className="rounded-2xl p-4" style={{ backgroundColor: 'white', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2 }}>
+                  <Text style={{ color: theme.textSecondary, fontSize: 13, lineHeight: 20, fontFamily: 'Poppins_400Regular' }}>
+                    Violations of these rules may result in:
+                  </Text>
+                  <Text style={{ color: theme.textSecondary, fontSize: 12, marginTop: 8, marginBottom: 4, fontFamily: 'Poppins_400Regular' }}>
+                    • Warning from group administrator
+                  </Text>
+                  <Text style={{ color: theme.textSecondary, fontSize: 12, marginBottom: 4, fontFamily: 'Poppins_400Regular' }}>
+                    • Temporary suspension from the group
+                  </Text>
+                  <Text style={{ color: theme.textSecondary, fontSize: 12, marginBottom: 8, fontFamily: 'Poppins_400Regular' }}>
+                    • Permanent removal from the group
+                  </Text>
+                  <Text style={{ color: theme.textSecondary, fontSize: 12, fontFamily: 'Poppins_400Regular' }}>
+                    Severe violations may be reported to school authorities or parents.
+                  </Text>
+                </View>
+              </View>
+
+              <Pressable
+                onPress={() => setShowRulesModal(false)}
+                style={{
+                  paddingVertical: 14,
+                  paddingHorizontal: 32,
+                  borderRadius: 16,
+                  backgroundColor: theme.primary,
+                  alignItems: 'center',
+                  marginBottom: 20
+                }}
+              >
+                <Text style={{
+                  color: 'white',
+                  fontSize: 16,
+                  fontFamily: 'Poppins_600SemiBold'
+                }}>
+                  I Understand
+                </Text>
+              </Pressable>
             </ScrollView>
           </SafeAreaView>
         </Modal>
