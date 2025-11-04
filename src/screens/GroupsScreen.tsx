@@ -156,7 +156,7 @@ const GroupsScreen = () => {
               color: theme.textSecondary,
               marginTop: 4
             }}>
-              {isTeacher ? "Manage your classes" : "Your study groups"}
+              Create, join, and manage study groups
             </Text>
           </View>
 
@@ -181,46 +181,45 @@ const GroupsScreen = () => {
               <Ionicons name="help-circle-outline" size={24} color={theme.primary} />
             </Pressable>
 
-            {/* Create/Join Button */}
-            {isTeacher ? (
-              <Pressable
-                onPress={() => setShowCreateModal(true)}
-                style={{
-                  width: 48,
-                  height: 48,
-                  borderRadius: 24,
-                  backgroundColor: theme.primary,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  shadowColor: '#000',
-                  shadowOffset: { width: 0, height: 2 },
-                  shadowOpacity: 0.15,
-                  shadowRadius: 8,
-                  elevation: 3
-                }}
-              >
-                <Ionicons name="add" size={28} color="white" />
-              </Pressable>
-            ) : (
-              <Pressable
-                onPress={() => setShowJoinModal(true)}
-                style={{
-                  width: 48,
-                  height: 48,
-                  borderRadius: 24,
-                  backgroundColor: theme.primary,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  shadowColor: '#000',
-                  shadowOffset: { width: 0, height: 2 },
-                  shadowOpacity: 0.15,
-                  shadowRadius: 8,
-                  elevation: 3
-                }}
-              >
-                <Ionicons name="enter" size={24} color="white" />
-              </Pressable>
-            )}
+            {/* Join Group Button */}
+            <Pressable
+              onPress={() => setShowJoinModal(true)}
+              style={{
+                width: 48,
+                height: 48,
+                borderRadius: 24,
+                backgroundColor: theme.secondary,
+                alignItems: 'center',
+                justifyContent: 'center',
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.15,
+                shadowRadius: 8,
+                elevation: 3
+              }}
+            >
+              <Ionicons name="enter" size={24} color="white" />
+            </Pressable>
+
+            {/* Create Group Button (for everyone) */}
+            <Pressable
+              onPress={() => setShowCreateModal(true)}
+              style={{
+                width: 48,
+                height: 48,
+                borderRadius: 24,
+                backgroundColor: theme.primary,
+                alignItems: 'center',
+                justifyContent: 'center',
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.15,
+                shadowRadius: 8,
+                elevation: 3
+              }}
+            >
+              <Ionicons name="add" size={28} color="white" />
+            </Pressable>
           </View>
         </View>
 
@@ -237,9 +236,7 @@ const GroupsScreen = () => {
                 No Groups Yet
               </Text>
               <Text className="text-sm text-center" style={{ color: theme.textSecondary }}>
-                {isTeacher
-                  ? "Create a group to get started"
-                  : "Join a group to collaborate with others"}
+                Create your own group or join an existing one
               </Text>
             </View>
           ) : (
