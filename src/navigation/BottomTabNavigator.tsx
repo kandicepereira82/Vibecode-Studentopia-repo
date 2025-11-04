@@ -7,6 +7,7 @@ import CalendarScreen from "../screens/CalendarScreen";
 import TimerScreen from "../screens/TimerScreen";
 import AIHelperScreen from "../screens/AIHelperScreen";
 import StudyTipsScreen from "../screens/StudyTipsScreen";
+import GroupsScreen from "../screens/GroupsScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import useUserStore from "../state/userStore";
 import { useTranslation } from "../utils/translations";
@@ -18,6 +19,7 @@ export type RootTabParamList = {
   Timer: undefined;
   AIHelper: undefined;
   StudyTips: undefined;
+  Groups: undefined;
   Profile: undefined;
 };
 
@@ -138,11 +140,21 @@ const BottomTabNavigator = () => {
         }}
       />
       <Tab.Screen
+        name="Groups"
+        component={GroupsScreen}
+        options={{
+          tabBarLabel: "Groups",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="people" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
         name="Profile"
         component={ProfileScreen}
         options={{
           tabBarLabel: t("profile"),
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({ color, size}) => (
             <Ionicons name="person" size={size} color={color} />
           ),
         }}
