@@ -333,17 +333,74 @@ const StudyPal: React.FC<StudyPalProps> = ({
 
   const displayMessage = message || getMoodMessage();
 
+  // Get background color based on animal type for kawaii styling
+  const getAnimalBackgroundColor = (animal: StudyPalAnimal): string => {
+    const colorMap: Record<StudyPalAnimal, string> = {
+      cat: "#FFE5B4",      // Peach
+      bunny: "#FFD4E5",    // Light pink
+      bear: "#D4A574",     // Tan
+      dog: "#E8D4B8",      // Cream
+      fox: "#FFB366",      // Light orange
+      panda: "#FFFFFF",    // White
+      koala: "#C8C8C8",    // Light gray
+      owl: "#D4BF9F",      // Light brown
+      penguin: "#E0F4FF",  // Light blue
+      lion: "#FFD700",     // Gold
+      tiger: "#FFB347",    // Orange
+      monkey: "#C8A882",   // Light brown
+      elephant: "#B0C4DE", // Light steel blue
+      giraffe: "#F4E4C1",  // Cream
+      hamster: "#FFE4B5",  // Moccasin
+      raccoon: "#A9A9A9",  // Dark gray
+      hedgehog: "#D2B48C", // Tan
+      deer: "#C8A882",     // Tan
+      duck: "#FFEB3B",     // Yellow
+      frog: "#90EE90",     // Light green
+    };
+    return colorMap[animal] || "#FFE5B4";
+  };
+
   return (
     <View className="items-center">
-      <Animated.View style={animatedStyle}>
-        <Text style={{ fontSize: size }}>{getAnimalEmoji(animal)}</Text>
+      {/* Kawaii style animal with circular background */}
+      <Animated.View
+        style={[
+          animatedStyle,
+          {
+            backgroundColor: getAnimalBackgroundColor(animal),
+            width: size * 1.4,
+            height: size * 1.4,
+            borderRadius: size * 0.7,
+            justifyContent: "center",
+            alignItems: "center",
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.15,
+            shadowRadius: 4,
+            elevation: 4,
+          }
+        ]}
+      >
+        <Text style={{ fontSize: size * 0.75 }}>{getAnimalEmoji(animal)}</Text>
       </Animated.View>
+
+      {/* Name label below animal */}
+      <Text
+        className="text-xs font-semibold mt-2"
+        style={{
+          color: "#4A4A4A",
+          textAlign: "center",
+        }}
+      >
+        {name}
+      </Text>
+
       {displayMessage && (
-        <View className="mt-2 bg-white dark:bg-gray-800 rounded-2xl px-4 py-2 max-w-xs">
-          <Text className="text-xs text-gray-600 dark:text-gray-300 font-medium">
+        <View className="mt-2 rounded-2xl px-4 py-2 max-w-xs" style={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}>
+          <Text className="text-xs font-semibold" style={{ color: "#666" }}>
             {name} says:
           </Text>
-          <Text className="text-sm text-gray-800 dark:text-gray-100 mt-1">
+          <Text className="text-sm mt-1" style={{ color: "#333" }}>
             {displayMessage}
           </Text>
         </View>
