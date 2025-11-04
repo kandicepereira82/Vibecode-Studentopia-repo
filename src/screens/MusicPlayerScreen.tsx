@@ -129,14 +129,23 @@ const MusicPlayerScreen = () => {
   const currentTrack = musicService.getCurrentTrack();
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#E8F5E9" }}>
+    <View style={{ flex: 1, backgroundColor: theme.backgroundGradient[0] }}>
       <SafeAreaView style={{ flex: 1 }} edges={["top"]}>
-        {/* Music Player Header */}
-        <View className="px-6 py-4">
-          <Text className="text-3xl font-bold text-gray-800">
+        {/* Music Player Header with Poppins */}
+        <View style={{ paddingHorizontal: 24, paddingVertical: 16 }}>
+          <Text style={{
+            fontSize: 32,
+            fontFamily: 'Poppins_700Bold',
+            color: theme.textPrimary
+          }}>
             {t("musicPlayer")}
           </Text>
-          <Text className="text-sm text-gray-600 mt-1">
+          <Text style={{
+            fontSize: 14,
+            fontFamily: 'Poppins_400Regular',
+            color: theme.textSecondary,
+            marginTop: 4
+          }}>
             {t("calmingClassicalMusic")}
           </Text>
         </View>

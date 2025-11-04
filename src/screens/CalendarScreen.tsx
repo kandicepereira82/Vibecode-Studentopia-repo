@@ -53,72 +53,104 @@ const CalendarScreen = () => {
   console.log("[CalendarScreen] Rendering. User:", user ? "exists" : "null");
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#E8F5E9" }}>
+    <View style={{ flex: 1, backgroundColor: theme.backgroundGradient[0] }}>
       <SafeAreaView style={{ flex: 1 }}>
-        {/* Debug Banner */}
-        <View style={{ backgroundColor: "green", padding: 10 }}>
-          <Text style={{ color: "white", fontSize: 16, fontWeight: "bold" }}>
-            CALENDAR SCREEN LOADED
-          </Text>
-        </View>
-
-        {/* Header */}
-        <View className="px-6 pt-4 pb-2">
-          <Text className="text-3xl font-bold" style={{ color: theme.textPrimary }}>
+        {/* Header with Poppins */}
+        <View style={{ paddingHorizontal: 24, paddingTop: 16, paddingBottom: 8 }}>
+          <Text style={{
+            fontSize: 32,
+            fontFamily: 'Poppins_700Bold',
+            color: theme.textPrimary
+          }}>
             {t("calendar")}
           </Text>
         </View>
 
       {/* View Mode Toggle */}
-      <View className="px-6 py-3 flex-row gap-2">
+      <View style={{ paddingHorizontal: 24, paddingVertical: 12, flexDirection: 'row', gap: 8 }}>
         <Pressable
           onPress={() => setViewMode("month")}
-          className="flex-1 py-3 rounded-xl items-center"
-          style={{ backgroundColor: viewMode === "month" ? theme.primary : theme.cardBackground }}
+          style={{
+            flex: 1,
+            paddingVertical: 12,
+            borderRadius: 16,
+            alignItems: 'center',
+            backgroundColor: viewMode === "month" ? theme.primary : 'white',
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 1 },
+            shadowOpacity: 0.05,
+            shadowRadius: 4,
+            elevation: 1
+          }}
         >
           <Text
-            className="font-semibold"
-            style={{ color: viewMode === "month" ? "white" : theme.textSecondary }}
+            style={{
+              fontFamily: 'Poppins_600SemiBold',
+              fontSize: 14,
+              color: viewMode === "month" ? "white" : theme.textSecondary
+            }}
           >
             Month
           </Text>
         </Pressable>
         <Pressable
           onPress={() => setViewMode("week")}
-          className="flex-1 py-3 rounded-xl items-center"
-          style={{ backgroundColor: viewMode === "week" ? theme.primary : theme.cardBackground }}
+          style={{
+            flex: 1,
+            paddingVertical: 12,
+            borderRadius: 16,
+            alignItems: 'center',
+            backgroundColor: viewMode === "week" ? theme.primary : 'white',
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 1 },
+            shadowOpacity: 0.05,
+            shadowRadius: 4,
+            elevation: 1
+          }}
         >
           <Text
-            className="font-semibold"
-            style={{ color: viewMode === "week" ? "white" : theme.textSecondary }}
+            style={{
+              fontFamily: 'Poppins_600SemiBold',
+              fontSize: 14,
+              color: viewMode === "week" ? "white" : theme.textSecondary
+            }}
           >
             Week
           </Text>
         </Pressable>
       </View>
 
-      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+      <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
         {/* Month/Year Header */}
-        <View className="px-6 py-4 flex-row items-center justify-between">
-          <Pressable onPress={handlePreviousMonth} className="p-2">
+        <View style={{ paddingHorizontal: 24, paddingVertical: 16, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Pressable onPress={handlePreviousMonth} style={{ padding: 8 }}>
             <Ionicons name="chevron-back" size={24} color={theme.textPrimary} />
           </Pressable>
-          <Text className="text-xl font-bold" style={{ color: theme.textPrimary }}>
+          <Text style={{ fontSize: 20, fontFamily: 'Poppins_700Bold', color: theme.textPrimary }}>
             {format(currentDate, "MMMM yyyy")}
           </Text>
-          <Pressable onPress={handleNextMonth} className="p-2">
+          <Pressable onPress={handleNextMonth} style={{ padding: 8 }}>
             <Ionicons name="chevron-forward" size={24} color={theme.textPrimary} />
           </Pressable>
         </View>
 
         {/* Calendar Grid */}
-        <View className="px-6">
-          <View className="rounded-2xl p-4" style={{ backgroundColor: theme.cardBackground }}>
+        <View style={{ paddingHorizontal: 24 }}>
+          <View style={{
+            backgroundColor: 'white',
+            borderRadius: 24,
+            padding: 16,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.06,
+            shadowRadius: 8,
+            elevation: 2
+          }}>
             {/* Day Headers */}
-            <View className="flex-row mb-2">
+            <View style={{ flexDirection: 'row', marginBottom: 8 }}>
               {["S", "M", "T", "W", "T", "F", "S"].map((day, index) => (
-                <View key={index} className="flex-1 items-center">
-                  <Text className="text-xs font-semibold" style={{ color: theme.textSecondary }}>
+                <View key={index} style={{ flex: 1, alignItems: 'center' }}>
+                  <Text style={{ fontSize: 12, fontFamily: 'Poppins_600SemiBold', color: theme.textSecondary }}>
                     {day}
                   </Text>
                 </View>

@@ -87,42 +87,67 @@ const AIHelperScreen = () => {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#E8F5E9" }}>
+    <View style={{ flex: 1, backgroundColor: theme.backgroundGradient[0] }}>
     <SafeAreaView className="flex-1" edges={["top"]}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         className="flex-1"
         keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}
       >
-        {/* Header */}
-        <View className="px-6 pt-4 pb-3 border-b" style={{ backgroundColor: theme.backgroundGradient[0], borderBottomColor: theme.textSecondary + "20" }}>
-          <View className="flex-row items-center justify-between mb-3">
-            <Text className="text-3xl font-bold" style={{ color: theme.textPrimary }}>
+        {/* Header with Poppins */}
+        <View style={{
+          paddingHorizontal: 24,
+          paddingTop: 16,
+          paddingBottom: 12,
+          backgroundColor: theme.backgroundGradient[0],
+          borderBottomWidth: 1,
+          borderBottomColor: theme.textSecondary + "20"
+        }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+            <Text style={{
+              fontSize: 32,
+              fontFamily: 'Poppins_700Bold',
+              color: theme.textPrimary
+            }}>
               {t("aiHelper")}
             </Text>
             {messages.length > 0 && (
-              <Pressable onPress={clearChat} className="p-2">
+              <Pressable onPress={clearChat} style={{ padding: 8 }}>
                 <Ionicons name="trash-outline" size={24} color="#EF4444" />
               </Pressable>
             )}
           </View>
 
           {/* Mode Toggle */}
-          <View className="flex-row gap-2">
+          <View style={{ flexDirection: 'row', gap: 8 }}>
             <Pressable
               onPress={() => setMode("chat")}
-              className="flex-1 py-3 rounded-xl items-center"
-              style={{ backgroundColor: mode === "chat" ? theme.primary : theme.cardBackground }}
+              style={{
+                flex: 1,
+                paddingVertical: 12,
+                borderRadius: 16,
+                alignItems: 'center',
+                backgroundColor: mode === "chat" ? theme.primary : 'white',
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 1 },
+                shadowOpacity: 0.05,
+                shadowRadius: 4,
+                elevation: 1
+              }}
             >
-              <View className="flex-row items-center">
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Ionicons
                   name="chatbubbles"
                   size={18}
                   color={mode === "chat" ? "white" : theme.textSecondary}
                 />
                 <Text
-                  className="ml-2 font-semibold"
-                  style={{ color: mode === "chat" ? "white" : theme.textSecondary }}
+                  style={{
+                    marginLeft: 8,
+                    fontFamily: 'Poppins_600SemiBold',
+                    fontSize: 14,
+                    color: mode === "chat" ? "white" : theme.textSecondary
+                  }}
                 >
                   {t("chatMode")}
                 </Text>
@@ -131,18 +156,32 @@ const AIHelperScreen = () => {
 
             <Pressable
               onPress={() => setMode("grammar")}
-              className="flex-1 py-3 rounded-xl items-center"
-              style={{ backgroundColor: mode === "grammar" ? theme.secondary : theme.cardBackground }}
+              style={{
+                flex: 1,
+                paddingVertical: 12,
+                borderRadius: 16,
+                alignItems: 'center',
+                backgroundColor: mode === "grammar" ? theme.secondary : 'white',
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 1 },
+                shadowOpacity: 0.05,
+                shadowRadius: 4,
+                elevation: 1
+              }}
             >
-              <View className="flex-row items-center">
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Ionicons
                   name="checkmark-done"
                   size={18}
                   color={mode === "grammar" ? "white" : theme.textSecondary}
                 />
                 <Text
-                  className="ml-2 font-semibold"
-                  style={{ color: mode === "grammar" ? "white" : theme.textSecondary }}
+                  style={{
+                    marginLeft: 8,
+                    fontFamily: 'Poppins_600SemiBold',
+                    fontSize: 14,
+                    color: mode === "grammar" ? "white" : theme.textSecondary
+                  }}
                 >
                   {t("grammarMode")}
                 </Text>

@@ -118,12 +118,16 @@ const TimerScreen = () => {
     : [theme.secondary, theme.primaryDark];
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#E8F5E9" }}>
+    <View style={{ flex: 1, backgroundColor: theme.backgroundGradient[0] }}>
       <SafeAreaView style={{ flex: 1 }}>
-      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-        {/* Header */}
-        <View className="px-6 pt-4 pb-2">
-          <Text className="text-3xl font-bold" style={{ color: theme.textPrimary }}>
+      <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+        {/* Header with Poppins */}
+        <View style={{ paddingHorizontal: 24, paddingTop: 16, paddingBottom: 8 }}>
+          <Text style={{
+            fontSize: 32,
+            fontFamily: 'Poppins_700Bold',
+            color: theme.textPrimary
+          }}>
             {t("timer")}
           </Text>
         </View>
@@ -242,32 +246,53 @@ const TimerScreen = () => {
         </View>
 
         {/* Duration Settings */}
-        <View className="px-6 py-6">
-          <View className="rounded-2xl p-5" style={{ backgroundColor: theme.cardBackground }}>
-            <Text className="text-lg font-bold mb-4" style={{ color: theme.textPrimary }}>
+        <View style={{ paddingHorizontal: 24, paddingVertical: 24 }}>
+          <View style={{
+            backgroundColor: 'white',
+            borderRadius: 24,
+            padding: 20,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.06,
+            shadowRadius: 8,
+            elevation: 2
+          }}>
+            <Text style={{ fontSize: 18, fontFamily: 'Poppins_700Bold', marginBottom: 16, color: theme.textPrimary }}>
               {t("settings")}
             </Text>
 
             {/* Study Duration */}
-            <View className="mb-4">
-              <Text className="text-sm font-medium mb-2" style={{ color: theme.textSecondary }}>
+            <View style={{ marginBottom: 16 }}>
+              <Text style={{ fontSize: 14, fontFamily: 'Poppins_500Medium', marginBottom: 8, color: theme.textSecondary }}>
                 {t("studySession")} ({t("minutes")})
               </Text>
-              <View className="flex-row items-center justify-between">
+              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Pressable
                   onPress={() => adjustDuration("study", -5)}
-                  className="w-12 h-12 rounded-full items-center justify-center"
-                  style={{ backgroundColor: theme.primary + "20" }}
+                  style={{
+                    width: 48,
+                    height: 48,
+                    borderRadius: 24,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: theme.primary + "20"
+                  }}
                 >
                   <Ionicons name="remove" size={24} color={theme.primary} />
                 </Pressable>
-                <Text className="text-3xl font-bold" style={{ color: theme.textPrimary }}>
+                <Text style={{ fontSize: 32, fontFamily: 'Poppins_700Bold', color: theme.textPrimary }}>
                   {studyDuration}
                 </Text>
                 <Pressable
                   onPress={() => adjustDuration("study", 5)}
-                  className="w-12 h-12 rounded-full items-center justify-center"
-                  style={{ backgroundColor: theme.primary + "20" }}
+                  style={{
+                    width: 48,
+                    height: 48,
+                    borderRadius: 24,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: theme.primary + "20"
+                  }}
                 >
                   <Ionicons name="add" size={24} color={theme.primary} />
                 </Pressable>
@@ -275,25 +300,37 @@ const TimerScreen = () => {
             </View>
 
             {/* Break Duration */}
-            <View className="mb-4">
-              <Text className="text-sm font-medium mb-2" style={{ color: theme.textSecondary }}>
+            <View style={{ marginBottom: 16 }}>
+              <Text style={{ fontSize: 14, fontFamily: 'Poppins_500Medium', marginBottom: 8, color: theme.textSecondary }}>
                 {t("breakTime")} ({t("minutes")})
               </Text>
-              <View className="flex-row items-center justify-between">
+              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Pressable
                   onPress={() => adjustDuration("break", -1)}
-                  className="w-12 h-12 rounded-full items-center justify-center"
-                  style={{ backgroundColor: theme.secondary + "20" }}
+                  style={{
+                    width: 48,
+                    height: 48,
+                    borderRadius: 24,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: theme.secondary + "20"
+                  }}
                 >
                   <Ionicons name="remove" size={24} color={theme.secondary} />
                 </Pressable>
-                <Text className="text-3xl font-bold" style={{ color: theme.textPrimary }}>
+                <Text style={{ fontSize: 32, fontFamily: 'Poppins_700Bold', color: theme.textPrimary }}>
                   {breakDuration}
                 </Text>
                 <Pressable
                   onPress={() => adjustDuration("break", 1)}
-                  className="w-12 h-12 rounded-full items-center justify-center"
-                  style={{ backgroundColor: theme.secondary + "20" }}
+                  style={{
+                    width: 48,
+                    height: 48,
+                    borderRadius: 24,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: theme.secondary + "20"
+                  }}
                 >
                   <Ionicons name="add" size={24} color={theme.secondary} />
                 </Pressable>

@@ -146,24 +146,32 @@ const TasksScreen = () => {
   console.log("[TasksScreen] Rendering. User:", user ? "exists" : "null", "Tasks count:", tasks.length);
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#E8F5E9" }}>
+    <View style={{ flex: 1, backgroundColor: theme.backgroundGradient[0] }}>
       <SafeAreaView style={{ flex: 1 }}>
-        {/* Debug Banner */}
-        <View style={{ backgroundColor: "blue", padding: 10 }}>
-          <Text style={{ color: "white", fontSize: 16, fontWeight: "bold" }}>
-            TASKS SCREEN LOADED - {tasks.length} tasks
-          </Text>
-        </View>
-
-        {/* Header */}
-        <View className="px-6 pt-4 pb-2 flex-row items-center justify-between">
-          <Text className="text-3xl font-bold" style={{ color: theme.textPrimary }}>
+        {/* Header with Poppins */}
+        <View style={{ paddingHorizontal: 24, paddingTop: 16, paddingBottom: 12, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Text style={{
+            fontSize: 32,
+            fontFamily: 'Poppins_700Bold',
+            color: theme.textPrimary
+          }}>
             {t("tasks")}
           </Text>
           <Pressable
             onPress={openAddModal}
-            className="rounded-full w-12 h-12 items-center justify-center"
-            style={{ backgroundColor: theme.primary }}
+            style={{
+              width: 48,
+              height: 48,
+              borderRadius: 24,
+              backgroundColor: theme.primary,
+              alignItems: 'center',
+              justifyContent: 'center',
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.15,
+              shadowRadius: 8,
+              elevation: 3
+            }}
           >
             <Ionicons name="add" size={28} color="white" />
           </Pressable>
@@ -173,18 +181,29 @@ const TasksScreen = () => {
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        className="px-6 py-3"
+        style={{ paddingHorizontal: 24, paddingVertical: 12 }}
       >
         <Pressable
           onPress={() => setFilterCategory("all")}
-          className={cn(
-            "px-4 py-2 rounded-full mr-2"
-          )}
-          style={{ backgroundColor: filterCategory === "all" ? theme.primary : theme.cardBackground }}
+          style={{
+            paddingHorizontal: 16,
+            paddingVertical: 10,
+            borderRadius: 20,
+            marginRight: 8,
+            backgroundColor: filterCategory === "all" ? theme.primary : 'white',
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 1 },
+            shadowOpacity: 0.05,
+            shadowRadius: 4,
+            elevation: 1
+          }}
         >
           <Text
-            style={{ color: filterCategory === "all" ? "white" : theme.textSecondary }}
-            className="font-medium"
+            style={{
+              color: filterCategory === "all" ? "white" : theme.textSecondary,
+              fontFamily: 'Poppins_500Medium',
+              fontSize: 14
+            }}
           >
             All
           </Text>
@@ -193,12 +212,26 @@ const TasksScreen = () => {
           <Pressable
             key={cat}
             onPress={() => setFilterCategory(cat)}
-            className="px-4 py-2 rounded-full mr-2"
-            style={{ backgroundColor: filterCategory === cat ? theme.primary : theme.cardBackground }}
+            style={{
+              paddingHorizontal: 16,
+              paddingVertical: 10,
+              borderRadius: 20,
+              marginRight: 8,
+              backgroundColor: filterCategory === cat ? theme.primary : 'white',
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 1 },
+              shadowOpacity: 0.05,
+              shadowRadius: 4,
+              elevation: 1
+            }}
           >
             <Text
-              style={{ color: filterCategory === cat ? "white" : theme.textSecondary }}
-              className="font-medium capitalize"
+              style={{
+                color: filterCategory === cat ? "white" : theme.textSecondary,
+                fontFamily: 'Poppins_500Medium',
+                fontSize: 14,
+                textTransform: 'capitalize'
+              }}
             >
               {t(cat)}
             </Text>
@@ -207,32 +240,39 @@ const TasksScreen = () => {
       </ScrollView>
 
       {/* Tasks List */}
-      <ScrollView className="flex-1 px-6" showsVerticalScrollIndicator={false}>
+      <ScrollView style={{ flex: 1, paddingHorizontal: 24 }} showsVerticalScrollIndicator={false}>
         {sortedTasks.length === 0 ? (
-          <View className="flex-1 items-center justify-center py-20">
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingVertical: 80 }}>
             <Ionicons name="clipboard-outline" size={80} color={theme.textSecondary} />
-            <Text className="text-lg mt-4" style={{ color: theme.textSecondary }}>
+            <Text style={{ fontSize: 18, fontFamily: 'Poppins_500Medium', marginTop: 16, color: theme.textSecondary }}>
               No tasks yet
             </Text>
-            <Text className="text-sm mt-2" style={{ color: theme.textSecondary }}>
+            <Text style={{ fontSize: 14, fontFamily: 'Poppins_400Regular', marginTop: 8, color: theme.textSecondary }}>
               Tap the + button to add a task
             </Text>
           </View>
         ) : (
-          <View className="py-2 pb-8">
+          <View style={{ paddingVertical: 8, paddingBottom: 32 }}>
             {sortedTasks.map((task) => (
               <View
                 key={task.id}
-                className={cn(
-                  "rounded-2xl p-4 mb-3 shadow-sm",
-                  task.status === "completed" && "opacity-60"
-                )}
-                style={{ backgroundColor: theme.cardBackground }}
+                style={{
+                  backgroundColor: 'white',
+                  borderRadius: 20,
+                  padding: 16,
+                  marginBottom: 12,
+                  opacity: task.status === "completed" ? 0.6 : 1,
+                  shadowColor: '#000',
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: 0.06,
+                  shadowRadius: 8,
+                  elevation: 2
+                }}
               >
-                <View className="flex-row items-start">
+                <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
                   <Pressable
                     onPress={() => handleToggle(task)}
-                    className="mr-3 mt-1"
+                    style={{ marginRight: 12, marginTop: 4 }}
                   >
                     <Ionicons
                       name={
@@ -249,25 +289,33 @@ const TasksScreen = () => {
                     />
                   </Pressable>
 
-                  <View className="flex-1">
+                  <View style={{ flex: 1 }}>
                     <Text
-                      className={cn(
-                        "text-lg font-semibold",
-                        task.status === "completed" && "line-through"
-                      )}
-                      style={{ color: theme.textPrimary }}
+                      style={{
+                        fontSize: 17,
+                        fontFamily: 'Poppins_600SemiBold',
+                        color: theme.textPrimary,
+                        textDecorationLine: task.status === "completed" ? 'line-through' : 'none'
+                      }}
                     >
                       {task.title}
                     </Text>
                     {task.description && (
-                      <Text className="text-sm mt-1" style={{ color: theme.textSecondary }}>
+                      <Text style={{ fontSize: 14, fontFamily: 'Poppins_400Regular', marginTop: 4, color: theme.textSecondary }}>
                         {task.description}
                       </Text>
                     )}
-                    <View className="flex-row items-center mt-2">
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
                       <View
-                        className="flex-row items-center px-2 py-1 rounded-full mr-2"
-                        style={{ backgroundColor: getCategoryColor(task.category) + "20" }}
+                        style={{
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          paddingHorizontal: 8,
+                          paddingVertical: 4,
+                          borderRadius: 12,
+                          marginRight: 8,
+                          backgroundColor: getCategoryColor(task.category) + "20"
+                        }}
                       >
                         <Ionicons
                           name={getCategoryIcon(task.category) as any}
@@ -275,31 +323,36 @@ const TasksScreen = () => {
                           color={getCategoryColor(task.category)}
                         />
                         <Text
-                          className="text-xs font-medium ml-1 capitalize"
-                          style={{ color: getCategoryColor(task.category) }}
+                          style={{
+                            fontSize: 12,
+                            fontFamily: 'Poppins_500Medium',
+                            marginLeft: 4,
+                            textTransform: 'capitalize',
+                            color: getCategoryColor(task.category)
+                          }}
                         >
                           {t(task.category)}
                         </Text>
                       </View>
-                      <View className="flex-row items-center">
+                      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <Ionicons name="calendar-outline" size={14} color={theme.textSecondary} />
-                        <Text className="text-xs ml-1" style={{ color: theme.textSecondary }}>
+                        <Text style={{ fontSize: 12, fontFamily: 'Poppins_400Regular', marginLeft: 4, color: theme.textSecondary }}>
                           {new Date(task.dueDate).toLocaleDateString()}
                         </Text>
                       </View>
                     </View>
                   </View>
 
-                  <View className="flex-row ml-2">
+                  <View style={{ flexDirection: 'row', marginLeft: 8 }}>
                     <Pressable
                       onPress={() => openEditModal(task)}
-                      className="p-2"
+                      style={{ padding: 8 }}
                     >
                       <Ionicons name="create-outline" size={20} color={theme.textSecondary} />
                     </Pressable>
                     <Pressable
                       onPress={() => handleDelete(task.id)}
-                      className="p-2"
+                      style={{ padding: 8 }}
                     >
                       <Ionicons name="trash-outline" size={20} color="#EF4444" />
                     </Pressable>

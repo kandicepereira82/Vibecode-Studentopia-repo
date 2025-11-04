@@ -105,31 +105,62 @@ const GroupsScreen = () => {
   const groupTasks = selectedGroup ? getGroupTasks(selectedGroup.id) : [];
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#E8F5E9" }}>
+    <View style={{ flex: 1, backgroundColor: theme.backgroundGradient[0] }}>
       <SafeAreaView className="flex-1">
-        {/* Header */}
-        <View className="px-6 pt-4 pb-2 flex-row items-center justify-between">
+        {/* Header with Poppins */}
+        <View style={{ paddingHorizontal: 24, paddingTop: 16, paddingBottom: 8, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
           <View>
-            <Text className="text-3xl font-bold" style={{ color: theme.textPrimary }}>
+            <Text style={{
+              fontSize: 32,
+              fontFamily: 'Poppins_700Bold',
+              color: theme.textPrimary
+            }}>
               Groups
             </Text>
-            <Text className="text-sm mt-1" style={{ color: theme.textSecondary }}>
+            <Text style={{
+              fontSize: 14,
+              fontFamily: 'Poppins_400Regular',
+              color: theme.textSecondary,
+              marginTop: 4
+            }}>
               {isTeacher ? "Manage your classes" : "Your study groups"}
             </Text>
           </View>
           {isTeacher ? (
             <Pressable
               onPress={() => setShowCreateModal(true)}
-              className="rounded-full items-center justify-center w-12 h-12"
-              style={{ backgroundColor: theme.primary }}
+              style={{
+                width: 48,
+                height: 48,
+                borderRadius: 24,
+                backgroundColor: theme.primary,
+                alignItems: 'center',
+                justifyContent: 'center',
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.15,
+                shadowRadius: 8,
+                elevation: 3
+              }}
             >
               <Ionicons name="add" size={28} color="white" />
             </Pressable>
           ) : (
             <Pressable
               onPress={() => setShowJoinModal(true)}
-              className="rounded-full items-center justify-center w-12 h-12"
-              style={{ backgroundColor: theme.primary }}
+              style={{
+                width: 48,
+                height: 48,
+                borderRadius: 24,
+                backgroundColor: theme.primary,
+                alignItems: 'center',
+                justifyContent: 'center',
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.15,
+                shadowRadius: 8,
+                elevation: 3
+              }}
             >
               <Ionicons name="enter" size={24} color="white" />
             </Pressable>

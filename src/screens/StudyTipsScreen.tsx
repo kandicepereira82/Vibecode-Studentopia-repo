@@ -198,14 +198,23 @@ const StudyTipsScreen = () => {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#E8F5E9" }}>
+    <View style={{ flex: 1, backgroundColor: theme.backgroundGradient[0] }}>
       <SafeAreaView className="flex-1">
-        {/* Header */}
-        <View className="px-6 pt-4 pb-2">
-          <Text className="text-3xl font-bold" style={{ color: theme.textPrimary }}>
+        {/* Header with Poppins */}
+        <View style={{ paddingHorizontal: 24, paddingTop: 16, paddingBottom: 8 }}>
+          <Text style={{
+            fontSize: 32,
+            fontFamily: 'Poppins_700Bold',
+            color: theme.textPrimary
+          }}>
             Study Tips
           </Text>
-          <Text className="text-sm mt-1" style={{ color: theme.textSecondary }}>
+          <Text style={{
+            fontSize: 14,
+            fontFamily: 'Poppins_400Regular',
+            color: theme.textSecondary,
+            marginTop: 4
+          }}>
             Evidence-based learning strategies
           </Text>
         </View>
