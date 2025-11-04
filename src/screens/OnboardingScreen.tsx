@@ -22,7 +22,12 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
   const [animal, setAnimal] = useState<StudyPalAnimal>("cat");
   const [themeColor, setThemeColor] = useState<ThemeColor>("blue");
 
-  const animals: StudyPalAnimal[] = ["cat", "bunny", "bear", "dog", "fox", "panda"];
+  const animals: StudyPalAnimal[] = [
+    "cat", "bunny", "bear", "dog", "fox", "panda",
+    "koala", "owl", "penguin", "lion", "tiger", "monkey",
+    "elephant", "giraffe", "hamster", "raccoon", "hedgehog", "deer",
+    "duck", "frog"
+  ];
 
   const themes: { color: ThemeColor; colors: [string, string] }[] = [
     { color: "blue", colors: ["#3B82F6", "#1D4ED8"] },
@@ -31,6 +36,10 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
     { color: "green", colors: ["#10B981", "#059669"] },
     { color: "orange", colors: ["#F97316", "#EA580C"] },
     { color: "red", colors: ["#EF4444", "#DC2626"] },
+    { color: "teal", colors: ["#14B8A6", "#0D9488"] },
+    { color: "indigo", colors: ["#6366F1", "#4F46E5"] },
+    { color: "rose", colors: ["#F43F5E", "#E11D48"] },
+    { color: "amber", colors: ["#F59E0B", "#D97706"] },
   ];
 
   const handleComplete = () => {
@@ -133,29 +142,34 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
               <Text className="text-gray-600 dark:text-gray-400 mb-6">
                 Pick your favorite animal companion
               </Text>
-              <View className="flex-row flex-wrap gap-3">
-                {animals.map((a) => (
-                  <Pressable
-                    key={a}
-                    onPress={() => setAnimal(a)}
-                    className={cn(
-                      "w-[30%] aspect-square bg-white dark:bg-gray-800 rounded-2xl items-center justify-center",
-                      animal === a && "border-4 border-blue-500"
-                    )}
-                  >
-                    <Text className="text-5xl">
-                      {a === "cat" && "🐱"}
-                      {a === "bunny" && "🐰"}
-                      {a === "bear" && "🐻"}
-                      {a === "dog" && "🐶"}
-                      {a === "fox" && "🦊"}
-                      {a === "panda" && "🐼"}
-                    </Text>
-                    <Text className="text-sm font-medium text-gray-700 dark:text-gray-300 mt-2 capitalize">
-                      {a}
-                    </Text>
-                  </Pressable>
-                ))}
+              <View className="flex-row flex-wrap gap-3 max-h-96">
+                <ScrollView showsVerticalScrollIndicator={false}>
+                  <View className="flex-row flex-wrap gap-3">
+                    {animals.map((a) => {
+                      const emojiMap: Record<StudyPalAnimal, string> = {
+                        cat: "🐱", bunny: "🐰", bear: "🐻", dog: "🐶", fox: "🦊", panda: "🐼",
+                        koala: "🐨", owl: "🦉", penguin: "🐧", lion: "🦁", tiger: "🐯", monkey: "🐵",
+                        elephant: "🐘", giraffe: "🦒", hamster: "🐹", raccoon: "🦝", hedgehog: "🦔",
+                        deer: "🦌", duck: "🦆", frog: "🐸"
+                      };
+                      return (
+                        <Pressable
+                          key={a}
+                          onPress={() => setAnimal(a)}
+                          className={cn(
+                            "w-[30%] aspect-square bg-white dark:bg-gray-800 rounded-2xl items-center justify-center mb-3",
+                            animal === a && "border-4 border-blue-500"
+                          )}
+                        >
+                          <Text className="text-4xl">{emojiMap[a]}</Text>
+                          <Text className="text-xs font-medium text-gray-700 dark:text-gray-300 mt-1 capitalize">
+                            {a}
+                          </Text>
+                        </Pressable>
+                      );
+                    })}
+                  </View>
+                </ScrollView>
               </View>
             </View>
           )}

@@ -4,10 +4,31 @@ export type TaskCategory = "homework" | "project" | "exam" | "other";
 export type TaskStatus = "pending" | "completed";
 export type UserRole = "student" | "teacher";
 export type Language = "en" | "es" | "fr" | "de" | "zh" | "ja" | "ar";
-export type StudyPalAnimal = "cat" | "bunny" | "bear" | "dog" | "fox" | "panda";
+export type StudyPalAnimal =
+  | "cat"
+  | "bunny"
+  | "bear"
+  | "dog"
+  | "fox"
+  | "panda"
+  | "koala"
+  | "owl"
+  | "penguin"
+  | "lion"
+  | "tiger"
+  | "monkey"
+  | "elephant"
+  | "giraffe"
+  | "hamster"
+  | "raccoon"
+  | "hedgehog"
+  | "deer"
+  | "duck"
+  | "frog";
+export type StudyPalMood = "happy" | "focused" | "celebrating" | "relaxed" | "neutral";
 export type TimerMode = "study" | "break";
 export type AIChatMode = "chat" | "grammar";
-export type ThemeColor = "blue" | "purple" | "pink" | "green" | "orange" | "red";
+export type ThemeColor = "blue" | "purple" | "pink" | "green" | "orange" | "red" | "teal" | "indigo" | "rose" | "amber";
 
 export interface Task {
   id: string;
@@ -41,6 +62,7 @@ export interface StudyPalConfig {
   name: string;
   animal: StudyPalAnimal;
   animationsEnabled: boolean;
+  mood?: StudyPalMood;
 }
 
 export interface Group {

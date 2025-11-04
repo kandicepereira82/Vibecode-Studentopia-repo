@@ -187,11 +187,11 @@ const TimerScreen = () => {
                 style={{ opacity: 0.1 }}
               />
               <View className="absolute w-64 h-64 bg-white dark:bg-gray-800 rounded-full items-center justify-center">
-                <Text className="text-7xl font-bold text-gray-800 dark:text-gray-100">
+                <Text className="text-6xl font-bold text-gray-800 dark:text-gray-100" style={{ letterSpacing: 4 }}>
                   {String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
                 </Text>
                 <Text
-                  className="text-lg font-medium mt-2"
+                  className="text-base font-medium mt-2"
                   style={{ color: modeColors[0] }}
                 >
                   {mode === "study" ? t("studySession") : t("breakTime")}

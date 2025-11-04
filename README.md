@@ -1,6 +1,14 @@
 # StudyPal - Your Personal Study Companion
 
-StudyPal is a comprehensive mobile productivity app designed for students to stay organized, complete tasks, maintain focus, and promote wellness. Built with React Native and Expo, it features a colorful, playful, and highly customizable interface.
+StudyPal is a comprehensive mobile productivity app designed for students to stay organized, complete tasks, maintain focus, and promote wellness. Built with React Native and Expo, it features a colorful, playful, and highly customizable interface with **20 animated animal companions** and **10 dynamic themes**.
+
+## ✨ Latest Updates
+
+- ✅ **20 Animal Companions** - Choose from cat, bunny, bear, dog, fox, panda, koala, owl, penguin, lion, tiger, monkey, elephant, giraffe, hamster, raccoon, hedgehog, deer, duck, or frog
+- ✅ **Celebration Animations** - Animated celebration modal with your Study Pal when you complete tasks
+- ✅ **10 Dynamic Themes** - Blue, Purple, Pink, Green, Orange, Red, Teal, Indigo, Rose, and Amber
+- ✅ **Mood-Based Animations** - Study Pal changes mood (happy, focused, celebrating, relaxed) based on your progress
+- ✅ **Improved Timer Display** - Fixed font size for better readability
 
 ## Features
 
@@ -10,7 +18,8 @@ StudyPal is a comprehensive mobile productivity app designed for students to sta
 - **Due Dates & Reminders**: Set due dates with custom reminder notifications
 - **Task Filtering**: Filter tasks by category and status
 - **Progress Tracking**: Daily and weekly progress bars with visual feedback
-- **Task Status**: Mark tasks as pending or completed with celebration animations
+- **🎉 Celebration Animations**: Animated modal with your Study Pal celebrating when tasks are completed
+- **Task Status**: Mark tasks as pending or completed with instant feedback
 
 ### 📅 Calendar Integration
 - **Month View**: Full calendar with color-coded task indicators
@@ -20,7 +29,7 @@ StudyPal is a comprehensive mobile productivity app designed for students to sta
 
 ### ⏱️ Study Timer (Pomodoro)
 - **Customizable Sessions**: Adjustable study (1-120 min) and break (1-60 min) durations
-- **Visual Timer**: Large, easy-to-read countdown display
+- **Visual Timer**: Large, optimized countdown display that fits on one line
 - **Session Modes**: Toggle between study (green) and break (blue) modes
 - **Background Music**: Optional background music during sessions (coming soon)
 - **Study Tracking**: Automatically logs study minutes to your stats
@@ -39,21 +48,42 @@ StudyPal is a comprehensive mobile productivity app designed for students to sta
 - **Gamification**: Achievement badges, daily streaks, and progress celebrations
 
 ### 🐾 Study Pal Companion
-- **Animated Mascots**: Choose from 6 kawaii animals (cat, bunny, bear, dog, fox, panda)
-- **Unique Animations**:
+- **20 Animated Mascots**: Choose from a wide variety of kawaii animals:
+  - **Original 6**: Cat, Bunny, Bear, Dog, Fox, Panda
+  - **New 14**: Koala, Owl, Penguin, Lion, Tiger, Monkey, Elephant, Giraffe, Hamster, Raccoon, Hedgehog, Deer, Duck, Frog
+- **Unique Animations** - Each animal has its own personality:
   - Cat: Blinking animation
   - Bunny: Hopping animation
   - Bear: Waving animation
   - Dog: Tail wagging animation
   - Fox: Head tilting animation
   - Panda: Gentle bobbing animation
+  - Koala: Slow swaying
+  - Owl: Head rotation
+  - Penguin: Waddle rock
+  - Lion: Proud breathing
+  - Tiger: Pouncing motion
+  - Monkey: Double bounce
+  - Elephant: Trunk sway
+  - Giraffe: Neck stretch
+  - Hamster: Quick twitching
+  - Raccoon: Curious blink
+  - Hedgehog: Gentle bobbing
+  - Deer: Light jump
+  - Duck: Side-to-side waddle
+  - Frog: High hop
+- **Mood States**: Study Pal shows different moods based on your progress:
+  - 😊 **Happy**: Default cheerful state
+  - 🎯 **Focused**: During study sessions
+  - 🎉 **Celebrating**: When you complete tasks (special animation!)
+  - 😌 **Relaxed**: During break times
 - **Customization**: Name your Study Pal and toggle animations on/off
 - **Motivational Messages**: Your Study Pal appears with encouragement throughout the app
 
 ### 🎨 Customization & Themes
-- **6 Theme Colors**: Blue, Purple, Pink, Green, Orange, Red
+- **10 Dynamic Theme Colors**: Blue, Purple, Pink, Green, Orange, Red, Teal, Indigo, Rose, Amber
 - **Multi-language Support**: English, Spanish, French, German, Chinese, Japanese, Arabic
-- **Personalization**: Custom username, Study Pal name and animal
+- **Personalization**: Custom username, Study Pal name and animal (20 choices!)
 - **Notifications**: Toggle push notifications on/off
 - **Animation Settings**: Enable or disable mascot animations
 

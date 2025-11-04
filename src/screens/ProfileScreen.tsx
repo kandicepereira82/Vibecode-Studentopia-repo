@@ -42,9 +42,18 @@ const ProfileScreen = () => {
     { color: "green", name: "Green", colors: ["#10B981", "#059669"] },
     { color: "orange", name: "Orange", colors: ["#F97316", "#EA580C"] },
     { color: "red", name: "Red", colors: ["#EF4444", "#DC2626"] },
+    { color: "teal", name: "Teal", colors: ["#14B8A6", "#0D9488"] },
+    { color: "indigo", name: "Indigo", colors: ["#6366F1", "#4F46E5"] },
+    { color: "rose", name: "Rose", colors: ["#F43F5E", "#E11D48"] },
+    { color: "amber", name: "Amber", colors: ["#F59E0B", "#D97706"] },
   ];
 
-  const animals: StudyPalAnimal[] = ["cat", "bunny", "bear", "dog", "fox", "panda"];
+  const animals: StudyPalAnimal[] = [
+    "cat", "bunny", "bear", "dog", "fox", "panda",
+    "koala", "owl", "penguin", "lion", "tiger", "monkey",
+    "elephant", "giraffe", "hamster", "raccoon", "hedgehog", "deer",
+    "duck", "frog"
+  ];
 
   const handleSavePalName = () => {
     if (user && studyPalName.trim()) {
@@ -188,6 +197,20 @@ const ProfileScreen = () => {
                   {user.studyPalConfig.animal === "dog" && "🐶"}
                   {user.studyPalConfig.animal === "fox" && "🦊"}
                   {user.studyPalConfig.animal === "panda" && "🐼"}
+                  {user.studyPalConfig.animal === "koala" && "🐨"}
+                  {user.studyPalConfig.animal === "owl" && "🦉"}
+                  {user.studyPalConfig.animal === "penguin" && "🐧"}
+                  {user.studyPalConfig.animal === "lion" && "🦁"}
+                  {user.studyPalConfig.animal === "tiger" && "🐯"}
+                  {user.studyPalConfig.animal === "monkey" && "🐵"}
+                  {user.studyPalConfig.animal === "elephant" && "🐘"}
+                  {user.studyPalConfig.animal === "giraffe" && "🦒"}
+                  {user.studyPalConfig.animal === "hamster" && "🐹"}
+                  {user.studyPalConfig.animal === "raccoon" && "🦝"}
+                  {user.studyPalConfig.animal === "hedgehog" && "🦔"}
+                  {user.studyPalConfig.animal === "deer" && "🦌"}
+                  {user.studyPalConfig.animal === "duck" && "🦆"}
+                  {user.studyPalConfig.animal === "frog" && "🐸"}
                 </Text>
                 <Ionicons name="chevron-forward" size={20} color="#9CA3AF" />
               </View>
@@ -423,9 +446,23 @@ const ProfileScreen = () => {
                     {animal === "dog" && "🐶"}
                     {animal === "fox" && "🦊"}
                     {animal === "panda" && "🐼"}
+                    {animal === "koala" && "🐨"}
+                    {animal === "owl" && "🦉"}
+                    {animal === "penguin" && "🐧"}
+                    {animal === "lion" && "🦁"}
+                    {animal === "tiger" && "🐯"}
+                    {animal === "monkey" && "🐵"}
+                    {animal === "elephant" && "🐘"}
+                    {animal === "giraffe" && "🦒"}
+                    {animal === "hamster" && "🐹"}
+                    {animal === "raccoon" && "🦝"}
+                    {animal === "hedgehog" && "🦔"}
+                    {animal === "deer" && "🦌"}
+                    {animal === "duck" && "🦆"}
+                    {animal === "frog" && "🐸"}
                   </Text>
                   <Text className="text-base font-medium text-gray-800 dark:text-gray-100 capitalize">
-                    {t(animal)}
+                    {animal}
                   </Text>
                 </View>
                 {user.studyPalConfig.animal === animal && (

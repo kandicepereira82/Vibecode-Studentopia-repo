@@ -19,6 +19,7 @@ import useStatsStore from "../state/statsStore";
 import { useTranslation } from "../utils/translations";
 import { Task, TaskCategory } from "../types";
 import { cn } from "../utils/cn";
+import CelebrationModal from "../components/CelebrationModal";
 
 const TasksScreen = () => {
   const user = useUserStore((s) => s.user);
@@ -30,6 +31,8 @@ const TasksScreen = () => {
   const incrementTasksCompleted = useStatsStore((s) => s.incrementTasksCompleted);
 
   const [modalVisible, setModalVisible] = useState(false);
+  const [celebrationVisible, setCelebrationVisible] = useState(false);
+  const [completedTaskTitle, setCompletedTaskTitle] = useState("");
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -91,6 +94,8 @@ const TasksScreen = () => {
     toggleTaskStatus(task.id);
     if (task.status === "pending") {
       incrementTasksCompleted();
+      setCompletedTaskTitle(task.title);
+      setCelebrationVisible(true);
     }
   };
 
@@ -428,6 +433,13 @@ const TasksScreen = () => {
           </KeyboardAvoidingView>
         </SafeAreaView>
       </Modal>
+
+      {/* Celebration Modal */}
+      <CelebrationModal
+        visible={celebrationVisible}
+        onClose={() => setCelebrationVisible(false)}
+        taskTitle={completedTaskTitle}
+      />
     </SafeAreaView>
   );
 };
