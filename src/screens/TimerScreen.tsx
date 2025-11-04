@@ -140,18 +140,29 @@ const TimerScreen = () => {
           >
             <LinearGradient
               colors={mode === "study" ? ["#10B981", "#059669"] : ["#E5E7EB", "#D1D5DB"]}
-              className="py-4 rounded-2xl items-center"
+              style={{
+                paddingVertical: 16,
+                borderRadius: 24,
+                alignItems: 'center',
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: mode === "study" ? 0.15 : 0.05,
+                shadowRadius: 8,
+                elevation: mode === "study" ? 4 : 2
+              }}
             >
               <Ionicons
                 name="book"
-                size={24}
+                size={28}
                 color={mode === "study" ? "white" : "#6B7280"}
               />
               <Text
-                className={cn(
-                  "font-semibold mt-2",
-                  mode === "study" ? "text-white" : "text-gray-600"
-                )}
+                style={{
+                  fontFamily: 'Poppins_600SemiBold',
+                  fontSize: 14,
+                  marginTop: 8,
+                  color: mode === "study" ? "white" : "#6B7280"
+                }}
               >
                 {t("studySession")}
               </Text>
@@ -164,18 +175,29 @@ const TimerScreen = () => {
           >
             <LinearGradient
               colors={mode === "break" ? ["#3B82F6", "#1D4ED8"] : ["#E5E7EB", "#D1D5DB"]}
-              className="py-4 rounded-2xl items-center"
+              style={{
+                paddingVertical: 16,
+                borderRadius: 24,
+                alignItems: 'center',
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: mode === "break" ? 0.15 : 0.05,
+                shadowRadius: 8,
+                elevation: mode === "break" ? 4 : 2
+              }}
             >
               <Ionicons
                 name="cafe"
-                size={24}
+                size={28}
                 color={mode === "break" ? "white" : "#6B7280"}
               />
               <Text
-                className={cn(
-                  "font-semibold mt-2",
-                  mode === "break" ? "text-white" : "text-gray-600"
-                )}
+                style={{
+                  fontFamily: 'Poppins_600SemiBold',
+                  fontSize: 14,
+                  marginTop: 8,
+                  color: mode === "break" ? "white" : "#6B7280"
+                }}
               >
                 {t("breakTime")}
               </Text>
@@ -187,28 +209,51 @@ const TimerScreen = () => {
         <View className="px-6 py-8 items-center">
           <View className="relative items-center justify-center">
             {/* Progress Circle */}
-            <View className="w-72 h-72 items-center justify-center">
+            <View style={{ width: 320, height: 320, alignItems: 'center', justifyContent: 'center' }}>
               <LinearGradient
                 colors={modeColors}
-                className="w-full h-full rounded-full items-center justify-center"
-                style={{ opacity: 0.1 }}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  borderRadius: 160,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  opacity: 0.1
+                }}
               />
-              <View className="absolute w-64 h-64 rounded-full items-center justify-center" style={{ backgroundColor: theme.cardBackground }}>
+              <View style={{
+                position: 'absolute',
+                width: 280,
+                height: 280,
+                borderRadius: 140,
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: theme.cardBackground,
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.1,
+                shadowRadius: 12,
+                elevation: 6
+              }}>
                 <Text
                   numberOfLines={1}
                   ellipsizeMode="clip"
                   style={{
-                    fontSize: 56,
+                    fontSize: 64,
                     fontFamily: 'Poppins_700Bold',
-                    letterSpacing: 4,
+                    letterSpacing: 2,
                     color: theme.textPrimary,
                     textAlign: 'center'
                   }}>
                   {`${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`}
                 </Text>
                 <Text
-                  className="text-base font-medium mt-2"
-                  style={{ color: modeColors[0] }}
+                  style={{
+                    fontSize: 16,
+                    fontFamily: 'Poppins_500Medium',
+                    marginTop: 8,
+                    color: modeColors[0]
+                  }}
                 >
                   {mode === "study" ? t("studySession") : t("breakTime")}
                 </Text>
