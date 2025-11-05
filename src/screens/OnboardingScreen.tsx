@@ -61,6 +61,37 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
     return imageMap[animal] || imageMap.cat;
   };
 
+  const getAnimalDisplayName = (animal: StudyPalAnimal): string => {
+    const nameMap: Record<StudyPalAnimal, string> = {
+      cat: "Cat",
+      redpanda: "Red Panda",
+      owl: "Owl",
+      penguin: "Penguin",
+      horse: "Horse",
+      dog: "Dog",
+      chick: "Chick",
+      bear: "Bear",
+      hedgehog: "Hedgehog",
+      tiger: "Tiger",
+      turtle: "Turtle",
+      bunny: "Bunny",
+      giraffe: "Giraffe",
+      lamb: "Lamb",
+      alpaca: "Alpaca",
+      lion: "Lion",
+      frog: "Frog",
+      koala: "Koala",
+      sloth: "Sloth",
+      monkey: "Monkey",
+      hamster: "Hamster",
+      reindeer: "Reindeer",
+      chipmunk: "Chipmunk",
+      elephant: "Elephant",
+      goldfish: "Goldfish",
+    };
+    return nameMap[animal] || animal;
+  };
+
   const themes: { color: ThemeColor; colors: [string, string]; emoji: string; name: string }[] = [
     { color: "nature", colors: ["#4CAF50", "#2E7D32"], emoji: "🌿", name: "Nature" },
     { color: "ocean", colors: ["#0288D1", "#01579B"], emoji: "🌊", name: "Ocean" },
@@ -193,7 +224,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
                             resizeMode="contain"
                           />
                           <Text className="text-xs font-medium text-gray-700 dark:text-gray-300 mt-1 capitalize">
-                            {a === "redpanda" ? "red panda" : a}
+                            {getAnimalDisplayName(a)}
                           </Text>
                         </Pressable>
                       );

@@ -94,6 +94,37 @@ const ProfileScreen = () => {
     return imageMap[animal] || imageMap.cat;
   };
 
+  const getAnimalDisplayName = (animal: StudyPalAnimal): string => {
+    const nameMap: Record<StudyPalAnimal, string> = {
+      cat: "Cat",
+      redpanda: "Red Panda",
+      owl: "Owl",
+      penguin: "Penguin",
+      horse: "Horse",
+      dog: "Dog",
+      chick: "Chick",
+      bear: "Bear",
+      hedgehog: "Hedgehog",
+      tiger: "Tiger",
+      turtle: "Turtle",
+      bunny: "Bunny",
+      giraffe: "Giraffe",
+      lamb: "Lamb",
+      alpaca: "Alpaca",
+      lion: "Lion",
+      frog: "Frog",
+      koala: "Koala",
+      sloth: "Sloth",
+      monkey: "Monkey",
+      hamster: "Hamster",
+      reindeer: "Reindeer",
+      chipmunk: "Chipmunk",
+      elephant: "Elephant",
+      goldfish: "Goldfish",
+    };
+    return nameMap[animal] || animal;
+  };
+
   const handleSavePalName = () => {
     if (user && studyPalName.trim()) {
       updateStudyPal(studyPalName, user.studyPalConfig.animal);
@@ -459,7 +490,7 @@ const ProfileScreen = () => {
                     resizeMode="contain"
                   />
                   <Text className="text-base font-medium text-gray-800 dark:text-gray-100 capitalize">
-                    {animal === "redpanda" ? "red panda" : animal}
+                    {getAnimalDisplayName(animal)}
                   </Text>
                 </View>
                 {user.studyPalConfig.animal === animal && (
