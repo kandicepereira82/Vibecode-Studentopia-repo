@@ -201,28 +201,6 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
           {/* Step 1: Username & Role */}
           {step === 1 && (
             <View>
-              {/* Red Panda Welcome */}
-              <View className="items-center mb-6">
-                <View className="mb-4">
-                  <StudyPal
-                    animal="redpanda"
-                    name=""
-                    animationsEnabled={false}
-                    size={80}
-                    showName={false}
-                    showMessage={false}
-                  />
-                </View>
-                <Text style={{
-                  fontSize: 20,
-                  fontFamily: 'Poppins_600SemiBold',
-                  color: '#374151',
-                  textAlign: 'center'
-                }}>
-                  Welcome to Studentopia!
-                </Text>
-              </View>
-
               <Text style={{
                 fontSize: 22,
                 fontFamily: 'Poppins_700Bold',
