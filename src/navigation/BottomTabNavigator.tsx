@@ -62,7 +62,7 @@ const BottomTabNavigator = () => {
       case "Tasks":
         return "#FF7F00"; // Orange
       case "Calendar":
-        return "#FFFF00"; // Yellow
+        return "#D4AF37"; // Darker Gold/Yellow
       case "Timer":
         return "#00B050"; // Green
       case "AIHelper":
