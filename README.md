@@ -1,20 +1,25 @@
-# StudyPal - Your Personal Study Companion
+# Studentopia - Your Personal Study Companion
 
-StudyPal is a comprehensive mobile productivity app designed for students to stay organized, complete tasks, maintain focus, and promote wellness. Built with React Native and Expo, it features a colorful, playful, and highly customizable interface with **20 animated animal companions** and **10 dynamic themes**.
+Studentopia is a comprehensive mobile productivity app designed for students to stay organized, complete tasks, maintain focus, and promote wellness. Built with React Native and Expo, it features a colorful, playful, and highly customizable interface with **25 adorable animal companions** and **8 dynamic themes**.
 
 ## ✨ Latest Updates
 
+- ✅ **Enhanced Onboarding Experience** - New 4-step guided setup with Studentopia Companion welcome and role selection
+- ✅ **Real-Time Theme Preview** - See your Studentopia Companion in your chosen theme before completing setup
+- ✅ **Student/Teacher Role Selection** - Personalized experience based on your role
+- ✅ **Dynamic Companion Preview** - Watch your companion's name update in real-time during onboarding
+- ✅ **Celebration Animation** - Motivational welcome message when you complete setup
 - ✅ **Time-Based Personalized Greetings** - Welcome messages change based on time of day (morning, afternoon, evening, night)
-- ✅ **Study Pal Engagement Messages** - Your Study Pal provides friendly task reminders and motivational messages on home page
+- ✅ **Studentopia Companion Engagement Messages** - Your companion provides friendly task reminders and motivational messages on home page
 - ✅ **Smart Task Reminders** - Gentle prompts when no tasks are added, with encouraging messages for daily and weekly goals
 - ✅ **Dynamic Encouragement** - Real-time motivational messages based on task completion progress
 - ✅ **Quick Task Creation** - Add tasks directly from empty state with convenient button
-- ✅ **Study Pal Integration** - Study Pal companion now appears throughout the app for consistent guidance and engagement
-- ✅ **Static Study Pal Images** - Removed distracting animations, replaced with friendly static images for cleaner UI
-- ✅ **Study Pal in Quotes & Tips** - Your companion now appears alongside motivational quotes and study tips
-- ✅ **Study Pal in Timer** - Study Pal guides you during focus sessions and break times
-- ✅ **Study Pal in Tasks** - Your companion appears in the task header to support your productivity
-- ✅ **Fixed Name Display** - Study Pal name now appears once only on home page, no duplication
+- ✅ **Studentopia Companion Integration** - Companion now appears throughout the app for consistent guidance and engagement
+- ✅ **Static Companion Images** - Removed distracting animations, replaced with friendly static images for cleaner UI
+- ✅ **Companion in Quotes & Tips** - Your companion now appears alongside motivational quotes and study tips
+- ✅ **Companion in Timer** - Your companion guides you during focus sessions and break times
+- ✅ **Companion in Tasks** - Your companion appears in the task header to support your productivity
+- ✅ **Fixed Name Display** - Companion name now appears once only on home page, no duplication
 - ✅ **Weekly Goal Display** - Weekly goal now displays "tasks completed" for clear progress tracking
 - ✅ **Enhanced Timer Features** - Custom time input, alarm sound selection, and color-coded backgrounds (green for study, blue for breaks)
 - ✅ **Custom Duration Input** - Directly type any study/break duration (1-120 minutes) with dedicated modal
@@ -74,7 +79,7 @@ StudyPal is a comprehensive mobile productivity app designed for students to sta
   - Evening (5 PM - 9 PM): "Good evening, [username]!"
   - Night (9 PM - 5 AM): "Great work today, [username]!"
 - **Motivational Sub-Messages**: Random encouraging phrases to start your session
-- **Smart Task Reminders**: Study Pal provides friendly reminders based on your task status
+- **Smart Task Reminders**: Studentopia Companion provides friendly reminders based on your task status
   - "You have 3 tasks due today — let's do this!"
   - "No tasks for today yet. Let's add your goals!"
   - "Amazing! You've completed all tasks today! 🎉"
@@ -84,7 +89,7 @@ StudyPal is a comprehensive mobile productivity app designed for students to sta
   - 75%+: "Great progress! Keep it up!"
   - 50%+: "You're halfway there! Keep going!"
 - **Empty State Guidance**: Helpful prompts with quick actions when no tasks exist
-- **Study Pal Welcome Card**: Dedicated card on home screen with personalized messages from your companion
+- **Studentopia Companion Welcome Card**: Dedicated card on home screen with personalized messages from your companion
 
 ### 📝 Core Task Management
 - **Task CRUD Operations**: Add, edit, delete, and complete tasks
@@ -154,19 +159,19 @@ StudyPal is a comprehensive mobile productivity app designed for students to sta
 - **Mindfulness**: Breathing exercises and relaxation prompts
 - **Gamification**: Achievement badges, daily streaks, and progress celebrations
 
-### 🐾 Study Pal Companion
-- **25 Adorable Animal Companions** - Choose from a wide variety of friendly Study Pals:
+### 🐾 Studentopia Companion
+- **25 Adorable Animal Companions** - Choose from a wide variety of friendly companions:
   - **Available Animals**: Cat, Red Panda, Owl, Penguin, Horse, Dog, Chick, Bear, Hedgehog, Tiger, Turtle, Bunny, Giraffe, Lamb, Alpaca, Lion, Frog, Koala, Sloth, Monkey, Hamster, Reindeer, Chipmunk, Elephant, and Goldfish
 - **Static Friendly Images** - Clean, non-distracting static images keep you focused on your studies
-- **App-Wide Integration** - Your Study Pal appears throughout the app:
+- **App-Wide Integration** - Your Studentopia Companion appears throughout the app:
   - 📖 **Motivational Quotes** - Companion appears alongside daily inspiration
-  - 💡 **Study Tips** - Study Pal guides you through helpful study techniques
+  - 💡 **Study Tips** - Your companion guides you through helpful study techniques
   - ⏱️ **Timer Sessions** - Your companion supports you during focus and break times
-  - ✅ **Task Management** - Study Pal appears in task views to encourage productivity
+  - ✅ **Task Management** - Companion appears in task views to encourage productivity
   - 🎉 **Celebrations** - Special celebration display when you complete tasks
-- **Customization** - Name your Study Pal and choose from 25 different animal companions
+- **Customization** - Name your companion and choose from 25 different animals
 - **Consistent Design** - Same friendly, kawaii-style circular design across all screens
-- **Motivational Presence** - Your Study Pal creates continuity and engagement as you navigate the app
+- **Motivational Presence** - Your companion creates continuity and engagement as you navigate the app
 
 ### 🌍 Multilingual Support
 - **14 Languages**: English, Spanish, French, German, Chinese (Simplified), Japanese, Arabic, Korean, Portuguese (Brazilian), Hindi, Italian, Turkish, Russian, Indonesian

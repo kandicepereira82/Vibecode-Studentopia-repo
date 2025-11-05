@@ -7,6 +7,7 @@ import useUserStore from "../state/userStore";
 import useStatsStore from "../state/statsStore";
 import { StudyPalAnimal, ThemeColor } from "../types";
 import { cn } from "../utils/cn";
+import StudyPal from "../components/StudyPal";
 
 interface OnboardingScreenProps {
   onComplete: () => void;
@@ -18,9 +19,11 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
 
   const [step, setStep] = useState(1);
   const [username, setUsername] = useState("");
-  const [studyPalName, setStudyPalName] = useState("Buddy");
-  const [animal, setAnimal] = useState<StudyPalAnimal>("cat");
+  const [role, setRole] = useState<"student" | "teacher">("student");
+  const [studyPalName, setStudyPalName] = useState("Tomo");
+  const [animal, setAnimal] = useState<StudyPalAnimal>("redpanda");
   const [themeColor, setThemeColor] = useState<ThemeColor>("nature");
+  const [showCelebration, setShowCelebration] = useState(false);
 
   const animals: StudyPalAnimal[] = [
     "cat", "redpanda", "owl", "penguin", "horse",
@@ -104,34 +107,43 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
   ];
 
   const handleComplete = () => {
-    const userId = Date.now().toString();
-    setUser({
-      id: userId,
-      username: username.trim() || "Student",
-      role: "student",
-      language: "en",
-      themeColor,
-      studyPalConfig: {
-        name: studyPalName,
-        animal,
-        animationsEnabled: true,
-      },
-      notificationEnabled: true,
-      createdAt: new Date(),
-    });
-    initStats(userId);
-    onComplete();
+    setShowCelebration(true);
+    setTimeout(() => {
+      const userId = Date.now().toString();
+      setUser({
+        id: userId,
+        username: username.trim() || "Student",
+        role,
+        language: "en",
+        themeColor,
+        studyPalConfig: {
+          name: studyPalName,
+          animal,
+          animationsEnabled: false,
+        },
+        notificationEnabled: true,
+        createdAt: new Date(),
+      });
+      initStats(userId);
+      onComplete();
+    }, 1500);
   };
 
   return (
     <SafeAreaView className="flex-1 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800">
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         <View className="px-6 py-8">
-          {/* Logo/Title */}
+          {/* App Icon and Title */}
           <View className="items-center mb-8">
-            <Text className="text-5xl mb-4">📚</Text>
+            <View className="w-24 h-24 bg-orange-500 rounded-3xl items-center justify-center mb-4 shadow-lg">
+              <Image
+                source={getAnimalImage("redpanda")}
+                style={{ width: 80, height: 80 }}
+                resizeMode="contain"
+              />
+            </View>
             <Text className="text-4xl font-bold text-gray-800 dark:text-gray-100">
-              StudyPal
+              Studentopia
             </Text>
             <Text className="text-lg text-gray-600 dark:text-gray-400 mt-2 text-center">
               Your personal study companion
@@ -155,14 +167,31 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
             ))}
           </View>
 
-          {/* Step 1: Username */}
+          {/* Step 1: Username & Role */}
           {step === 1 && (
             <View>
+              {/* Red Panda Welcome */}
+              <View className="items-center mb-6">
+                <View className="mb-4">
+                  <StudyPal
+                    animal="redpanda"
+                    name=""
+                    animationsEnabled={false}
+                    size={80}
+                    showName={false}
+                    showMessage={false}
+                  />
+                </View>
+                <Text className="text-xl font-semibold text-gray-700 dark:text-gray-300 text-center">
+                  Welcome to Studentopia!
+                </Text>
+              </View>
+
               <Text className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">
                 What should we call you?
               </Text>
-              <Text className="text-gray-600 dark:text-gray-400 mb-6">
-                Enter your name or nickname
+              <Text className="text-gray-600 dark:text-gray-400 mb-4">
+                Enter your name or nickname so your Studentopia Companion can greet you personally.
               </Text>
               <TextInput
                 value={username}
@@ -172,25 +201,108 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
                 className="bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-2xl px-6 py-4 text-lg mb-6"
                 autoFocus
               />
+
+              <Text className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2">
+                Are you a student or teacher?
+              </Text>
+              <View className="flex-row gap-3 mb-6">
+                <Pressable
+                  onPress={() => setRole("student")}
+                  className={cn(
+                    "flex-1 py-4 rounded-2xl items-center border-2",
+                    role === "student"
+                      ? "bg-blue-50 dark:bg-blue-900 border-blue-500"
+                      : "bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700"
+                  )}
+                >
+                  <Ionicons
+                    name="school"
+                    size={32}
+                    color={role === "student" ? "#3B82F6" : "#9CA3AF"}
+                  />
+                  <Text
+                    className={cn(
+                      "text-lg font-semibold mt-2",
+                      role === "student"
+                        ? "text-blue-600 dark:text-blue-400"
+                        : "text-gray-600 dark:text-gray-400"
+                    )}
+                  >
+                    Student
+                  </Text>
+                </Pressable>
+                <Pressable
+                  onPress={() => setRole("teacher")}
+                  className={cn(
+                    "flex-1 py-4 rounded-2xl items-center border-2",
+                    role === "teacher"
+                      ? "bg-blue-50 dark:bg-blue-900 border-blue-500"
+                      : "bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700"
+                  )}
+                >
+                  <Ionicons
+                    name="book"
+                    size={32}
+                    color={role === "teacher" ? "#3B82F6" : "#9CA3AF"}
+                  />
+                  <Text
+                    className={cn(
+                      "text-lg font-semibold mt-2",
+                      role === "teacher"
+                        ? "text-blue-600 dark:text-blue-400"
+                        : "text-gray-600 dark:text-gray-400"
+                    )}
+                  >
+                    Teacher
+                  </Text>
+                </Pressable>
+              </View>
+
+              {username.trim() && (
+                <View className="bg-blue-50 dark:bg-blue-900 rounded-2xl p-4 mt-2">
+                  <Text className="text-blue-800 dark:text-blue-200 text-center">
+                    {"Hi " + username + "! I'm your Studentopia Companion. Let's make every day fun and focused!"}
+                  </Text>
+                </View>
+              )}
             </View>
           )}
 
-          {/* Step 2: Study Pal Name */}
+          {/* Step 2: Studentopia Companion Name */}
           {step === 2 && (
             <View>
               <Text className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">
-                Name your Study Pal
+                Name your Studentopia Companion
               </Text>
               <Text className="text-gray-600 dark:text-gray-400 mb-6">
-                This cute companion will help keep you motivated
+                This cute companion will help keep you motivated. You can rename them later!
               </Text>
+
+              {/* Dynamic preview with chosen name */}
+              <View className="items-center mb-6">
+                <StudyPal
+                  animal={animal}
+                  name={studyPalName}
+                  animationsEnabled={false}
+                  size={100}
+                  showName={true}
+                  showMessage={false}
+                />
+              </View>
+
               <TextInput
                 value={studyPalName}
                 onChangeText={setStudyPalName}
                 placeholder="Enter a name"
                 placeholderTextColor="#9CA3AF"
-                className="bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-2xl px-6 py-4 text-lg mb-6"
+                className="bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-2xl px-6 py-4 text-lg mb-4"
               />
+
+              <View className="bg-purple-50 dark:bg-purple-900 rounded-2xl p-4">
+                <Text className="text-purple-800 dark:text-purple-200 text-center">
+                  Your Studentopia Companion is excited to be part of your journey!
+                </Text>
+              </View>
             </View>
           )}
 
@@ -198,11 +310,18 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
           {step === 3 && (
             <View>
               <Text className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">
-                Choose your Study Pal
+                Choose your Studentopia Companion
               </Text>
-              <Text className="text-gray-600 dark:text-gray-400 mb-6">
-                Pick your favorite animal companion
+              <Text className="text-gray-600 dark:text-gray-400 mb-4">
+                {"Pick your favourite animal companion — they'll journey with you through every task and study session!"}
               </Text>
+
+              <View className="bg-blue-50 dark:bg-blue-900 rounded-2xl p-4 mb-6">
+                <Text className="text-blue-800 dark:text-blue-200 text-center">
+                  {"Your Studentopia Companion will guide you, cheer you on, and help you stay on track!"}
+                </Text>
+              </View>
+
               <View className="flex-row flex-wrap gap-3 max-h-96">
                 <ScrollView showsVerticalScrollIndicator={false}>
                   <View className="flex-row flex-wrap gap-3">
@@ -239,9 +358,33 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
               <Text className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">
                 Choose your environment
               </Text>
-              <Text className="text-gray-600 dark:text-gray-400 mb-6">
-                Pick a theme that matches your vibe
+              <Text className="text-gray-600 dark:text-gray-400 mb-4">
+                {"Pick a theme that matches your vibe — your Studentopia Companion will explore it with you!"}
               </Text>
+
+              {/* Real-time theme preview */}
+              <View className="items-center mb-6">
+                <LinearGradient
+                  colors={themes.find((t) => t.color === themeColor)?.colors || ["#4CAF50", "#2E7D32"]}
+                  className="w-full h-32 rounded-2xl items-center justify-center"
+                >
+                  <StudyPal
+                    animal={animal}
+                    name={studyPalName}
+                    animationsEnabled={false}
+                    size={80}
+                    showName={false}
+                    showMessage={false}
+                  />
+                </LinearGradient>
+              </View>
+
+              <View className="bg-green-50 dark:bg-green-900 rounded-2xl p-4 mb-6">
+                <Text className="text-green-800 dark:text-green-200 text-center">
+                  Make your Studentopia Companion feel right at home!
+                </Text>
+              </View>
+
               <View className="flex-row flex-wrap gap-3">
                 {themes.map((theme) => (
                   <Pressable
@@ -311,6 +454,42 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
           </View>
         </View>
       </ScrollView>
+
+      {/* Celebration Modal */}
+      {showCelebration && (
+        <View
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: 24
+          }}
+        >
+          <View className="bg-white dark:bg-gray-800 rounded-3xl p-8 items-center max-w-sm">
+            <View className="mb-6">
+              <StudyPal
+                animal={animal}
+                name={studyPalName}
+                animationsEnabled={false}
+                size={120}
+                showName={false}
+                showMessage={false}
+              />
+            </View>
+            <Text className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-4 text-center">
+              {"You're ready!"}
+            </Text>
+            <Text className="text-lg text-gray-600 dark:text-gray-400 text-center">
+              {"Your Studentopia Companion is here to help you focus, stay motivated, and enjoy every step of your journey."}
+            </Text>
+          </View>
+        </View>
+      )}
     </SafeAreaView>
   );
 };
