@@ -749,7 +749,7 @@ const HomeScreen = () => {
                   }}
                 >
                   <LinearGradient
-                    colors={[theme.primary, theme.primary]}
+                    colors={[theme.primary, theme.primaryDark]}
                     style={{
                       flex: 1,
                       flexDirection: 'row',
@@ -764,7 +764,7 @@ const HomeScreen = () => {
                       fontSize: 16,
                       fontFamily: 'Poppins_600SemiBold'
                     }}>
-                      Start
+                      {(timerMinutes !== studyDuration || timerSeconds !== 0) && timerMode === "study" ? "Resume" : "Start"}
                     </Text>
                   </LinearGradient>
                 </Pressable>
@@ -785,7 +785,7 @@ const HomeScreen = () => {
                     }}
                   >
                     <LinearGradient
-                      colors={['#F97316', '#EA580C']}
+                      colors={[theme.secondary, theme.secondaryDark]}
                       style={{
                         flex: 1,
                         flexDirection: 'row',
@@ -819,7 +819,7 @@ const HomeScreen = () => {
                     }}
                   >
                     <LinearGradient
-                      colors={['#EF4444', '#DC2626']}
+                      colors={[theme.accentColor, theme.accentColor]}
                       style={{
                         flex: 1,
                         flexDirection: 'row',

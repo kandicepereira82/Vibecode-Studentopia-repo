@@ -10,7 +10,8 @@ StudyPal is a comprehensive mobile productivity app designed for students to sta
 - ✅ **Alarm Volume Control** - Adjust alarm sound volume with easy-to-use slider (0-100%)
 - ✅ **Alarm Sound Options** - Choose from 4 different alarm sounds (Bell, Chime, Beep, Gentle) to play when timer completes
 - ✅ **Color-Coded Backgrounds** - Study sessions show green background, break sessions show blue background for clear visual distinction
-- ✅ **Fixed Timer Button Styling** - Fixed pause and stop buttons on Timer screen to use proper gradient styling matching Home screen
+- ✅ **Fixed Pause/Resume Functionality** - Pause button now properly pauses (not stops) and shows "Resume" when timer has remaining time
+- ✅ **Theme-Based Timer Buttons** - All timer control buttons now use dynamic theme colors (primary, secondary, accent) for consistent theming
 - ✅ **Modern Timer Controls** - Rectangular buttons (120px × 56px) with rounded edges, text labels, and consistent styling across Home and Timer screens
 - ✅ **Unified Timer UI** - Home screen Quick Timer now matches Timer page style with rectangular buttons and gradient backgrounds
 - ✅ **Simplified Profile Screen** - Removed stats section for cleaner, more focused profile management

@@ -416,8 +416,7 @@ const TimerScreen = () => {
                 width: 120,
                 height: 56,
                 borderRadius: 16,
-                alignItems: 'center',
-                justifyContent: 'center',
+                overflow: 'hidden',
                 shadowColor: '#000',
                 shadowOffset: { width: 0, height: 2 },
                 shadowOpacity: 0.15,
@@ -426,7 +425,7 @@ const TimerScreen = () => {
               }}
             >
               <LinearGradient
-                colors={modeColors}
+                colors={[theme.primary, theme.primaryDark]}
                 style={{
                   width: '100%',
                   height: '100%',
@@ -439,7 +438,7 @@ const TimerScreen = () => {
               >
                 <Ionicons name="play" size={24} color="white" />
                 <Text style={{ color: 'white', fontSize: 16, fontFamily: 'Poppins_600SemiBold' }}>
-                  Start
+                  {(minutes !== (mode === "study" ? studyDuration : breakDuration) || seconds !== 0) ? "Resume" : "Start"}
                 </Text>
               </LinearGradient>
             </Pressable>
@@ -460,7 +459,7 @@ const TimerScreen = () => {
                 }}
               >
                 <LinearGradient
-                  colors={['#F97316', '#EA580C']}
+                  colors={[theme.secondary, theme.secondaryDark]}
                   style={{
                     width: '100%',
                     height: '100%',
@@ -492,7 +491,7 @@ const TimerScreen = () => {
                 }}
               >
                 <LinearGradient
-                  colors={['#EF4444', '#DC2626']}
+                  colors={[theme.accentColor, theme.accentColor]}
                   style={{
                     width: '100%',
                     height: '100%',
