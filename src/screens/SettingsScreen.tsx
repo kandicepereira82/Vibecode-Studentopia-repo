@@ -6,7 +6,6 @@ import { LinearGradient } from "expo-linear-gradient";
 import useUserStore from "../state/userStore";
 import { getTheme } from "../utils/themes";
 import { useTranslation } from "../utils/translations";
-import { useNavigation } from "@react-navigation/native";
 import {
   requestNotificationPermissions,
   scheduleDailyStudyReminder,
@@ -32,7 +31,6 @@ const SettingsScreen = () => {
   const logout = useUserStore((s) => s.logout);
   const theme = getTheme(user?.themeColor);
   const { t } = useTranslation(user?.language || "en");
-  const navigation = useNavigation();
 
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [calendarSyncEnabled, setCalendarSyncEnabled] = useState(false);
@@ -171,10 +169,7 @@ const SettingsScreen = () => {
           style: "destructive",
           onPress: () => {
             logout();
-            navigation.reset({
-              index: 0,
-              routes: [{ name: "Root" as never }],
-            });
+            // Navigation will be handled automatically by App.tsx when user becomes null
           },
         },
       ]
