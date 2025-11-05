@@ -135,12 +135,12 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
         <View className="px-6 py-8">
           {/* App Icon and Title */}
           <View className="items-center mb-8">
-            {/* Icon-style container with gradient background */}
+            {/* App Icon Image */}
             <View
               style={{
-                width: 120,
-                height: 120,
-                borderRadius: 28,
+                width: 140,
+                height: 140,
+                borderRadius: 32,
                 overflow: 'hidden',
                 marginBottom: 16,
                 shadowColor: '#000',
@@ -150,17 +150,11 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
                 elevation: 8
               }}
             >
-              <LinearGradient
-                colors={['#4A7C9E', '#2D5F7E']}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}
-              >
-                {/* Icon content - can be replaced with actual icon image later */}
-              </LinearGradient>
+              <Image
+                source={require("../../assets/image-1762386191.png")}
+                style={{ width: 140, height: 140 }}
+                resizeMode="cover"
+              />
             </View>
             <Text style={{
               fontSize: 24,
