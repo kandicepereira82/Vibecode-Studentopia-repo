@@ -12,7 +12,9 @@ export interface MusicTrack {
   localFile?: any; // Local asset reference after download
 }
 
-// Curated list of calming classical music from Pixabay
+// Curated list of calming classical music
+// Note: URLs are placeholders - users need to provide their own hosted audio files
+// You can find royalty-free music at: Pixabay, YouTube Audio Library, or Free Music Archive
 export const musicLibrary: MusicTrack[] = [
   {
     id: "calm-piano-1",
@@ -21,7 +23,7 @@ export const musicLibrary: MusicTrack[] = [
     duration: 180,
     mood: "peaceful",
     genre: "piano",
-    pixabayUrl: "https://pixabay.com/music/beautiful-plays-peaceful-piano-192088/",
+    pixabayUrl: "", // User must provide their own URL
   },
   {
     id: "calming-classical-1",
@@ -30,7 +32,7 @@ export const musicLibrary: MusicTrack[] = [
     duration: 240,
     mood: "calming",
     genre: "classical",
-    pixabayUrl: "https://pixabay.com/music/classical-calming-classical-music-192089/",
+    pixabayUrl: "",
   },
   {
     id: "uplifting-strings-1",
@@ -39,7 +41,7 @@ export const musicLibrary: MusicTrack[] = [
     duration: 200,
     mood: "uplifting",
     genre: "classical",
-    pixabayUrl: "https://pixabay.com/music/classical-uplifting-classical-192090/",
+    pixabayUrl: "",
   },
   {
     id: "gentle-meditation-1",
@@ -48,7 +50,7 @@ export const musicLibrary: MusicTrack[] = [
     duration: 300,
     mood: "peaceful",
     genre: "ambient",
-    pixabayUrl: "https://pixabay.com/music/meditation-gentle-meditation-192091/",
+    pixabayUrl: "",
   },
   {
     id: "soft-piano-2",
@@ -57,7 +59,7 @@ export const musicLibrary: MusicTrack[] = [
     duration: 220,
     mood: "calming",
     genre: "piano",
-    pixabayUrl: "https://pixabay.com/music/piano-soft-piano-dreams-192092/",
+    pixabayUrl: "",
   },
   {
     id: "morning-sunrise-1",
@@ -66,7 +68,7 @@ export const musicLibrary: MusicTrack[] = [
     duration: 190,
     mood: "uplifting",
     genre: "classical",
-    pixabayUrl: "https://pixabay.com/music/classical-morning-sunrise-192093/",
+    pixabayUrl: "",
   },
 ];
 
@@ -92,16 +94,30 @@ class MusicService {
     }
   }
 
-  async loadTrack(track: MusicTrack, uri: string): Promise<boolean> {
+  async loadTrack(track: MusicTrack, uri?: string): Promise<boolean> {
     try {
       // Unload previous track
       if (this.sound) {
         await this.sound.unloadAsync();
       }
 
+      // Use provided URI or fall back to track's pixabayUrl
+      const audioUri = uri || track.pixabayUrl;
+
+      if (!audioUri) {
+        console.error("No audio URI provided for track:", track.title);
+        return false;
+      }
+
+      // Validate that URI looks like an audio file
+      if (!audioUri.includes('.mp3') && !audioUri.includes('.m4a') && !audioUri.includes('.wav') && !audioUri.startsWith('http')) {
+        console.error("Invalid audio URI format:", audioUri);
+        return false;
+      }
+
       // Load new track from URI (either local file or remote URL)
       const { sound } = await Audio.Sound.createAsync(
-        { uri },
+        { uri: audioUri },
         { shouldPlay: false, volume: this.volume, isLooping: this.isLooping },
         this.onPlaybackStatusUpdate
       );
@@ -112,8 +128,15 @@ class MusicService {
       this.currentPosition = 0;
 
       return true;
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error loading track:", error);
+      console.error("Track details:", { title: track.title, uri });
+
+      // Provide more specific error messages
+      if (error.message && error.message.includes('-11850')) {
+        console.error("Server configuration error: The URL does not point to a valid audio file");
+      }
+
       return false;
     }
   }

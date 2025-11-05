@@ -56,7 +56,8 @@ const MusicPlayerScreen = () => {
     };
   }, []);
 
-  const handleTrackSelect = (track: MusicTrack) => {
+  const handleTrackSelect = async (track: MusicTrack) => {
+    // Show modal for URL entry since we don't have built-in audio files
     setSelectedTrack(track);
     setShowDownloadModal(true);
   };
@@ -68,6 +69,8 @@ const MusicPlayerScreen = () => {
     if (success) {
       setShowDownloadModal(false);
       setMusicUri("");
+      // Auto-play after successful load
+      await musicService.play();
     }
   };
 
@@ -338,21 +341,21 @@ const MusicPlayerScreen = () => {
                 color="#3B82F6"
                 style={{ marginRight: 8, marginTop: 2 }}
               />
-              <Text className="flex-1 text-sm font-semibold text-blue-900">
-                How to use Pixabay music
+              <Text className="flex-1 text-sm font-semibold text-blue-900" style={{ fontFamily: 'Poppins_600SemiBold' }}>
+                How to add music
               </Text>
             </View>
-            <Text className="text-xs text-blue-800 leading-5">
-              1. Tap a song to see its Pixabay link{"\n"}
-              2. Download the MP3 file from Pixabay{"\n"}
-              3. Upload it to your preferred cloud storage{"\n"}
-              4. Paste the direct audio file URL here{"\n"}
-              5. Enjoy royalty-free classical music!
+            <Text className="text-xs text-blue-800 leading-5" style={{ fontFamily: 'Poppins_400Regular' }}>
+              1. Tap a song placeholder to open the setup dialog{"\n"}
+              2. Find royalty-free music from Pixabay or similar sites{"\n"}
+              3. Upload the MP3 to cloud storage (Dropbox, Google Drive){"\n"}
+              4. Copy the direct audio file URL{"\n"}
+              5. Paste the URL and tap Load to start playing
             </Text>
           </View>
         </ScrollView>
 
-        {/* Download Modal */}
+        {/* Audio Setup Modal */}
         <Modal
           visible={showDownloadModal}
           animationType="slide"
@@ -362,42 +365,53 @@ const MusicPlayerScreen = () => {
           <View style={{ flex: 1, backgroundColor: "#E8F5E9" }}>
             <SafeAreaView style={{ flex: 1 }} edges={["top", "bottom"]}>
               <View className="px-6 py-4">
-                <Text className="text-2xl font-bold text-gray-900 mb-2">
+                <Text className="text-2xl font-bold text-gray-900 mb-2" style={{ fontFamily: 'Poppins_700Bold' }}>
                   {selectedTrack?.title}
                 </Text>
-                <Text className="text-base text-gray-600 mb-6">
+                <Text className="text-base text-gray-600 mb-6" style={{ fontFamily: 'Poppins_400Regular' }}>
                   {selectedTrack?.artist}
                 </Text>
 
+                <View className="bg-blue-50 rounded-2xl p-4 mb-4">
+                  <View className="flex-row items-start mb-2">
+                    <Ionicons name="musical-notes" size={20} color="#3B82F6" style={{ marginRight: 8 }} />
+                    <Text className="flex-1 text-sm font-semibold text-blue-900" style={{ fontFamily: 'Poppins_600SemiBold' }}>
+                      Audio file needed
+                    </Text>
+                  </View>
+                  <Text className="text-xs text-blue-800" style={{ fontFamily: 'Poppins_400Regular' }}>
+                    To use this music player, you need to provide a direct URL to an MP3 audio file. The URL must be publicly accessible and serve the correct audio MIME type.
+                  </Text>
+                </View>
+
                 <View className="bg-white/90 rounded-2xl p-4 mb-4">
-                  <Text className="text-sm font-semibold text-gray-800 mb-2">
-                    Step 1: Download from Pixabay
+                  <Text className="text-sm font-semibold text-gray-800 mb-2" style={{ fontFamily: 'Poppins_600SemiBold' }}>
+                    Step 1: Find Royalty-Free Music
+                  </Text>
+                  <Text className="text-xs text-gray-600 mb-3" style={{ fontFamily: 'Poppins_400Regular' }}>
+                    Download calming music from free sources like Pixabay, YouTube Audio Library, or Free Music Archive.
                   </Text>
                   <Pressable
-                    onPress={() =>
-                      selectedTrack &&
-                      Linking.openURL(selectedTrack.pixabayUrl)
-                    }
+                    onPress={() => Linking.openURL("https://pixabay.com/music/search/classical/")}
                     className="bg-blue-500 rounded-xl py-3 items-center"
                   >
-                    <Text className="text-white font-semibold">
-                      Open Pixabay Link
+                    <Text className="text-white font-semibold" style={{ fontFamily: 'Poppins_600SemiBold' }}>
+                      Browse Pixabay Music
                     </Text>
                   </Pressable>
                 </View>
 
                 <View className="bg-white/90 rounded-2xl p-4 mb-4">
-                  <Text className="text-sm font-semibold text-gray-800 mb-2">
+                  <Text className="text-sm font-semibold text-gray-800 mb-2" style={{ fontFamily: 'Poppins_600SemiBold' }}>
                     Step 2: Upload to Cloud Storage
                   </Text>
-                  <Text className="text-xs text-gray-600 mb-2">
-                    Upload the downloaded MP3 to Dropbox, Google Drive, or any
-                    cloud storage that provides direct file links.
+                  <Text className="text-xs text-gray-600" style={{ fontFamily: 'Poppins_400Regular' }}>
+                    Upload your downloaded MP3 to Dropbox, Google Drive, or any cloud storage that provides direct file access URLs (must end in .mp3).
                   </Text>
                 </View>
 
                 <View className="bg-white/90 rounded-2xl p-4 mb-6">
-                  <Text className="text-sm font-semibold text-gray-800 mb-3">
+                  <Text className="text-sm font-semibold text-gray-800 mb-3" style={{ fontFamily: 'Poppins_600SemiBold' }}>
                     Step 3: Paste Direct Audio URL
                   </Text>
                   <TextInput
@@ -405,6 +419,7 @@ const MusicPlayerScreen = () => {
                     onChangeText={setMusicUri}
                     placeholder="https://example.com/music.mp3"
                     className="bg-gray-100 rounded-xl px-4 py-3 text-sm text-gray-900 mb-3"
+                    style={{ fontFamily: 'Poppins_400Regular' }}
                     autoCapitalize="none"
                     autoCorrect={false}
                   />
