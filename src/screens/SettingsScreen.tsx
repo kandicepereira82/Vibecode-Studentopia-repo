@@ -6,6 +6,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import useUserStore from "../state/userStore";
 import { getTheme } from "../utils/themes";
 import { useTranslation } from "../utils/translations";
+import { useNavigation } from "@react-navigation/native";
 import {
   requestNotificationPermissions,
   scheduleDailyStudyReminder,
@@ -28,8 +29,10 @@ interface AlertState {
 
 const SettingsScreen = () => {
   const user = useUserStore((s) => s.user);
+  const logout = useUserStore((s) => s.logout);
   const theme = getTheme(user?.themeColor);
   const { t } = useTranslation(user?.language || "en");
+  const navigation = useNavigation();
 
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [calendarSyncEnabled, setCalendarSyncEnabled] = useState(false);
@@ -151,6 +154,27 @@ const SettingsScreen = () => {
             await cancelAllNotifications();
             loadScheduledNotifications();
             showAlert("Success", "All scheduled notifications cleared.");
+          },
+        },
+      ]
+    );
+  };
+
+  const handleLogout = () => {
+    showAlert(
+      "Logout",
+      "Are you sure you want to logout? You will need to set up your profile again.",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Logout",
+          style: "destructive",
+          onPress: () => {
+            logout();
+            navigation.reset({
+              index: 0,
+              routes: [{ name: "Root" as never }],
+            });
           },
         },
       ]
@@ -410,6 +434,18 @@ const SettingsScreen = () => {
                 </View>
               </View>
             </View>
+          </View>
+
+          {/* Logout Section */}
+          <View className="mb-6">
+            <Pressable
+              onPress={handleLogout}
+              className="rounded-2xl p-4 flex-row items-center justify-center"
+              style={{ backgroundColor: "#EF444420" }}
+            >
+              <Ionicons name="log-out" size={20} color="#EF4444" />
+              <Text className="text-red-500 font-semibold ml-2">Logout</Text>
+            </Pressable>
           </View>
 
           {/* Bottom Spacing */}
