@@ -52,6 +52,32 @@ const BottomTabNavigator = () => {
     }
   };
 
+  // Rainbow colors for each tab: Red, Orange, Yellow, Green, Cyan, Blue, Purple
+  const getRainbowTabColor = (tabName: string) => {
+    if (user?.themeColor !== "rainbow") return undefined;
+
+    switch (tabName) {
+      case "Home":
+        return "#FF0000"; // Red
+      case "Tasks":
+        return "#FF7F00"; // Orange
+      case "Calendar":
+        return "#FFFF00"; // Yellow
+      case "Timer":
+        return "#00B050"; // Green
+      case "AIHelper":
+        return "#00FFFF"; // Cyan
+      case "StudyTips":
+        return "#0000FF"; // Blue
+      case "Groups":
+        return "#9400D3"; // Purple
+      case "Profile":
+        return "#FF1493"; // Deep Pink (8 tabs, rainbow + pink)
+      default:
+        return undefined;
+    }
+  };
+
   const themeColor = getThemeColor();
 
   return (
@@ -81,8 +107,14 @@ const BottomTabNavigator = () => {
         options={{
           tabBarLabel: t("home"),
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home" size={size} color={color} />
+            <Ionicons name="home" size={size} color={getRainbowTabColor("Home") || color} />
           ),
+          tabBarLabelStyle: {
+            fontSize: 12,
+            fontWeight: "600",
+            marginTop: 4,
+            color: getRainbowTabColor("Home") || undefined,
+          },
         }}
       />
       <Tab.Screen
@@ -91,8 +123,14 @@ const BottomTabNavigator = () => {
         options={{
           tabBarLabel: t("tasks"),
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="checkbox" size={size} color={color} />
+            <Ionicons name="checkbox" size={size} color={getRainbowTabColor("Tasks") || color} />
           ),
+          tabBarLabelStyle: {
+            fontSize: 12,
+            fontWeight: "600",
+            marginTop: 4,
+            color: getRainbowTabColor("Tasks") || undefined,
+          },
         }}
       />
       <Tab.Screen
@@ -101,8 +139,14 @@ const BottomTabNavigator = () => {
         options={{
           tabBarLabel: t("calendar"),
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="calendar" size={size} color={color} />
+            <Ionicons name="calendar" size={size} color={getRainbowTabColor("Calendar") || color} />
           ),
+          tabBarLabelStyle: {
+            fontSize: 12,
+            fontWeight: "600",
+            marginTop: 4,
+            color: getRainbowTabColor("Calendar") || undefined,
+          },
         }}
       />
       <Tab.Screen
@@ -111,8 +155,14 @@ const BottomTabNavigator = () => {
         options={{
           tabBarLabel: t("timer"),
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="time" size={size} color={color} />
+            <Ionicons name="time" size={size} color={getRainbowTabColor("Timer") || color} />
           ),
+          tabBarLabelStyle: {
+            fontSize: 12,
+            fontWeight: "600",
+            marginTop: 4,
+            color: getRainbowTabColor("Timer") || undefined,
+          },
         }}
       />
       <Tab.Screen
@@ -121,8 +171,14 @@ const BottomTabNavigator = () => {
         options={{
           tabBarLabel: t("aiHelper"),
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="chatbubbles" size={size} color={color} />
+            <Ionicons name="chatbubbles" size={size} color={getRainbowTabColor("AIHelper") || color} />
           ),
+          tabBarLabelStyle: {
+            fontSize: 12,
+            fontWeight: "600",
+            marginTop: 4,
+            color: getRainbowTabColor("AIHelper") || undefined,
+          },
         }}
       />
       <Tab.Screen
@@ -131,8 +187,14 @@ const BottomTabNavigator = () => {
         options={{
           tabBarLabel: "Tips",
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="bulb" size={size} color={color} />
+            <Ionicons name="bulb" size={size} color={getRainbowTabColor("StudyTips") || color} />
           ),
+          tabBarLabelStyle: {
+            fontSize: 12,
+            fontWeight: "600",
+            marginTop: 4,
+            color: getRainbowTabColor("StudyTips") || undefined,
+          },
         }}
       />
       <Tab.Screen
@@ -141,8 +203,14 @@ const BottomTabNavigator = () => {
         options={{
           tabBarLabel: "Groups",
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="people" size={size} color={color} />
+            <Ionicons name="people" size={size} color={getRainbowTabColor("Groups") || color} />
           ),
+          tabBarLabelStyle: {
+            fontSize: 12,
+            fontWeight: "600",
+            marginTop: 4,
+            color: getRainbowTabColor("Groups") || undefined,
+          },
         }}
       />
       <Tab.Screen
@@ -151,8 +219,14 @@ const BottomTabNavigator = () => {
         options={{
           tabBarLabel: t("profile"),
           tabBarIcon: ({ color, size}) => (
-            <Ionicons name="person" size={size} color={color} />
+            <Ionicons name="person" size={size} color={getRainbowTabColor("Profile") || color} />
           ),
+          tabBarLabelStyle: {
+            fontSize: 12,
+            fontWeight: "600",
+            marginTop: 4,
+            color: getRainbowTabColor("Profile") || undefined,
+          },
         }}
       />
     </Tab.Navigator>
