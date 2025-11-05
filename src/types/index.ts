@@ -53,7 +53,7 @@ export type ThemeColor =
   | "sunset"
   | "galaxy"
   | "rainbow"
-  | "desert"
+  | "golden"
   | "arctic"
   | "autumn"
   | "cherry";

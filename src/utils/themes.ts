@@ -131,10 +131,10 @@ export const THEMES: Record<ThemeColor, ThemeConfig> = {
     accentColor: "#FBC02D",
     emoji: "🌈",
   },
-  desert: {
-    id: "desert",
-    name: "Desert",
-    description: "Orange, rust, and brown tones of desert landscapes",
+  golden: {
+    id: "golden",
+    name: "Golden",
+    description: "Warm golden tones and rich amber hues",
     backgroundGradient: ["#FFCCBC", "#FFAB91", "#FF8A65"],
     cardBackground: "#FFFFFF",
     cardBackgroundDark: "#D84315",
@@ -149,7 +149,7 @@ export const THEMES: Record<ThemeColor, ThemeConfig> = {
     tabBarInactive: "#FF7043",
     progressGradient: ["#FF7043", "#FF5722"],
     accentColor: "#E64A19",
-    emoji: "🏜️",
+    emoji: "✨",
   },
   arctic: {
     id: "arctic",
