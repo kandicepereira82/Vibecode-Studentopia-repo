@@ -4,6 +4,8 @@ StudyPal is a comprehensive mobile productivity app designed for students to sta
 
 ## ✨ Latest Updates
 
+- ✅ **Music Player Integration** - Music player moved from separate tab to Timer screen for seamless study sessions
+- ✅ **Streamlined Navigation** - Removed Music tab; music controls now integrated into study/break flow
 - ✅ **Code Quality Improvements** - Fixed all functional errors including Alert usage, console.log statements, type safety, and React hooks
 - ✅ **Custom Alert Modal** - Replaced native Alert.alert() with beautiful custom modal component following Apple HIG
 - ✅ **Type Safety Enhanced** - Fixed unsafe type casts and added proper TypeScript return types
@@ -65,6 +67,9 @@ StudyPal is a comprehensive mobile productivity app designed for students to sta
 - **Study Tracking**: Automatically logs study minutes to your stats
 - **Synchronized State**: Timer state shared across Home and Timer screens
 - **Quick Timer**: Start study sessions directly from home screen
+- **Background Music**: Toggle calming music during study/break sessions
+- **Music Controls**: Integrated music player with play/pause, stop, volume control, and track selection
+- **Music Library**: Choose from curated classical music tracks filtered by mood
 
 ### 👥 Groups & Collaboration
 - **Create Groups**: Both teachers and students can create groups with name, description, school, class, and teacher email
@@ -77,12 +82,12 @@ StudyPal is a comprehensive mobile productivity app designed for students to sta
 - **How-To Guide**: Built-in comprehensive guide for creating, joining, and managing groups
 
 ### 🎵 Music Player
+- **Integrated in Timer**: Background music player available during study and break sessions
 - **Curated Classical Music**: 6 calming, peaceful, and uplifting tracks from Pixabay
-- **Full Playback Controls**: Play, pause, stop, seek, and loop
+- **Full Playback Controls**: Play, pause, stop, and seek functionality
 - **Volume Control**: Adjustable volume slider (0-100%)
-- **Mood Filters**: Filter music by calming, uplifting, or peaceful moods
+- **Mood-Based Selection**: Filter music by calming, uplifting, or peaceful moods
 - **Now Playing Display**: Beautiful card showing current track with progress bar
-- **Background Playback**: Music continues playing when app is minimized
 - **Easy Integration**: Simple workflow to add Pixabay music (see PIXABAY_MUSIC_GUIDE.md)
 - **Royalty-Free**: All music is 100% free for personal and commercial use
 
@@ -177,7 +182,8 @@ src/
 │   ├── transcribe-audio.ts    # Audio transcription
 │   └── image-generation.ts    # Image generation
 ├── components/
-│   └── StudyPal.tsx          # Animated mascot component
+│   ├── StudyPal.tsx           # Animated mascot component
+│   └── CustomAlert.tsx        # Custom alert modal component
 ├── navigation/
 │   └── BottomTabNavigator.tsx # Main app navigation
 ├── screens/
@@ -185,7 +191,7 @@ src/
 │   ├── HomeScreen.tsx         # Dashboard with stats & quotes
 │   ├── TasksScreen.tsx        # Task management
 │   ├── CalendarScreen.tsx     # Calendar view
-│   ├── TimerScreen.tsx        # Study/break timer
+│   ├── TimerScreen.tsx        # Study/break timer with music
 │   ├── AIHelperScreen.tsx     # AI chatbot
 │   └── ProfileScreen.tsx      # Settings & customization
 ├── state/
@@ -194,12 +200,17 @@ src/
 │   ├── statsStore.ts          # User statistics
 │   ├── timerStore.ts          # Centralized timer state
 │   └── groupStore.ts          # Groups & collaboration
+├── services/
+│   ├── musicService.ts        # Music playback service
+│   ├── notificationService.ts # Push notifications
+│   └── calendarService.ts     # Calendar integration
 ├── types/
 │   ├── index.ts               # TypeScript type definitions
 │   └── ai.ts                  # AI-related types
 └── utils/
     ├── cn.ts                  # Tailwind class merger
     ├── translations.ts        # Multi-language translations
+    ├── themes.ts              # Theme configurations
     └── content.ts             # Motivational quotes & tips
 ```
 
@@ -277,10 +288,11 @@ API keys are pre-configured in the Vibecode environment:
 
 ### Best Practices
 - Use double quotes for strings with apostrophes
-- Avoid alerts; use custom modals instead
+- Avoid native alerts; use CustomAlert component instead
 - All user-facing text should use `t()` translation function
 - Use Pressable instead of TouchableOpacity
 - Dismiss keyboard on scroll/tap outside input
+- Use individual Zustand selectors to prevent unnecessary re-renders
 
 ### Performance
 - Individual Zustand selectors to avoid re-renders

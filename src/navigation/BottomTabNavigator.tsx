@@ -5,7 +5,6 @@ import HomeScreen from "../screens/HomeScreen";
 import TasksScreen from "../screens/TasksScreen";
 import CalendarScreen from "../screens/CalendarScreen";
 import TimerScreen from "../screens/TimerScreen";
-import MusicPlayerScreen from "../screens/MusicPlayerScreen";
 import AIHelperScreen from "../screens/AIHelperScreen";
 import StudyTipsScreen from "../screens/StudyTipsScreen";
 import GroupsScreen from "../screens/GroupsScreen";
@@ -18,7 +17,6 @@ export type RootTabParamList = {
   Tasks: undefined;
   Calendar: undefined;
   Timer: undefined;
-  Music: undefined;
   AIHelper: undefined;
   StudyTips: undefined;
   Groups: undefined;
@@ -118,16 +116,6 @@ const BottomTabNavigator = () => {
           tabBarLabel: t("timer"),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="time" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Music"
-        component={MusicPlayerScreen}
-        options={{
-          tabBarLabel: "Music",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="musical-notes" size={size} color={color} />
           ),
         }}
       />

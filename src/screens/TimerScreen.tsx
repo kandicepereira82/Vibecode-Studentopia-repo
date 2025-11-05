@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { Audio } from "expo-av";
+import Slider from "@react-native-community/slider";
 import useUserStore from "../state/userStore";
 import useStatsStore from "../state/statsStore";
 import useTimerStore from "../state/timerStore";
@@ -11,6 +12,7 @@ import { useTranslation } from "../utils/translations";
 import { getTheme } from "../utils/themes";
 import { TimerMode } from "../types";
 import { cn } from "../utils/cn";
+import { musicService, musicLibrary, MusicTrack } from "../services/musicService";
 
 const TimerScreen = () => {
   const user = useUserStore((s) => s.user);
@@ -33,9 +35,37 @@ const TimerScreen = () => {
   const stopTimer = useTimerStore((s) => s.stopTimer);
 
   const [musicEnabled, setMusicEnabled] = useState(false);
+  const [selectedTrack, setSelectedTrack] = useState<MusicTrack | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentPosition, setCurrentPosition] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [volume, setVolume] = useState(0.7);
+  const [showMusicSelector, setShowMusicSelector] = useState(false);
 
   const { t } = useTranslation(user?.language || "en");
   const theme = getTheme(user?.themeColor);
+
+  // Initialize music service
+  useEffect(() => {
+    musicService.initializeAudio();
+
+    // Update playback status every 500ms
+    const interval = setInterval(async () => {
+      if (musicEnabled) {
+        const status = await musicService.getStatus();
+        if (status && status.isLoaded) {
+          setCurrentPosition(status.positionMillis);
+          setDuration(status.durationMillis || 0);
+          setIsPlaying(status.isPlaying);
+        }
+      }
+    }, 500);
+
+    return () => {
+      clearInterval(interval);
+      musicService.unload();
+    };
+  }, [musicEnabled]);
 
   // Watch for timer completion and handle mode switching
   useEffect(() => {
@@ -75,6 +105,47 @@ const TimerScreen = () => {
         setMinutes(newDuration);
       }
     }
+  };
+
+  const handlePlayPause = async () => {
+    if (!selectedTrack) {
+      setShowMusicSelector(true);
+      return;
+    }
+
+    if (isPlaying) {
+      await musicService.pause();
+    } else {
+      await musicService.play();
+    }
+  };
+
+  const handleStop = async () => {
+    await musicService.stop();
+    setCurrentPosition(0);
+  };
+
+  const handleVolumeChange = async (value: number) => {
+    setVolume(value);
+    await musicService.setVolume(value);
+  };
+
+  const handleSelectTrack = async (track: MusicTrack) => {
+    setSelectedTrack(track);
+    // For demo purposes, we'll use a placeholder URL
+    // In production, you would load actual music files
+    const success = await musicService.loadTrack(track, "");
+    if (success) {
+      setShowMusicSelector(false);
+      await musicService.play();
+    }
+  };
+
+  const formatTime = (millis: number) => {
+    const totalSeconds = Math.floor(millis / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   };
 
   const progress = mode === "study"
@@ -364,8 +435,8 @@ const TimerScreen = () => {
             <View className="flex-row items-center justify-between pt-4" style={{ borderTopWidth: 1, borderTopColor: theme.textSecondary + "20" }}>
               <View className="flex-row items-center">
                 <Ionicons name="musical-notes" size={20} color={theme.textSecondary} />
-                <Text className="ml-2 text-base" style={{ color: theme.textPrimary }}>
-                  {t("backgroundMusic")}
+                <Text className="ml-2 text-base" style={{ color: theme.textPrimary, fontFamily: "Poppins_500Medium" }}>
+                  Background Music
                 </Text>
               </View>
               <Pressable
@@ -381,8 +452,197 @@ const TimerScreen = () => {
                 />
               </Pressable>
             </View>
+
+            {/* Music Player Section */}
+            {musicEnabled && (
+              <View style={{ marginTop: 16, paddingTop: 16, borderTopWidth: 1, borderTopColor: theme.textSecondary + "20" }}>
+                {selectedTrack ? (
+                  <>
+                    {/* Now Playing */}
+                    <View style={{ marginBottom: 12 }}>
+                      <Text style={{ fontSize: 12, fontFamily: "Poppins_500Medium", color: theme.textSecondary, marginBottom: 4 }}>
+                        Now Playing
+                      </Text>
+                      <Text style={{ fontSize: 16, fontFamily: "Poppins_600SemiBold", color: theme.textPrimary }}>
+                        {selectedTrack.title}
+                      </Text>
+                      <Text style={{ fontSize: 12, fontFamily: "Poppins_400Regular", color: theme.textSecondary, marginTop: 2 }}>
+                        {selectedTrack.artist}
+                      </Text>
+                    </View>
+
+                    {/* Progress Bar */}
+                    <View style={{ marginBottom: 12 }}>
+                      <Slider
+                        style={{ width: "100%", height: 40 }}
+                        minimumValue={0}
+                        maximumValue={duration}
+                        value={currentPosition}
+                        onSlidingComplete={async (value) => await musicService.seekTo(value)}
+                        minimumTrackTintColor={theme.primary}
+                        maximumTrackTintColor={theme.textSecondary + "30"}
+                        thumbTintColor={theme.primary}
+                      />
+                      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                        <Text style={{ fontSize: 10, fontFamily: "Poppins_400Regular", color: theme.textSecondary }}>
+                          {formatTime(currentPosition)}
+                        </Text>
+                        <Text style={{ fontSize: 10, fontFamily: "Poppins_400Regular", color: theme.textSecondary }}>
+                          {formatTime(duration)}
+                        </Text>
+                      </View>
+                    </View>
+
+                    {/* Playback Controls */}
+                    <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 16, marginBottom: 12 }}>
+                      <Pressable
+                        onPress={handleStop}
+                        style={{
+                          width: 40,
+                          height: 40,
+                          borderRadius: 20,
+                          backgroundColor: theme.textSecondary + "20",
+                          alignItems: "center",
+                          justifyContent: "center"
+                        }}
+                      >
+                        <Ionicons name="stop" size={20} color={theme.textPrimary} />
+                      </Pressable>
+
+                      <Pressable
+                        onPress={handlePlayPause}
+                        style={{
+                          width: 56,
+                          height: 56,
+                          borderRadius: 28,
+                          backgroundColor: theme.primary,
+                          alignItems: "center",
+                          justifyContent: "center",
+                          shadowColor: "#000",
+                          shadowOffset: { width: 0, height: 2 },
+                          shadowOpacity: 0.2,
+                          shadowRadius: 4,
+                          elevation: 3
+                        }}
+                      >
+                        <Ionicons name={isPlaying ? "pause" : "play"} size={28} color="white" />
+                      </Pressable>
+
+                      <Pressable
+                        onPress={() => setShowMusicSelector(true)}
+                        style={{
+                          width: 40,
+                          height: 40,
+                          borderRadius: 20,
+                          backgroundColor: theme.secondary + "20",
+                          alignItems: "center",
+                          justifyContent: "center"
+                        }}
+                      >
+                        <Ionicons name="list" size={20} color={theme.secondary} />
+                      </Pressable>
+                    </View>
+
+                    {/* Volume Control */}
+                    <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+                      <Ionicons name="volume-low" size={16} color={theme.textSecondary} />
+                      <Slider
+                        style={{ flex: 1, height: 32 }}
+                        minimumValue={0}
+                        maximumValue={1}
+                        value={volume}
+                        onValueChange={handleVolumeChange}
+                        minimumTrackTintColor={theme.secondary}
+                        maximumTrackTintColor={theme.textSecondary + "30"}
+                        thumbTintColor={theme.secondary}
+                      />
+                      <Ionicons name="volume-high" size={16} color={theme.textSecondary} />
+                    </View>
+                  </>
+                ) : (
+                  <Pressable
+                    onPress={() => setShowMusicSelector(true)}
+                    style={{
+                      padding: 16,
+                      borderRadius: 12,
+                      backgroundColor: theme.primary + "10",
+                      alignItems: "center"
+                    }}
+                  >
+                    <Ionicons name="add-circle-outline" size={32} color={theme.primary} style={{ marginBottom: 8 }} />
+                    <Text style={{ fontSize: 14, fontFamily: "Poppins_600SemiBold", color: theme.primary }}>
+                      Select Music
+                    </Text>
+                    <Text style={{ fontSize: 12, fontFamily: "Poppins_400Regular", color: theme.textSecondary, marginTop: 4, textAlign: "center" }}>
+                      Choose a calming track for your study session
+                    </Text>
+                  </Pressable>
+                )}
+              </View>
+            )}
           </View>
         </View>
+
+        {/* Music Selection Modal */}
+        {showMusicSelector && (
+          <View
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: "rgba(0,0,0,0.5)",
+              justifyContent: "center",
+              alignItems: "center",
+              padding: 24
+            }}
+          >
+            <View
+              style={{
+                backgroundColor: "white",
+                borderRadius: 24,
+                padding: 24,
+                width: "100%",
+                maxHeight: "80%"
+              }}
+            >
+              <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+                <Text style={{ fontSize: 20, fontFamily: "Poppins_700Bold", color: theme.textPrimary }}>
+                  Select Music
+                </Text>
+                <Pressable onPress={() => setShowMusicSelector(false)}>
+                  <Ionicons name="close" size={28} color={theme.textPrimary} />
+                </Pressable>
+              </View>
+
+              <ScrollView showsVerticalScrollIndicator={false}>
+                {musicLibrary.map((track) => (
+                  <Pressable
+                    key={track.id}
+                    onPress={() => handleSelectTrack(track)}
+                    style={{
+                      padding: 16,
+                      borderRadius: 16,
+                      backgroundColor: selectedTrack?.id === track.id ? theme.primary + "20" : theme.textSecondary + "10",
+                      marginBottom: 12
+                    }}
+                  >
+                    <Text style={{ fontSize: 16, fontFamily: "Poppins_600SemiBold", color: theme.textPrimary, marginBottom: 4 }}>
+                      {track.title}
+                    </Text>
+                    <Text style={{ fontSize: 12, fontFamily: "Poppins_400Regular", color: theme.textSecondary }}>
+                      {track.artist}
+                    </Text>
+                    <Text style={{ fontSize: 11, fontFamily: "Poppins_400Regular", color: theme.textSecondary, marginTop: 4 }}>
+                      {track.mood.charAt(0).toUpperCase() + track.mood.slice(1)} • {track.duration}
+                    </Text>
+                  </Pressable>
+                ))}
+              </ScrollView>
+            </View>
+          </View>
+        )}
       </ScrollView>
       </SafeAreaView>
     </View>
