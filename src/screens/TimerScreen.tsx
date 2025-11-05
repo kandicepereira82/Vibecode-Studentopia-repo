@@ -56,6 +56,7 @@ const TimerScreen = () => {
   const [customTimeInput, setCustomTimeInput] = useState("");
   const [selectedAlarm, setSelectedAlarm] = useState<AlarmSound>("bell");
   const [alarmSound, setAlarmSound] = useState<Audio.Sound | null>(null);
+  const [previewSound, setPreviewSound] = useState<Audio.Sound | null>(null);
 
   const { t } = useTranslation(user?.language || "en");
   const theme = getTheme(user?.themeColor);
@@ -79,8 +80,13 @@ const TimerScreen = () => {
     return () => {
       clearInterval(interval);
       musicService.unload();
+      // Clean up any preview sounds
+      if (previewSound) {
+        previewSound.stopAsync().catch(() => {});
+        previewSound.unloadAsync().catch(() => {});
+      }
     };
-  }, [musicEnabled]);
+  }, [musicEnabled, previewSound]);
 
   // Watch for timer completion and handle mode switching
   useEffect(() => {
@@ -113,6 +119,39 @@ const TimerScreen = () => {
       // Unload after 3 seconds
       setTimeout(async () => {
         await sound.unloadAsync();
+      }, 3000);
+    } catch (error) {
+      // Silently fail if sound doesn't load
+    }
+  };
+
+  const playPreviewSound = async (soundType: AlarmSound) => {
+    try {
+      // Stop any currently playing preview
+      if (previewSound) {
+        await previewSound.stopAsync();
+        await previewSound.unloadAsync();
+      }
+
+      // Map alarm types to different sound URLs
+      const soundUrls = {
+        bell: "https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3",
+        chime: "https://www.soundjay.com/misc/sounds/wind-chime-1.mp3",
+        beep: "https://www.soundjay.com/button/sounds/beep-07a.mp3",
+        gentle: "https://www.soundjay.com/human/sounds/meditation-bell-001.mp3"
+      };
+
+      const { sound } = await Audio.Sound.createAsync(
+        { uri: soundUrls[soundType] },
+        { shouldPlay: true, volume: 0.5 }
+      );
+      setPreviewSound(sound);
+
+      // Unload after sound finishes (3 seconds max)
+      setTimeout(async () => {
+        await sound.stopAsync();
+        await sound.unloadAsync();
+        setPreviewSound(null);
       }, 3000);
     } catch (error) {
       // Silently fail if sound doesn't load
@@ -990,6 +1029,23 @@ const TimerScreen = () => {
                   <Text style={{ flex: 1, fontSize: 16, fontFamily: "Poppins_600SemiBold", color: theme.textPrimary }}>
                     {sound.name}
                   </Text>
+                  <Pressable
+                    onPress={(e) => {
+                      e.stopPropagation();
+                      playPreviewSound(sound.id);
+                    }}
+                    style={{
+                      width: 36,
+                      height: 36,
+                      borderRadius: 18,
+                      backgroundColor: theme.primary + "20",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      marginRight: 8
+                    }}
+                  >
+                    <Ionicons name="play" size={18} color={theme.primary} />
+                  </Pressable>
                   {selectedAlarm === sound.id && (
                     <Ionicons name="checkmark-circle" size={24} color={theme.accentColor} />
                   )}
