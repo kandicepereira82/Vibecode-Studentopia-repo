@@ -510,23 +510,31 @@ const HomeScreen = () => {
                   backgroundColor: theme.primary + '10',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  marginBottom: 12
+                  marginBottom: 16
                 }}>
                   <StudyPal
                     animal={user.studyPalConfig.animal}
                     name={user.studyPalConfig.name}
                     animationsEnabled={false}
                     size={50}
-                    showName={true}
+                    showName={false}
                     showMessage={false}
                   />
                 </View>
                 <Text style={{
+                  fontSize: 16,
+                  fontFamily: 'Poppins_600SemiBold',
+                  color: theme.textPrimary,
+                  textAlign: 'center',
+                  marginBottom: 8
+                }}>
+                  {user.studyPalConfig.name}
+                </Text>
+                <Text style={{
                   fontSize: 12,
                   fontFamily: 'Poppins_400Regular',
                   color: theme.textSecondary,
-                  textAlign: 'center',
-                  marginTop: 4
+                  textAlign: 'center'
                 }}>
                   Take a deep breath... 🌸
                 </Text>
