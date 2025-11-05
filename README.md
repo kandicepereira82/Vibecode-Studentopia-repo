@@ -4,6 +4,7 @@ StudyPal is a comprehensive mobile productivity app designed for students to sta
 
 ## ✨ Latest Updates
 
+- ✅ **Simplified Profile Screen** - Removed stats section for cleaner, more focused profile management
 - ✅ **Music Player Integration** - Music player moved from separate tab to Timer screen for seamless study sessions
 - ✅ **Streamlined Navigation** - Removed Music tab; music controls now integrated into study/break flow
 - ✅ **Code Quality Improvements** - Fixed all functional errors including Alert usage, console.log statements, type safety, and React hooks
@@ -151,13 +152,6 @@ StudyPal is a comprehensive mobile productivity app designed for students to sta
 - **Personalization**: Custom username, Study Pal name and animal (20 choices!)
 - **Notifications**: Toggle push notifications on/off
 - **Animation Settings**: Enable or disable mascot animations
-
-### 📊 Progress Tracking & Stats
-- **Total Tasks Completed**: Track your lifetime task completions
-- **Daily Streaks**: Monitor consecutive days of task completion
-- **Longest Streak**: See your best streak performance
-- **Study Minutes**: Total time spent studying
-- **Achievement Badges**: Unlock achievements for milestones
 
 ## Tech Stack
 
@@ -329,12 +323,12 @@ The app runs automatically on Expo. No additional setup required.
 ## User Flow
 
 1. **Onboarding**: Set username, name Study Pal, choose animal and theme
-2. **Home**: View daily stats, motivational quote, and study tip
+2. **Home**: View daily progress, motivational quote, and study tip
 3. **Tasks**: Add and manage tasks with categories and due dates
 4. **Calendar**: Visualize tasks on calendar, tap to view by date
-5. **Timer**: Run study sessions with customizable durations
+5. **Timer**: Run study sessions with customizable durations and background music
 6. **AI Helper**: Ask questions or check grammar
-7. **Profile**: Customize settings, view stats, manage preferences
+7. **Profile**: Customize settings and manage preferences
 
 ## Credits
 

@@ -3,7 +3,6 @@ import { View, Text, ScrollView, Pressable, TextInput, Modal } from "react-nativ
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import useUserStore from "../state/userStore";
-import useStatsStore from "../state/statsStore";
 import { useTranslation, languageNames } from "../utils/translations";
 import { Language, ThemeColor, StudyPalAnimal } from "../types";
 import { cn } from "../utils/cn";
@@ -17,7 +16,6 @@ const ProfileScreen = () => {
   const updateStudyPal = useUserStore((s) => s.updateStudyPal);
   const toggleAnimations = useUserStore((s) => s.toggleAnimations);
   const toggleNotifications = useUserStore((s) => s.toggleNotifications);
-  const stats = useStatsStore((s) => s.stats);
 
   const [showLanguageModal, setShowLanguageModal] = useState(false);
   const [showThemeModal, setShowThemeModal] = useState(false);
@@ -99,7 +97,6 @@ const ProfileScreen = () => {
                 createdAt: new Date(),
               };
               useUserStore.getState().setUser(newUser);
-              useStatsStore.getState().initStats(userId);
             }}
             className="bg-blue-500 px-8 py-4 rounded-2xl"
           >
@@ -140,49 +137,6 @@ const ProfileScreen = () => {
             <Text className="text-sm text-gray-500 dark:text-gray-400 mt-1">
               {user.email || "student@studypal.com"}
             </Text>
-          </View>
-        </View>
-
-        {/* Stats Overview */}
-        <View className="px-6 py-2">
-          <View className="bg-white dark:bg-gray-800 rounded-2xl p-5">
-            <Text className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4">
-              Your Stats
-            </Text>
-            <View className="flex-row flex-wrap gap-4">
-              <View className="flex-1 min-w-[45%]">
-                <Text className="text-3xl font-bold text-blue-500">
-                  {stats?.totalTasksCompleted || 0}
-                </Text>
-                <Text className="text-sm text-gray-600 dark:text-gray-400">
-                  {t("tasksCompleted")}
-                </Text>
-              </View>
-              <View className="flex-1 min-w-[45%]">
-                <Text className="text-3xl font-bold text-orange-500">
-                  {stats?.currentStreak || 0}
-                </Text>
-                <Text className="text-sm text-gray-600 dark:text-gray-400">
-                  {t("currentStreak")}
-                </Text>
-              </View>
-              <View className="flex-1 min-w-[45%]">
-                <Text className="text-3xl font-bold text-purple-500">
-                  {stats?.longestStreak || 0}
-                </Text>
-                <Text className="text-sm text-gray-600 dark:text-gray-400">
-                  Longest Streak
-                </Text>
-              </View>
-              <View className="flex-1 min-w-[45%]">
-                <Text className="text-3xl font-bold text-green-500">
-                  {stats?.totalStudyMinutes || 0}
-                </Text>
-                <Text className="text-sm text-gray-600 dark:text-gray-400">
-                  Study Minutes
-                </Text>
-              </View>
-            </View>
           </View>
         </View>
 
