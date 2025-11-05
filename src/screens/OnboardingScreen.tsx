@@ -379,7 +379,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
 
           {/* Step 3: Choose Animal */}
           {step === 3 && (
-            <View>
+            <View style={{ flex: 1 }}>
               <Text style={{
                 fontSize: 22,
                 fontFamily: 'Poppins_700Bold',
@@ -408,38 +408,35 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
                 </Text>
               </View>
 
-              <View className="flex-row flex-wrap gap-3 max-h-96">
-                <ScrollView showsVerticalScrollIndicator={false}>
-                  <View className="flex-row flex-wrap gap-3">
-                    {animals.map((a) => {
-                      return (
-                        <Pressable
-                          key={a}
-                          onPress={() => setAnimal(a)}
-                          className={cn(
-                            "w-[30%] aspect-square bg-white dark:bg-gray-800 rounded-2xl items-center justify-center mb-3",
-                            animal === a && "border-4 border-blue-500"
-                          )}
-                        >
-                          <Image
-                            source={getAnimalImage(a)}
-                            style={{ width: 60, height: 60 }}
-                            resizeMode="contain"
-                          />
-                          <Text style={{
-                            fontSize: 11,
-                            fontFamily: 'Poppins_500Medium',
-                            color: '#374151',
-                            marginTop: 4,
-                            textTransform: 'capitalize'
-                          }}>
-                            {getAnimalDisplayName(a)}
-                          </Text>
-                        </Pressable>
-                      );
-                    })}
-                  </View>
-                </ScrollView>
+              {/* Scrollable Animal Grid */}
+              <View className="flex-row flex-wrap gap-3 mb-4">
+                {animals.map((a) => {
+                  return (
+                    <Pressable
+                      key={a}
+                      onPress={() => setAnimal(a)}
+                      className={cn(
+                        "w-[30%] aspect-square bg-white dark:bg-gray-800 rounded-2xl items-center justify-center mb-3",
+                        animal === a && "border-4 border-blue-500"
+                      )}
+                    >
+                      <Image
+                        source={getAnimalImage(a)}
+                        style={{ width: 60, height: 60 }}
+                        resizeMode="contain"
+                      />
+                      <Text style={{
+                        fontSize: 11,
+                        fontFamily: 'Poppins_500Medium',
+                        color: '#374151',
+                        marginTop: 4,
+                        textTransform: 'capitalize'
+                      }}>
+                        {getAnimalDisplayName(a)}
+                      </Text>
+                    </Pressable>
+                  );
+                })}
               </View>
             </View>
           )}
