@@ -416,7 +416,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
                       key={a}
                       onPress={() => setAnimal(a)}
                       className={cn(
-                        "w-[30%] aspect-square bg-white dark:bg-gray-800 rounded-2xl items-center justify-center mb-3",
+                        "w-[20%] aspect-square bg-white dark:bg-gray-800 rounded-2xl items-center justify-center mb-3",
                         animal === a && "border-4 border-blue-500"
                       )}
                     >
