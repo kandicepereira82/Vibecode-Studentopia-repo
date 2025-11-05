@@ -75,7 +75,7 @@ const TimerScreen = () => {
     const loadSounds = async () => {
       const soundUrls = {
         bell: "https://assets.mixkit.co/active_storage/sfx/1997/1997-preview.mp3", // Christmas bell sound
-        chime: "https://assets.mixkit.co/active_storage/sfx/2871/2871-preview.mp3", // Wind chimes
+        chime: "https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3", // Original chime
         gong: "https://assets.mixkit.co/active_storage/sfx/2866/2866-preview.mp3", // Gong sound
         gentle: "https://assets.mixkit.co/active_storage/sfx/2393/2393-preview.mp3" // Ocean waves
       };
