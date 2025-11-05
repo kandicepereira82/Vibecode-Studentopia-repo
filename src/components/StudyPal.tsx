@@ -107,23 +107,13 @@ const StudyPal: React.FC<StudyPalProps> = ({
             true,
           );
           break;
-        case "fox":
+        case "redpanda":
           rotation.value = withRepeat(
             withSequence(
               withTiming(10, { duration: 1000 }),
               withTiming(0, { duration: 1000 }),
               withTiming(-10, { duration: 1000 }),
               withTiming(0, { duration: 1000 }),
-            ),
-            -1,
-            false,
-          );
-          break;
-        case "panda":
-          translateY.value = withRepeat(
-            withSequence(
-              withTiming(-5, { duration: 1500, easing: Easing.inOut(Easing.ease) }),
-              withTiming(0, { duration: 1500, easing: Easing.inOut(Easing.ease) }),
             ),
             -1,
             false,
@@ -225,7 +215,7 @@ const StudyPal: React.FC<StudyPalProps> = ({
             true,
           );
           break;
-        case "raccoon":
+        case "chipmunk":
           scale.value = withRepeat(
             withSequence(
               withTiming(1, { duration: 1500 }),
@@ -246,7 +236,7 @@ const StudyPal: React.FC<StudyPalProps> = ({
             false,
           );
           break;
-        case "deer":
+        case "reindeer":
           translateY.value = withRepeat(
             withSequence(
               withTiming(-7, { duration: 400, easing: Easing.out(Easing.ease) }),
@@ -257,7 +247,7 @@ const StudyPal: React.FC<StudyPalProps> = ({
             false,
           );
           break;
-        case "duck":
+        case "chick":
           rotation.value = withRepeat(
             withSequence(
               withTiming(6, { duration: 500 }),
@@ -278,6 +268,68 @@ const StudyPal: React.FC<StudyPalProps> = ({
             false,
           );
           break;
+        case "horse":
+          translateY.value = withRepeat(
+            withSequence(
+              withTiming(-10, { duration: 350, easing: Easing.out(Easing.ease) }),
+              withTiming(0, { duration: 350, easing: Easing.in(Easing.ease) }),
+              withTiming(0, { duration: 1000 }),
+            ),
+            -1,
+            false,
+          );
+          break;
+        case "turtle":
+          translateY.value = withRepeat(
+            withSequence(
+              withTiming(-2, { duration: 2500, easing: Easing.inOut(Easing.ease) }),
+              withTiming(0, { duration: 2500, easing: Easing.inOut(Easing.ease) }),
+            ),
+            -1,
+            false,
+          );
+          break;
+        case "lamb":
+          translateY.value = withRepeat(
+            withSequence(
+              withTiming(-8, { duration: 350, easing: Easing.out(Easing.ease) }),
+              withTiming(0, { duration: 350, easing: Easing.in(Easing.ease) }),
+              withTiming(0, { duration: 1100 }),
+            ),
+            -1,
+            false,
+          );
+          break;
+        case "alpaca":
+          rotation.value = withRepeat(
+            withSequence(
+              withTiming(7, { duration: 600 }),
+              withTiming(-7, { duration: 600 }),
+            ),
+            -1,
+            true,
+          );
+          break;
+        case "sloth":
+          translateY.value = withRepeat(
+            withSequence(
+              withTiming(-2, { duration: 3000, easing: Easing.inOut(Easing.ease) }),
+              withTiming(0, { duration: 3000, easing: Easing.inOut(Easing.ease) }),
+            ),
+            -1,
+            false,
+          );
+          break;
+        case "goldfish":
+          rotation.value = withRepeat(
+            withSequence(
+              withTiming(10, { duration: 700 }),
+              withTiming(-10, { duration: 700 }),
+            ),
+            -1,
+            true,
+          );
+          break;
       }
     }
   }, [animal, animationsEnabled, mood]);
@@ -293,25 +345,30 @@ const StudyPal: React.FC<StudyPalProps> = ({
   const getAnimalEmoji = (animal: StudyPalAnimal): string => {
     const emojiMap: Record<StudyPalAnimal, string> = {
       cat: "🐱",
-      bunny: "🐰",
-      bear: "🐻",
-      dog: "🐶",
-      fox: "🦊",
-      panda: "🐼",
-      koala: "🐨",
+      redpanda: "🦊",
       owl: "🦉",
       penguin: "🐧",
-      lion: "🦁",
-      tiger: "🐯",
-      monkey: "🐵",
-      elephant: "🐘",
-      giraffe: "🦒",
-      hamster: "🐹",
-      raccoon: "🦝",
+      horse: "🐴",
+      dog: "🐶",
+      chick: "🐥",
+      bear: "🐻",
       hedgehog: "🦔",
-      deer: "🦌",
-      duck: "🦆",
+      tiger: "🐯",
+      turtle: "🐢",
+      bunny: "🐰",
+      giraffe: "🦒",
+      lamb: "🐑",
+      alpaca: "🦙",
+      lion: "🦁",
       frog: "🐸",
+      koala: "🐨",
+      sloth: "🦥",
+      monkey: "🐵",
+      hamster: "🐹",
+      reindeer: "🦌",
+      chipmunk: "🐿️",
+      elephant: "🐘",
+      goldfish: "🐠",
     };
     return emojiMap[animal] || "🐱";
   };
@@ -337,25 +394,30 @@ const StudyPal: React.FC<StudyPalProps> = ({
   const getAnimalBackgroundColor = (animal: StudyPalAnimal): string => {
     const colorMap: Record<StudyPalAnimal, string> = {
       cat: "#FFE5B4",      // Peach
-      bunny: "#FFD4E5",    // Light pink
-      bear: "#D4A574",     // Tan
-      dog: "#E8D4B8",      // Cream
-      fox: "#FFB366",      // Light orange
-      panda: "#FFFFFF",    // White
-      koala: "#C8C8C8",    // Light gray
+      redpanda: "#FFB366", // Light orange
       owl: "#D4BF9F",      // Light brown
       penguin: "#E0F4FF",  // Light blue
-      lion: "#FFD700",     // Gold
-      tiger: "#FFB347",    // Orange
-      monkey: "#C8A882",   // Light brown
-      elephant: "#B0C4DE", // Light steel blue
-      giraffe: "#F4E4C1",  // Cream
-      hamster: "#FFE4B5",  // Moccasin
-      raccoon: "#A9A9A9",  // Dark gray
+      horse: "#E8D4B8",    // Cream
+      dog: "#E8D4B8",      // Cream
+      chick: "#FFEB3B",    // Yellow
+      bear: "#D4A574",     // Tan
       hedgehog: "#D2B48C", // Tan
-      deer: "#C8A882",     // Tan
-      duck: "#FFEB3B",     // Yellow
+      tiger: "#FFB347",    // Orange
+      turtle: "#90EE90",   // Light green
+      bunny: "#FFD4E5",    // Light pink
+      giraffe: "#F4E4C1",  // Cream
+      lamb: "#FFFFFF",     // White
+      alpaca: "#F4E4C1",   // Cream
+      lion: "#FFD700",     // Gold
       frog: "#90EE90",     // Light green
+      koala: "#C8C8C8",    // Light gray
+      sloth: "#C8A882",    // Light brown
+      monkey: "#C8A882",   // Light brown
+      hamster: "#FFE4B5",  // Moccasin
+      reindeer: "#C8A882", // Tan
+      chipmunk: "#D2B48C", // Tan
+      elephant: "#B0C4DE", // Light steel blue
+      goldfish: "#FFA500", // Orange
     };
     return colorMap[animal] || "#FFE5B4";
   };

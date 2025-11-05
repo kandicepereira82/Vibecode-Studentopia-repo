@@ -23,10 +23,11 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
   const [themeColor, setThemeColor] = useState<ThemeColor>("nature");
 
   const animals: StudyPalAnimal[] = [
-    "cat", "bunny", "bear", "dog", "fox", "panda",
-    "koala", "owl", "penguin", "lion", "tiger", "monkey",
-    "elephant", "giraffe", "hamster", "raccoon", "hedgehog", "deer",
-    "duck", "frog"
+    "cat", "redpanda", "owl", "penguin", "horse",
+    "dog", "chick", "bear", "hedgehog", "tiger",
+    "turtle", "bunny", "giraffe", "lamb", "alpaca",
+    "lion", "frog", "koala", "sloth", "monkey",
+    "hamster", "reindeer", "chipmunk", "elephant", "goldfish"
   ];
 
   const themes: { color: ThemeColor; colors: [string, string]; emoji: string; name: string }[] = [
@@ -147,10 +148,11 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
                   <View className="flex-row flex-wrap gap-3">
                     {animals.map((a) => {
                       const emojiMap: Record<StudyPalAnimal, string> = {
-                        cat: "🐱", bunny: "🐰", bear: "🐻", dog: "🐶", fox: "🦊", panda: "🐼",
-                        koala: "🐨", owl: "🦉", penguin: "🐧", lion: "🦁", tiger: "🐯", monkey: "🐵",
-                        elephant: "🐘", giraffe: "🦒", hamster: "🐹", raccoon: "🦝", hedgehog: "🦔",
-                        deer: "🦌", duck: "🦆", frog: "🐸"
+                        cat: "🐱", redpanda: "🦊", owl: "🦉", penguin: "🐧", horse: "🐴",
+                        dog: "🐶", chick: "🐥", bear: "🐻", hedgehog: "🦔", tiger: "🐯",
+                        turtle: "🐢", bunny: "🐰", giraffe: "🦒", lamb: "🐑", alpaca: "🦙",
+                        lion: "🦁", frog: "🐸", koala: "🐨", sloth: "🦥", monkey: "🐵",
+                        hamster: "🐹", reindeer: "🦌", chipmunk: "🐿️", elephant: "🐘", goldfish: "🐠"
                       };
                       return (
                         <Pressable

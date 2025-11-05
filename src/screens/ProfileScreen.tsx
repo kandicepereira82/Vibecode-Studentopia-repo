@@ -56,10 +56,11 @@ const ProfileScreen = () => {
   ];
 
   const animals: StudyPalAnimal[] = [
-    "cat", "bunny", "bear", "dog", "fox", "panda",
-    "koala", "owl", "penguin", "lion", "tiger", "monkey",
-    "elephant", "giraffe", "hamster", "raccoon", "hedgehog", "deer",
-    "duck", "frog"
+    "cat", "redpanda", "owl", "penguin", "horse",
+    "dog", "chick", "bear", "hedgehog", "tiger",
+    "turtle", "bunny", "giraffe", "lamb", "alpaca",
+    "lion", "frog", "koala", "sloth", "monkey",
+    "hamster", "reindeer", "chipmunk", "elephant", "goldfish"
   ];
 
   const handleSavePalName = () => {
@@ -189,25 +190,30 @@ const ProfileScreen = () => {
               <View className="flex-row items-center">
                 <Text className="text-lg mr-2">
                   {user.studyPalConfig.animal === "cat" && "🐱"}
-                  {user.studyPalConfig.animal === "bunny" && "🐰"}
-                  {user.studyPalConfig.animal === "bear" && "🐻"}
-                  {user.studyPalConfig.animal === "dog" && "🐶"}
-                  {user.studyPalConfig.animal === "fox" && "🦊"}
-                  {user.studyPalConfig.animal === "panda" && "🐼"}
-                  {user.studyPalConfig.animal === "koala" && "🐨"}
+                  {user.studyPalConfig.animal === "redpanda" && "🦊"}
                   {user.studyPalConfig.animal === "owl" && "🦉"}
                   {user.studyPalConfig.animal === "penguin" && "🐧"}
-                  {user.studyPalConfig.animal === "lion" && "🦁"}
-                  {user.studyPalConfig.animal === "tiger" && "🐯"}
-                  {user.studyPalConfig.animal === "monkey" && "🐵"}
-                  {user.studyPalConfig.animal === "elephant" && "🐘"}
-                  {user.studyPalConfig.animal === "giraffe" && "🦒"}
-                  {user.studyPalConfig.animal === "hamster" && "🐹"}
-                  {user.studyPalConfig.animal === "raccoon" && "🦝"}
+                  {user.studyPalConfig.animal === "horse" && "🐴"}
+                  {user.studyPalConfig.animal === "dog" && "🐶"}
+                  {user.studyPalConfig.animal === "chick" && "🐥"}
+                  {user.studyPalConfig.animal === "bear" && "🐻"}
                   {user.studyPalConfig.animal === "hedgehog" && "🦔"}
-                  {user.studyPalConfig.animal === "deer" && "🦌"}
-                  {user.studyPalConfig.animal === "duck" && "🦆"}
+                  {user.studyPalConfig.animal === "tiger" && "🐯"}
+                  {user.studyPalConfig.animal === "turtle" && "🐢"}
+                  {user.studyPalConfig.animal === "bunny" && "🐰"}
+                  {user.studyPalConfig.animal === "giraffe" && "🦒"}
+                  {user.studyPalConfig.animal === "lamb" && "🐑"}
+                  {user.studyPalConfig.animal === "alpaca" && "🦙"}
+                  {user.studyPalConfig.animal === "lion" && "🦁"}
                   {user.studyPalConfig.animal === "frog" && "🐸"}
+                  {user.studyPalConfig.animal === "koala" && "🐨"}
+                  {user.studyPalConfig.animal === "sloth" && "🦥"}
+                  {user.studyPalConfig.animal === "monkey" && "🐵"}
+                  {user.studyPalConfig.animal === "hamster" && "🐹"}
+                  {user.studyPalConfig.animal === "reindeer" && "🦌"}
+                  {user.studyPalConfig.animal === "chipmunk" && "🐿️"}
+                  {user.studyPalConfig.animal === "elephant" && "🐘"}
+                  {user.studyPalConfig.animal === "goldfish" && "🐠"}
                 </Text>
                 <Ionicons name="chevron-forward" size={20} color="#9CA3AF" />
               </View>
@@ -440,25 +446,30 @@ const ProfileScreen = () => {
                 <View className="flex-row items-center">
                   <Text className="text-3xl mr-3">
                     {animal === "cat" && "🐱"}
-                    {animal === "bunny" && "🐰"}
-                    {animal === "bear" && "🐻"}
-                    {animal === "dog" && "🐶"}
-                    {animal === "fox" && "🦊"}
-                    {animal === "panda" && "🐼"}
-                    {animal === "koala" && "🐨"}
+                    {animal === "redpanda" && "🦊"}
                     {animal === "owl" && "🦉"}
                     {animal === "penguin" && "🐧"}
-                    {animal === "lion" && "🦁"}
-                    {animal === "tiger" && "🐯"}
-                    {animal === "monkey" && "🐵"}
-                    {animal === "elephant" && "🐘"}
-                    {animal === "giraffe" && "🦒"}
-                    {animal === "hamster" && "🐹"}
-                    {animal === "raccoon" && "🦝"}
+                    {animal === "horse" && "🐴"}
+                    {animal === "dog" && "🐶"}
+                    {animal === "chick" && "🐥"}
+                    {animal === "bear" && "🐻"}
                     {animal === "hedgehog" && "🦔"}
-                    {animal === "deer" && "🦌"}
-                    {animal === "duck" && "🦆"}
+                    {animal === "tiger" && "🐯"}
+                    {animal === "turtle" && "🐢"}
+                    {animal === "bunny" && "🐰"}
+                    {animal === "giraffe" && "🦒"}
+                    {animal === "lamb" && "🐑"}
+                    {animal === "alpaca" && "🦙"}
+                    {animal === "lion" && "🦁"}
                     {animal === "frog" && "🐸"}
+                    {animal === "koala" && "🐨"}
+                    {animal === "sloth" && "🦥"}
+                    {animal === "monkey" && "🐵"}
+                    {animal === "hamster" && "🐹"}
+                    {animal === "reindeer" && "🦌"}
+                    {animal === "chipmunk" && "🐿️"}
+                    {animal === "elephant" && "🐘"}
+                    {animal === "goldfish" && "🐠"}
                   </Text>
                   <Text className="text-base font-medium text-gray-800 dark:text-gray-100 capitalize">
                     {animal}

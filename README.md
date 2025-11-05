@@ -44,7 +44,7 @@ StudyPal is a comprehensive mobile productivity app designed for students to sta
 - ✅ **Automatic Error Recovery** - App now automatically shows onboarding if user data is corrupted
 - ✅ **14 Languages Supported** - Full multilingual support: English, Spanish, French, German, Chinese, Japanese, Arabic, Korean, Portuguese (BR), Hindi, Italian, Turkish, Russian, and Indonesian
 - ✅ **Music Player** - Calming classical music from Pixabay with full playback controls, mood filters, and volume adjustment
-- ✅ **20 Animal Companions** - Choose from cat, bunny, bear, dog, fox, panda, koala, owl, penguin, lion, tiger, monkey, elephant, giraffe, hamster, raccoon, hedgehog, deer, duck, or frog
+- ✅ **25 Adorable Animal Companions** - New digital art style with friendly, bright-eyed Study Pals: Cat, Red Panda, Owl, Penguin, Horse, Dog, Chick, Bear, Hedgehog, Tiger, Turtle, Bunny, Giraffe, Lamb, Alpaca, Lion, Frog, Koala, Sloth, Monkey, Hamster, Reindeer, Chipmunk, Elephant, and Goldfish
 - ✅ **Celebration Animations** - Animated celebration modal with your Study Pal when you complete tasks
 - ✅ **10 Dynamic Themes** - Blue, Purple, Pink, Green, Orange, Red, Teal, Indigo, Rose, and Amber
 - ✅ **Mood-Based Animations** - Study Pal changes mood (happy, focused, celebrating, relaxed) based on your progress
