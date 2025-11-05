@@ -19,6 +19,7 @@ const GroupsScreen = () => {
 
   const groups = useGroupStore((s) => s.groups);
   const addGroup = useGroupStore((s) => s.addGroup);
+  const updateGroup = useGroupStore((s) => s.updateGroup);
   const joinGroupWithCode = useGroupStore((s) => s.joinGroupWithCode);
   const leaveGroup = useGroupStore((s) => s.leaveGroup);
   const regenerateShareCode = useGroupStore((s) => s.regenerateShareCode);
@@ -26,11 +27,13 @@ const GroupsScreen = () => {
   const tasks = useTaskStore((s) => s.tasks);
 
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [showJoinModal, setShowJoinModal] = useState(false);
   const [showQRModal, setShowQRModal] = useState(false);
   const [showHowToModal, setShowHowToModal] = useState(false);
   const [showRulesModal, setShowRulesModal] = useState(false);
   const [qrGroupCode, setQRGroupCode] = useState("");
+  const [editingGroupId, setEditingGroupId] = useState<string | null>(null);
   const [groupName, setGroupName] = useState("");
   const [groupDescription, setGroupDescription] = useState("");
   const [school, setSchool] = useState("");
@@ -114,6 +117,56 @@ const GroupsScreen = () => {
         },
       ]
     );
+  };
+
+  const handleEditGroup = (groupId: string) => {
+    const group = groups.find((g) => g.id === groupId);
+    if (!group) return;
+
+    // Check if user is the creator
+    if (group.teacherId !== user?.id) {
+      Alert.alert("Permission Denied", "Only the group creator can edit this group");
+      return;
+    }
+
+    // Pre-fill the form with existing group data
+    setEditingGroupId(groupId);
+    setGroupName(group.name);
+    setGroupDescription(group.description || "");
+    setSchool(group.school || "");
+    setClassName(group.className || "");
+    setTeacherEmail(group.teacherEmail || "");
+    setShowEditModal(true);
+  };
+
+  const handleSaveEdit = () => {
+    if (!groupName.trim()) {
+      Alert.alert("Error", "Please enter a group name");
+      return;
+    }
+
+    if (!editingGroupId) return;
+
+    const success = updateGroup(editingGroupId, {
+      name: groupName,
+      description: groupDescription,
+      school: school.trim() || undefined,
+      className: className.trim() || undefined,
+      teacherEmail: teacherEmail.trim() || undefined,
+    });
+
+    if (success) {
+      setEditingGroupId(null);
+      setGroupName("");
+      setGroupDescription("");
+      setSchool("");
+      setClassName("");
+      setTeacherEmail("");
+      setShowEditModal(false);
+      Alert.alert("Success", "Group updated successfully!");
+    } else {
+      Alert.alert("Error", "Failed to update group");
+    }
   };
 
   const handleCopyCode = (shareCode: string) => {
@@ -491,6 +544,25 @@ const GroupsScreen = () => {
                           </View>
                         </View>
 
+                        {/* Edit Group Button (for creators only) */}
+                        <Pressable
+                          onPress={() => handleEditGroup(group.id)}
+                          style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            paddingVertical: 12,
+                            borderRadius: 12,
+                            backgroundColor: theme.primary,
+                            marginBottom: 12
+                          }}
+                        >
+                          <Ionicons name="create-outline" size={18} color="white" />
+                          <Text style={{ color: 'white', marginLeft: 8, fontSize: 14, fontFamily: 'Poppins_600SemiBold' }}>
+                            Edit Group Details
+                          </Text>
+                        </Pressable>
+
                         {/* Expanded Content - Group Tasks */}
                         {selectedGroupId === group.id && (
                           <View className="mt-4 pt-4" style={{ borderTopWidth: 1, borderTopColor: theme.textSecondary + "20" }}>
@@ -867,6 +939,124 @@ const GroupsScreen = () => {
                     I agree to follow the group rules and maintain appropriate content
                   </Text>
                 </Pressable>
+              </View>
+            </ScrollView>
+          </SafeAreaView>
+        </Modal>
+
+        {/* Edit Group Modal */}
+        <Modal
+          visible={showEditModal}
+          animationType="slide"
+          presentationStyle="pageSheet"
+          onRequestClose={() => {
+            setShowEditModal(false);
+            setEditingGroupId(null);
+          }}
+        >
+          <SafeAreaView className="flex-1" style={{ backgroundColor: theme.backgroundGradient[0] }}>
+            <View className="px-6 py-4 flex-row items-center justify-between" style={{ borderBottomWidth: 1, borderBottomColor: theme.textSecondary + "20" }}>
+              <Pressable onPress={() => {
+                setShowEditModal(false);
+                setEditingGroupId(null);
+              }}>
+                <Text style={{ color: theme.primary, fontFamily: 'Poppins_400Regular' }} className="text-lg">Cancel</Text>
+              </Pressable>
+              <Text className="text-xl" style={{ color: theme.textPrimary, fontFamily: 'Poppins_700Bold' }}>
+                Edit Group
+              </Text>
+              <Pressable onPress={handleSaveEdit}>
+                <Text style={{ color: theme.primary, fontFamily: 'Poppins_600SemiBold' }} className="text-lg">Save</Text>
+              </Pressable>
+            </View>
+
+            <ScrollView className="flex-1 px-6 py-4">
+              <View className="mb-4">
+                <Text className="text-sm font-medium mb-2" style={{ color: theme.textSecondary, fontFamily: 'Poppins_500Medium' }}>
+                  Group Name *
+                </Text>
+                <TextInput
+                  value={groupName}
+                  onChangeText={setGroupName}
+                  placeholder="e.g., Math Class 2025"
+                  placeholderTextColor={theme.textSecondary}
+                  className="rounded-xl px-4 py-3 text-base"
+                  style={{ backgroundColor: 'white', color: theme.textPrimary, fontFamily: 'Poppins_400Regular' }}
+                />
+              </View>
+
+              <View className="mb-4">
+                <Text className="text-sm font-medium mb-2" style={{ color: theme.textSecondary, fontFamily: 'Poppins_500Medium' }}>
+                  Description (Optional)
+                </Text>
+                <TextInput
+                  value={groupDescription}
+                  onChangeText={setGroupDescription}
+                  placeholder="What is this group about?"
+                  placeholderTextColor={theme.textSecondary}
+                  multiline
+                  numberOfLines={4}
+                  textAlignVertical="top"
+                  className="rounded-xl px-4 py-3 text-base min-h-[100px]"
+                  style={{ backgroundColor: 'white', color: theme.textPrimary, fontFamily: 'Poppins_400Regular' }}
+                />
+              </View>
+
+              <View className="mb-4">
+                <Text className="text-sm font-medium mb-2" style={{ color: theme.textSecondary, fontFamily: 'Poppins_500Medium' }}>
+                  School (Optional)
+                </Text>
+                <TextInput
+                  value={school}
+                  onChangeText={setSchool}
+                  placeholder="e.g., Lincoln High School"
+                  placeholderTextColor={theme.textSecondary}
+                  className="rounded-xl px-4 py-3 text-base"
+                  style={{ backgroundColor: 'white', color: theme.textPrimary, fontFamily: 'Poppins_400Regular' }}
+                />
+              </View>
+
+              <View className="mb-4">
+                <Text className="text-sm font-medium mb-2" style={{ color: theme.textSecondary, fontFamily: 'Poppins_500Medium' }}>
+                  Class Name (Optional)
+                </Text>
+                <TextInput
+                  value={className}
+                  onChangeText={setClassName}
+                  placeholder="e.g., Grade 10 Math"
+                  placeholderTextColor={theme.textSecondary}
+                  className="rounded-xl px-4 py-3 text-base"
+                  style={{ backgroundColor: 'white', color: theme.textPrimary, fontFamily: 'Poppins_400Regular' }}
+                />
+              </View>
+
+              <View className="mb-4">
+                <Text className="text-sm font-medium mb-2" style={{ color: theme.textSecondary, fontFamily: 'Poppins_500Medium' }}>
+                  Teacher Email (Optional)
+                </Text>
+                <TextInput
+                  value={teacherEmail}
+                  onChangeText={setTeacherEmail}
+                  placeholder="e.g., teacher@school.edu"
+                  placeholderTextColor={theme.textSecondary}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  className="rounded-xl px-4 py-3 text-base"
+                  style={{ backgroundColor: 'white', color: theme.textPrimary, fontFamily: 'Poppins_400Regular' }}
+                />
+              </View>
+
+              {/* Info Box */}
+              <View className="mb-4 rounded-xl p-4" style={{ backgroundColor: theme.primary + "15" }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+                  <Ionicons name="information-circle" size={20} color={theme.primary} />
+                  <Text style={{ color: theme.primary, marginLeft: 8, fontSize: 14, fontFamily: 'Poppins_600SemiBold' }}>
+                    Note
+                  </Text>
+                </View>
+                <Text style={{ color: theme.textSecondary, fontSize: 12, fontFamily: 'Poppins_400Regular' }}>
+                  You can edit the group name, description, and metadata. The share code and member list cannot be changed from this screen.
+                </Text>
               </View>
             </ScrollView>
           </SafeAreaView>

@@ -6,6 +6,7 @@ import { Group } from "../types";
 interface GroupStore {
   groups: Group[];
   addGroup: (group: Omit<Group, "id" | "createdAt" | "shareCode">) => void;
+  updateGroup: (groupId: string, updates: Partial<Omit<Group, "id" | "createdAt" | "shareCode" | "teacherId" | "studentIds">>) => boolean;
   joinGroupWithCode: (shareCode: string, studentId: string) => boolean;
   joinGroup: (groupId: string, studentId: string) => void;
   leaveGroup: (groupId: string, studentId: string) => void;
@@ -37,6 +38,19 @@ const useGroupStore = create<GroupStore>()(
           createdAt: new Date(),
         };
         set((state) => ({ groups: [...state.groups, newGroup] }));
+      },
+      updateGroup: (groupId, updates) => {
+        const group = get().groups.find((g) => g.id === groupId);
+        if (!group) return false;
+
+        set((state) => ({
+          groups: state.groups.map((g) =>
+            g.id === groupId
+              ? { ...g, ...updates }
+              : g
+          ),
+        }));
+        return true;
       },
       joinGroupWithCode: (shareCode, studentId) => {
         const group = get().groups.find((g) => g.shareCode === shareCode);
