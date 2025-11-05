@@ -10,7 +10,7 @@ StudyPal is a comprehensive mobile productivity app designed for students to sta
 - ✅ **Study Pal in Timer** - Study Pal guides you during focus sessions and break times
 - ✅ **Study Pal in Tasks** - Your companion appears in the task header to support your productivity
 - ✅ **Fixed Name Display** - Study Pal name now appears once only on home page, no duplication
-- ✅ **Weekly Goal Clarity** - Weekly goal now shows "(includes today)" for better understanding
+- ✅ **Weekly Goal Display** - Weekly goal now displays "tasks completed" for clear progress tracking
 - ✅ **Enhanced Timer Features** - Custom time input, alarm sound selection, and color-coded backgrounds (green for study, blue for breaks)
 - ✅ **Custom Duration Input** - Directly type any study/break duration (1-120 minutes) with dedicated modal
 - ✅ **Continuous Alarm with Snooze** - Alarm sounds play repeatedly until dismissed with beautiful snooze modal
