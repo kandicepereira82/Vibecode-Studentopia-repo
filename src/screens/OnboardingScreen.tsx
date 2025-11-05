@@ -135,14 +135,50 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
         <View className="px-6 py-8">
           {/* App Icon and Title */}
           <View className="items-center mb-8">
-            <View className="w-24 h-24 bg-orange-500 rounded-3xl items-center justify-center mb-4 shadow-lg">
-              <Image
-                source={getAnimalImage("redpanda")}
-                style={{ width: 80, height: 80 }}
-                resizeMode="contain"
-              />
+            {/* Icon-style container with gradient background */}
+            <View
+              style={{
+                width: 120,
+                height: 120,
+                borderRadius: 28,
+                overflow: 'hidden',
+                marginBottom: 16,
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.3,
+                shadowRadius: 8,
+                elevation: 8
+              }}
+            >
+              <LinearGradient
+                colors={['#4A7C9E', '#2D5F7E']}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+              >
+                <Image
+                  source={getAnimalImage("redpanda")}
+                  style={{ width: 90, height: 90 }}
+                  resizeMode="contain"
+                />
+              </LinearGradient>
             </View>
-            <Text className="text-4xl font-bold text-gray-800 dark:text-gray-100">
+            <Text
+              style={{
+                fontSize: 36,
+                fontWeight: 'bold',
+                color: '#FFFFFF',
+                backgroundColor: '#FF6B35',
+                paddingHorizontal: 24,
+                paddingVertical: 8,
+                borderRadius: 12,
+                overflow: 'hidden',
+                marginBottom: 8
+              }}
+            >
               Studentopia
             </Text>
             <Text className="text-lg text-gray-600 dark:text-gray-400 mt-2 text-center">
