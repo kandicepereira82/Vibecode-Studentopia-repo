@@ -162,10 +162,21 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
                 {/* Icon content - can be replaced with actual icon image later */}
               </LinearGradient>
             </View>
-            <Text className="text-xl font-semibold text-gray-800 dark:text-gray-100 text-center mb-1">
+            <Text style={{
+              fontSize: 24,
+              fontFamily: 'Poppins_600SemiBold',
+              color: '#1F2937',
+              textAlign: 'center',
+              marginBottom: 8
+            }}>
               Welcome to Studentopia
             </Text>
-            <Text className="text-base text-gray-600 dark:text-gray-400 text-center">
+            <Text style={{
+              fontSize: 16,
+              fontFamily: 'Poppins_400Regular',
+              color: '#6B7280',
+              textAlign: 'center'
+            }}>
               Learn, Focus, Grow together
             </Text>
           </View>
@@ -202,15 +213,30 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
                     showMessage={false}
                   />
                 </View>
-                <Text className="text-xl font-semibold text-gray-700 dark:text-gray-300 text-center">
+                <Text style={{
+                  fontSize: 20,
+                  fontFamily: 'Poppins_600SemiBold',
+                  color: '#374151',
+                  textAlign: 'center'
+                }}>
                   Welcome to Studentopia!
                 </Text>
               </View>
 
-              <Text className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">
+              <Text style={{
+                fontSize: 22,
+                fontFamily: 'Poppins_700Bold',
+                color: '#1F2937',
+                marginBottom: 8
+              }}>
                 What should we call you?
               </Text>
-              <Text className="text-gray-600 dark:text-gray-400 mb-4">
+              <Text style={{
+                fontSize: 15,
+                fontFamily: 'Poppins_400Regular',
+                color: '#6B7280',
+                marginBottom: 16
+              }}>
                 Enter your name or nickname so your Studentopia Companion can greet you personally.
               </Text>
               <TextInput
@@ -218,11 +244,27 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
                 onChangeText={setUsername}
                 placeholder="Enter your name"
                 placeholderTextColor="#9CA3AF"
-                className="bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-2xl px-6 py-4 text-lg mb-6"
+                style={{
+                  backgroundColor: '#FFFFFF',
+                  color: '#1F2937',
+                  borderRadius: 16,
+                  paddingHorizontal: 24,
+                  paddingVertical: 16,
+                  fontSize: 16,
+                  fontFamily: 'Poppins_400Regular',
+                  marginBottom: 24,
+                  borderWidth: 1,
+                  borderColor: '#E5E7EB'
+                }}
                 autoFocus
               />
 
-              <Text className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2">
+              <Text style={{
+                fontSize: 20,
+                fontFamily: 'Poppins_700Bold',
+                color: '#1F2937',
+                marginBottom: 8
+              }}>
                 Are you a student or teacher?
               </Text>
               <View className="flex-row gap-3 mb-6">
@@ -240,14 +282,12 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
                     size={32}
                     color={role === "student" ? "#3B82F6" : "#9CA3AF"}
                   />
-                  <Text
-                    className={cn(
-                      "text-lg font-semibold mt-2",
-                      role === "student"
-                        ? "text-blue-600 dark:text-blue-400"
-                        : "text-gray-600 dark:text-gray-400"
-                    )}
-                  >
+                  <Text style={{
+                    fontSize: 16,
+                    fontFamily: 'Poppins_600SemiBold',
+                    color: role === "student" ? "#3B82F6" : "#6B7280",
+                    marginTop: 8
+                  }}>
                     Student
                   </Text>
                 </Pressable>
@@ -265,14 +305,12 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
                     size={32}
                     color={role === "teacher" ? "#3B82F6" : "#9CA3AF"}
                   />
-                  <Text
-                    className={cn(
-                      "text-lg font-semibold mt-2",
-                      role === "teacher"
-                        ? "text-blue-600 dark:text-blue-400"
-                        : "text-gray-600 dark:text-gray-400"
-                    )}
-                  >
+                  <Text style={{
+                    fontSize: 16,
+                    fontFamily: 'Poppins_600SemiBold',
+                    color: role === "teacher" ? "#3B82F6" : "#6B7280",
+                    marginTop: 8
+                  }}>
                     Teacher
                   </Text>
                 </Pressable>
@@ -280,7 +318,12 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
 
               {username.trim() && (
                 <View className="bg-blue-50 dark:bg-blue-900 rounded-2xl p-4 mt-2">
-                  <Text className="text-blue-800 dark:text-blue-200 text-center">
+                  <Text style={{
+                    fontSize: 15,
+                    fontFamily: 'Poppins_500Medium',
+                    color: '#1E40AF',
+                    textAlign: 'center'
+                  }}>
                     {"Hi " + username + "! I'm your Studentopia Companion. Let's make every day fun and focused!"}
                   </Text>
                 </View>
@@ -291,10 +334,20 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
           {/* Step 2: Studentopia Companion Name */}
           {step === 2 && (
             <View>
-              <Text className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">
+              <Text style={{
+                fontSize: 22,
+                fontFamily: 'Poppins_700Bold',
+                color: '#1F2937',
+                marginBottom: 8
+              }}>
                 Name your Studentopia Companion
               </Text>
-              <Text className="text-gray-600 dark:text-gray-400 mb-6">
+              <Text style={{
+                fontSize: 15,
+                fontFamily: 'Poppins_400Regular',
+                color: '#6B7280',
+                marginBottom: 24
+              }}>
                 This cute companion will help keep you motivated. You can rename them later!
               </Text>
 
@@ -315,11 +368,27 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
                 onChangeText={setStudyPalName}
                 placeholder="Enter a name"
                 placeholderTextColor="#9CA3AF"
-                className="bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-2xl px-6 py-4 text-lg mb-4"
+                style={{
+                  backgroundColor: '#FFFFFF',
+                  color: '#1F2937',
+                  borderRadius: 16,
+                  paddingHorizontal: 24,
+                  paddingVertical: 16,
+                  fontSize: 16,
+                  fontFamily: 'Poppins_400Regular',
+                  marginBottom: 16,
+                  borderWidth: 1,
+                  borderColor: '#E5E7EB'
+                }}
               />
 
               <View className="bg-purple-50 dark:bg-purple-900 rounded-2xl p-4">
-                <Text className="text-purple-800 dark:text-purple-200 text-center">
+                <Text style={{
+                  fontSize: 15,
+                  fontFamily: 'Poppins_500Medium',
+                  color: '#6B21A8',
+                  textAlign: 'center'
+                }}>
                   Your Studentopia Companion is excited to be part of your journey!
                 </Text>
               </View>
@@ -329,15 +398,30 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
           {/* Step 3: Choose Animal */}
           {step === 3 && (
             <View>
-              <Text className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">
+              <Text style={{
+                fontSize: 22,
+                fontFamily: 'Poppins_700Bold',
+                color: '#1F2937',
+                marginBottom: 8
+              }}>
                 Choose your Studentopia Companion
               </Text>
-              <Text className="text-gray-600 dark:text-gray-400 mb-4">
+              <Text style={{
+                fontSize: 15,
+                fontFamily: 'Poppins_400Regular',
+                color: '#6B7280',
+                marginBottom: 16
+              }}>
                 {"Pick your favourite animal companion — they'll journey with you through every task and study session!"}
               </Text>
 
               <View className="bg-blue-50 dark:bg-blue-900 rounded-2xl p-4 mb-6">
-                <Text className="text-blue-800 dark:text-blue-200 text-center">
+                <Text style={{
+                  fontSize: 15,
+                  fontFamily: 'Poppins_500Medium',
+                  color: '#1E40AF',
+                  textAlign: 'center'
+                }}>
                   {"Your Studentopia Companion will guide you, cheer you on, and help you stay on track!"}
                 </Text>
               </View>
@@ -360,7 +444,13 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
                             style={{ width: 60, height: 60 }}
                             resizeMode="contain"
                           />
-                          <Text className="text-xs font-medium text-gray-700 dark:text-gray-300 mt-1 capitalize">
+                          <Text style={{
+                            fontSize: 11,
+                            fontFamily: 'Poppins_500Medium',
+                            color: '#374151',
+                            marginTop: 4,
+                            textTransform: 'capitalize'
+                          }}>
                             {getAnimalDisplayName(a)}
                           </Text>
                         </Pressable>
@@ -375,10 +465,20 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
           {/* Step 4: Choose Theme */}
           {step === 4 && (
             <View>
-              <Text className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">
+              <Text style={{
+                fontSize: 22,
+                fontFamily: 'Poppins_700Bold',
+                color: '#1F2937',
+                marginBottom: 8
+              }}>
                 Choose your environment
               </Text>
-              <Text className="text-gray-600 dark:text-gray-400 mb-4">
+              <Text style={{
+                fontSize: 15,
+                fontFamily: 'Poppins_400Regular',
+                color: '#6B7280',
+                marginBottom: 16
+              }}>
                 {"Pick a theme that matches your vibe — your Studentopia Companion will explore it with you!"}
               </Text>
 
@@ -400,7 +500,12 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
               </View>
 
               <View className="bg-green-50 dark:bg-green-900 rounded-2xl p-4 mb-6">
-                <Text className="text-green-800 dark:text-green-200 text-center">
+                <Text style={{
+                  fontSize: 15,
+                  fontFamily: 'Poppins_500Medium',
+                  color: '#166534',
+                  textAlign: 'center'
+                }}>
                   Make your Studentopia Companion feel right at home!
                 </Text>
               </View>
@@ -421,7 +526,12 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
                     >
                       <Text className="text-3xl">{theme.emoji}</Text>
                     </LinearGradient>
-                    <Text className="text-xs font-medium text-gray-700 dark:text-gray-300 text-center">
+                    <Text style={{
+                      fontSize: 11,
+                      fontFamily: 'Poppins_500Medium',
+                      color: '#374151',
+                      textAlign: 'center'
+                    }}>
                       {theme.name}
                     </Text>
                   </Pressable>
@@ -435,9 +545,19 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
             {step > 1 && (
               <Pressable
                 onPress={() => setStep(step - 1)}
-                className="flex-1 bg-gray-200 dark:bg-gray-700 py-4 rounded-2xl items-center"
+                style={{
+                  flex: 1,
+                  backgroundColor: '#F3F4F6',
+                  paddingVertical: 16,
+                  borderRadius: 16,
+                  alignItems: 'center'
+                }}
               >
-                <Text className="text-gray-700 dark:text-gray-300 font-semibold text-lg">
+                <Text style={{
+                  fontSize: 16,
+                  fontFamily: 'Poppins_600SemiBold',
+                  color: '#4B5563'
+                }}>
                   Back
                 </Text>
               </Pressable>
@@ -451,12 +571,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
                 }
               }}
               disabled={step === 1 && !username.trim()}
-              className={cn(
-                "flex-1 py-4 rounded-2xl items-center",
-                step === 1 && !username.trim()
-                  ? "bg-gray-300 dark:bg-gray-700"
-                  : ""
-              )}
+              style={{ flex: 1 }}
             >
               <LinearGradient
                 colors={
@@ -464,9 +579,18 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
                     ? ["#D1D5DB", "#9CA3AF"]
                     : ["#3B82F6", "#1D4ED8"]
                 }
-                className="w-full py-4 rounded-2xl items-center"
+                style={{
+                  width: '100%',
+                  paddingVertical: 16,
+                  borderRadius: 16,
+                  alignItems: 'center'
+                }}
               >
-                <Text className="text-white font-bold text-lg">
+                <Text style={{
+                  fontSize: 16,
+                  fontFamily: 'Poppins_700Bold',
+                  color: '#FFFFFF'
+                }}>
                   {step === 4 ? "Get Started" : "Next"}
                 </Text>
               </LinearGradient>
@@ -501,10 +625,22 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
                 showMessage={false}
               />
             </View>
-            <Text className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-4 text-center">
+            <Text style={{
+              fontSize: 28,
+              fontFamily: 'Poppins_700Bold',
+              color: '#1F2937',
+              marginBottom: 16,
+              textAlign: 'center'
+            }}>
               {"You're ready!"}
             </Text>
-            <Text className="text-lg text-gray-600 dark:text-gray-400 text-center">
+            <Text style={{
+              fontSize: 16,
+              fontFamily: 'Poppins_400Regular',
+              color: '#6B7280',
+              textAlign: 'center',
+              lineHeight: 24
+            }}>
               {"Your Studentopia Companion is here to help you focus, stay motivated, and enjoy every step of your journey."}
             </Text>
           </View>
