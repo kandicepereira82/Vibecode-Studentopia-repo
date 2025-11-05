@@ -451,8 +451,7 @@ const TimerScreen = () => {
                   width: 120,
                   height: 56,
                   borderRadius: 16,
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  overflow: 'hidden',
                   shadowColor: '#000',
                   shadowOffset: { width: 0, height: 2 },
                   shadowOpacity: 0.15,
@@ -461,7 +460,7 @@ const TimerScreen = () => {
                 }}
               >
                 <LinearGradient
-                  colors={[theme.accentColor, theme.primaryDark]}
+                  colors={['#F97316', '#EA580C']}
                   style={{
                     width: '100%',
                     height: '100%',
@@ -484,11 +483,7 @@ const TimerScreen = () => {
                   width: 120,
                   height: 56,
                   borderRadius: 16,
-                  backgroundColor: theme.textSecondary,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: 8,
+                  overflow: 'hidden',
                   shadowColor: '#000',
                   shadowOffset: { width: 0, height: 2 },
                   shadowOpacity: 0.15,
@@ -496,10 +491,23 @@ const TimerScreen = () => {
                   elevation: 3
                 }}
               >
-                <Ionicons name="stop" size={24} color="white" />
-                <Text style={{ color: 'white', fontSize: 16, fontFamily: 'Poppins_600SemiBold' }}>
-                  Stop
-                </Text>
+                <LinearGradient
+                  colors={['#EF4444', '#DC2626']}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    borderRadius: 16,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 8
+                  }}
+                >
+                  <Ionicons name="stop" size={24} color="white" />
+                  <Text style={{ color: 'white', fontSize: 16, fontFamily: 'Poppins_600SemiBold' }}>
+                    Stop
+                  </Text>
+                </LinearGradient>
               </Pressable>
             </>
           )}
