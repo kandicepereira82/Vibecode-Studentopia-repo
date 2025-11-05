@@ -8,7 +8,8 @@ StudyPal is a comprehensive mobile productivity app designed for students to sta
 - ✅ **Custom Duration Input** - Directly type any study/break duration (1-120 minutes) with dedicated modal
 - ✅ **Alarm Sound Options** - Choose from 4 different alarm sounds (Bell, Chime, Beep, Gentle) to play when timer completes
 - ✅ **Color-Coded Backgrounds** - Study sessions show green background, break sessions show blue background for clear visual distinction
-- ✅ **Modern Timer Controls** - Rectangular buttons with rounded edges, consistent sizing, and theme colors
+- ✅ **Modern Timer Controls** - Rectangular buttons (120px × 56px) with rounded edges, text labels, and consistent styling across Home and Timer screens
+- ✅ **Unified Timer UI** - Home screen Quick Timer now matches Timer page style with rectangular buttons and gradient backgrounds
 - ✅ **Simplified Profile Screen** - Removed stats section for cleaner, more focused profile management
 - ✅ **Music Player Integration** - Music player moved from separate tab to Timer screen for seamless study sessions
 - ✅ **Code Quality Improvements** - Fixed all functional errors including Alert usage, console.log statements, type safety, and React hooks

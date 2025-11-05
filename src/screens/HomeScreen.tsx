@@ -737,12 +737,10 @@ const HomeScreen = () => {
                 <Pressable
                   onPress={startTimer}
                   style={{
-                    backgroundColor: theme.primary,
-                    width: 56,
+                    width: 120,
                     height: 56,
-                    borderRadius: 28,
-                    alignItems: 'center',
-                    justifyContent: 'center',
+                    borderRadius: 16,
+                    overflow: 'hidden',
                     shadowColor: '#000',
                     shadowOffset: { width: 0, height: 2 },
                     shadowOpacity: 0.15,
@@ -750,19 +748,35 @@ const HomeScreen = () => {
                     elevation: 3
                   }}
                 >
-                  <Ionicons name="play" size={24} color="white" />
+                  <LinearGradient
+                    colors={[theme.primary, theme.primary]}
+                    style={{
+                      flex: 1,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: 8
+                    }}
+                  >
+                    <Ionicons name="play" size={24} color="white" />
+                    <Text style={{
+                      color: 'white',
+                      fontSize: 16,
+                      fontFamily: 'Poppins_600SemiBold'
+                    }}>
+                      Start
+                    </Text>
+                  </LinearGradient>
                 </Pressable>
               ) : (
                 <>
                   <Pressable
                     onPress={pauseTimer}
                     style={{
-                      backgroundColor: '#F97316',
-                      width: 56,
+                      width: 120,
                       height: 56,
-                      borderRadius: 28,
-                      alignItems: 'center',
-                      justifyContent: 'center',
+                      borderRadius: 16,
+                      overflow: 'hidden',
                       shadowColor: '#000',
                       shadowOffset: { width: 0, height: 2 },
                       shadowOpacity: 0.15,
@@ -770,17 +784,33 @@ const HomeScreen = () => {
                       elevation: 3
                     }}
                   >
-                    <Ionicons name="pause" size={24} color="white" />
+                    <LinearGradient
+                      colors={['#F97316', '#EA580C']}
+                      style={{
+                        flex: 1,
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: 8
+                      }}
+                    >
+                      <Ionicons name="pause" size={24} color="white" />
+                      <Text style={{
+                        color: 'white',
+                        fontSize: 16,
+                        fontFamily: 'Poppins_600SemiBold'
+                      }}>
+                        Pause
+                      </Text>
+                    </LinearGradient>
                   </Pressable>
                   <Pressable
                     onPress={stopTimer}
                     style={{
-                      backgroundColor: '#EF4444',
-                      width: 48,
-                      height: 48,
-                      borderRadius: 24,
-                      alignItems: 'center',
-                      justifyContent: 'center',
+                      width: 120,
+                      height: 56,
+                      borderRadius: 16,
+                      overflow: 'hidden',
                       shadowColor: '#000',
                       shadowOffset: { width: 0, height: 2 },
                       shadowOpacity: 0.15,
@@ -788,7 +818,25 @@ const HomeScreen = () => {
                       elevation: 3
                     }}
                   >
-                    <Ionicons name="stop" size={20} color="white" />
+                    <LinearGradient
+                      colors={['#EF4444', '#DC2626']}
+                      style={{
+                        flex: 1,
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: 8
+                      }}
+                    >
+                      <Ionicons name="stop" size={24} color="white" />
+                      <Text style={{
+                        color: 'white',
+                        fontSize: 16,
+                        fontFamily: 'Poppins_600SemiBold'
+                      }}>
+                        Stop
+                      </Text>
+                    </LinearGradient>
                   </Pressable>
                 </>
               )}
