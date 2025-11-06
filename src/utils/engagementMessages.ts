@@ -140,18 +140,51 @@ export const getTimeOfDay = (hour: number = new Date().getHours()): "morning" | 
 };
 
 /**
- * Get study time reminder message based on hour of day
+ * Get study time reminder message based on hour of day with growth mindset
  */
 export const getStudyTimeMessage = (hour: number = new Date().getHours()): string => {
+  const growthMindsetMessages = {
+    morning: [
+      "Good morning! Every study session grows your skills 🌱",
+      "Good morning! Challenges today = Growth tomorrow 🚀",
+      "Good morning! Your effort is building your success 💪",
+      "Good morning! Ready to learn something new today? 🧠",
+      "Good morning! Progress over perfection. Let's study! 📈",
+    ],
+    afternoon: [
+      "Good afternoon! Keep pushing—you're building expertise 🎯",
+      "Good afternoon! Embrace the challenge, grow your abilities 💡",
+      "Good afternoon! Your brain thrives on focused effort 🧠",
+      "Good afternoon! Every problem you solve makes you stronger 💪",
+      "Good afternoon! Keep learning, keep growing! 🌱",
+    ],
+    evening: [
+      "Good evening! End strong—your effort creates lasting growth 🌟",
+      "Good evening! Study now, celebrate progress later! 🎉",
+      "Good evening! Dedication today = Mastery tomorrow 📚",
+      "Good evening! You're developing new abilities right now 🚀",
+      "Good evening! Progress is progress, no matter the pace 📈",
+    ],
+    night: [
+      "Good night! Rest well—your brain is consolidating today's learning 🧠✨",
+      "Good night! You grew today. Sleep well, future expert! 🌙",
+      "Good night! Recovery is part of growth—sweet dreams! 💤",
+      "Good night! Proud of your effort today 🌙⭐",
+      "Good night! Rest up for tomorrow's growth journey 🌱💤",
+    ],
+  };
+
+  let timeOfDay = "night";
   if (hour >= 5 && hour < 12) {
-    return "Good morning! Time to plan your study session 📚";
+    timeOfDay = "morning";
   } else if (hour >= 12 && hour < 17) {
-    return "Good afternoon! Ready to focus on your studies? 📚";
+    timeOfDay = "afternoon";
   } else if (hour >= 17 && hour < 21) {
-    return "Good evening! Let's hit those study goals 📚";
-  } else {
-    return "Good night! Time to wind down and prepare for tomorrow 🌙";
+    timeOfDay = "evening";
   }
+
+  const messages = growthMindsetMessages[timeOfDay as keyof typeof growthMindsetMessages];
+  return messages[Math.floor(Math.random() * messages.length)];
 };
 
 /**
