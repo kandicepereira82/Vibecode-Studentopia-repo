@@ -228,8 +228,15 @@ const MindfulnessScreen = () => {
           <Text style={{ fontSize: 14, fontFamily: "Poppins_400Regular", color: theme.textSecondary, marginBottom: 2 }}>
             Take a moment to breathe and find peace
           </Text>
-          <View className="bg-blue-50 dark:bg-blue-900 rounded-2xl p-3 mt-3 border border-blue-200 dark:border-blue-700">
-            <Text style={{ fontSize: 12, fontFamily: "Poppins_500Medium", color: "#1E40AF", lineHeight: 16 }}>
+          <View style={{
+            backgroundColor: theme.primary + "15",
+            borderRadius: 16,
+            padding: 12,
+            marginTop: 12,
+            borderWidth: 1,
+            borderColor: theme.primary + "40",
+          }}>
+            <Text style={{ fontSize: 12, fontFamily: "Poppins_500Medium", color: theme.primary, lineHeight: 16 }}>
               💙 Mindfulness helps calm your nerves and reduce stress. Take time to focus on your breath and bring peace to your mind.
             </Text>
           </View>
@@ -410,12 +417,20 @@ const MindfulnessScreen = () => {
                   </Text>
 
                   {/* Instructions */}
-                  <View className="bg-blue-50 dark:bg-blue-900 rounded-2xl p-4 mb-6 w-full">
+                  <View style={{
+                    backgroundColor: theme.primary + "15",
+                    borderRadius: 16,
+                    padding: 16,
+                    marginBottom: 16,
+                    width: "100%",
+                    borderWidth: 1,
+                    borderColor: theme.primary + "30",
+                  }}>
                     <Text
                       style={{
                         fontSize: 13,
                         fontFamily: "Poppins_400Regular",
-                        color: "#1E40AF",
+                        color: theme.primary,
                         textAlign: "center",
                         lineHeight: 20,
                       }}
@@ -642,12 +657,18 @@ const MindfulnessScreen = () => {
                 </Text>
 
                 {/* Safety Disclaimer */}
-                <View className="bg-yellow-50 dark:bg-yellow-900 rounded-2xl p-4 border border-yellow-200 dark:border-yellow-700">
+                <View style={{
+                  backgroundColor: theme.secondary + "15",
+                  borderRadius: 16,
+                  padding: 16,
+                  borderWidth: 1,
+                  borderColor: theme.secondary + "40",
+                }}>
                   <Text
                     style={{
                       fontSize: 12,
                       fontFamily: "Poppins_500Medium",
-                      color: "#92400E",
+                      color: theme.secondary,
                       lineHeight: 18,
                     }}
                   >
@@ -656,9 +677,15 @@ const MindfulnessScreen = () => {
                 </View>
 
                 {/* Parent Support Guide */}
-                <View className="bg-blue-50 dark:bg-blue-900 rounded-2xl p-4 border border-blue-200 dark:border-blue-700">
+                <View style={{
+                  backgroundColor: theme.primary + "15",
+                  borderRadius: 16,
+                  padding: 16,
+                  borderWidth: 1,
+                  borderColor: theme.primary + "40",
+                }}>
                   <View className="flex-row items-start gap-3 mb-2">
-                    <Text style={{ fontSize: 16, fontFamily: "Poppins_700Bold", color: "#1E40AF" }}>
+                    <Text style={{ fontSize: 16, fontFamily: "Poppins_700Bold", color: theme.primary }}>
                       👋 Ask a Parent for Help
                     </Text>
                   </View>
@@ -666,7 +693,7 @@ const MindfulnessScreen = () => {
                     style={{
                       fontSize: 12,
                       fontFamily: "Poppins_400Regular",
-                      color: "#1E40AF",
+                      color: theme.primary,
                       lineHeight: 18,
                     }}
                   >
@@ -702,7 +729,7 @@ const MindfulnessScreen = () => {
                       style={{
                         fontSize: 13,
                         fontFamily: "Poppins_500Medium",
-                        color: "#10B981",
+                        color: theme.secondary,
                         marginBottom: 6,
                         marginLeft: 32,
                       }}

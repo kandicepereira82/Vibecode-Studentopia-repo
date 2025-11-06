@@ -4,6 +4,7 @@ Studentopia is a comprehensive mobile productivity app designed for students to 
 
 ## ✨ Latest Updates
 
+- ✅ **Theme-Consistent Mindfulness Page** - All UI elements on Mindfulness page now dynamically use the user's selected theme color scheme (primary, secondary colors)
 - ✅ **Music Player Loading Fixed** - Removed empty URI parameter that was blocking local file playback
 - ✅ **Audio Mode Initialized** - Added proper Audio.setAudioModeAsync() setup to enable playback of alarm sounds
 - ✅ **Alarm Sounds Working** - Fixed sound loading to properly preload all alarm sounds on app start for reliable playback
