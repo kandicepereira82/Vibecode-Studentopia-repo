@@ -9,7 +9,7 @@ import Animated, {
   withSequence,
   Easing,
 } from "react-native-reanimated";
-import { StudyPalAnimal, StudyPalMood } from "../types";
+import { StudyPalAnimal, StudyPalMood, AvatarCustomization } from "../types";
 
 interface StudyPalProps {
   animal: StudyPalAnimal;
@@ -20,6 +20,7 @@ interface StudyPalProps {
   mood?: StudyPalMood;
   showName?: boolean;
   showMessage?: boolean;
+  customAvatar?: AvatarCustomization;
 }
 
 const StudyPal: React.FC<StudyPalProps> = React.memo(({
@@ -31,6 +32,7 @@ const StudyPal: React.FC<StudyPalProps> = React.memo(({
   mood = "neutral",
   showName = true,
   showMessage = true,
+  customAvatar,
 }) => {
   const scale = useSharedValue(1);
   const rotation = useSharedValue(0);

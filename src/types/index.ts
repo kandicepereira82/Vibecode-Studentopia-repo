@@ -94,6 +94,17 @@ export interface StudyPalConfig {
   animal: StudyPalAnimal;
   animationsEnabled: boolean;
   mood?: StudyPalMood;
+  avatar?: AvatarCustomization;
+}
+
+export interface AvatarCustomization {
+  hairStyle?: string;
+  hairColor?: string;
+  furColor?: string;
+  outfit?: string;
+  accessory?: string;
+  glasses?: boolean;
+  headphones?: boolean;
 }
 
 export interface Group {

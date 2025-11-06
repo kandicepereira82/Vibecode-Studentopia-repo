@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { User, Language, ThemeColor, StudyPalAnimal } from "../types";
+import { User, Language, ThemeColor, StudyPalAnimal, AvatarCustomization } from "../types";
 import useTaskStore from "./taskStore";
 import useStatsStore from "./statsStore";
 import useGroupStore from "./groupStore";
@@ -12,6 +12,7 @@ interface UserStore {
   updateLanguage: (language: Language) => void;
   updateThemeColor: (color: ThemeColor) => void;
   updateStudyPal: (name: string, animal: StudyPalAnimal) => void;
+  updateAvatar: (avatar: AvatarCustomization) => void;
   toggleAnimations: () => void;
   toggleNotifications: () => void;
   updateNotificationSound: (enabled: boolean) => void;
@@ -43,6 +44,18 @@ const useUserStore = create<UserStore>()(
                   ...state.user.studyPalConfig,
                   name,
                   animal,
+                },
+              }
+            : null,
+        })),
+      updateAvatar: (avatar: AvatarCustomization) =>
+        set((state) => ({
+          user: state.user
+            ? {
+                ...state.user,
+                studyPalConfig: {
+                  ...state.user.studyPalConfig,
+                  avatar,
                 },
               }
             : null,
