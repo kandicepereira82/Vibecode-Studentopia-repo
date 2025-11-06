@@ -296,3 +296,27 @@ export const getStudySessionMessage = (minutesStudiedToday: number): string | nu
 
   return null;
 };
+
+/**
+ * Get encouraging message when user has no tasks
+ * Rotates through inspirational messages to encourage adding tasks
+ */
+export const getNoTasksMessage = (companionName: string = "Your Companion"): string => {
+  const messages = [
+    "Let's start your day with purpose! Add your first task to get organized.",
+    "Every journey begins with a single step. What will you accomplish today?",
+    "Ready to make progress? Add a task and let's get started!",
+    "Great things start with small actions. Add your first goal!",
+    "Your future self will thank you! Start by adding a task.",
+    "Let's turn your dreams into a plan. Add what you want to achieve!",
+    "The best time to start is now. What's your first task?",
+    "I'm here to help you succeed! Add a task to begin your journey.",
+  ];
+
+  // Rotate messages based on day of month
+  const today = new Date();
+  const dayOfMonth = today.getDate();
+  const messageIndex = dayOfMonth % messages.length;
+
+  return messages[messageIndex];
+};

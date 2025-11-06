@@ -25,6 +25,7 @@ import {
   getEncouragementMessage,
   getTimeOfDay,
   getTodaysDailyReminder,
+  getNoTasksMessage,
 } from "../utils/engagementMessages";
 
 const HomeScreen = () => {
@@ -226,6 +227,26 @@ const HomeScreen = () => {
                   {user.studyPalConfig.name} says:
                 </Text>
                 {(() => {
+                  // Check if user has any tasks at all
+                  const userTasks = tasks.filter(t => t.userId === user?.id);
+                  const hasNoTasks = userTasks.length === 0;
+
+                  // If no tasks exist, show encouraging message to add first task
+                  if (hasNoTasks) {
+                    return (
+                      <Text style={{
+                        fontSize: 15,
+                        fontFamily: 'Poppins_500Medium',
+                        color: theme.textPrimary,
+                        lineHeight: 22,
+                        marginBottom: 8
+                      }}>
+                        {getNoTasksMessage(user.studyPalConfig.name)}
+                      </Text>
+                    );
+                  }
+
+                  // Otherwise, show normal messages
                   const taskReminder = getTaskReminderMessage(todayTasks.length, todayCompleted, user.studyPalConfig.name);
                   const weeklyPrompt = getWeeklyTaskPrompt(weekTasks.length, user.studyPalConfig.name);
                   const encouragement = getEncouragementMessage(todayProgress, user.studyPalConfig.name);
