@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import useUserStore from "../state/userStore";
-import useStatsStore from "../state/statsStore";
+import useOnboardingStore from "../state/onboardingStore";
 import { StudyPalAnimal, ThemeColor } from "../types";
 import { cn } from "../utils/cn";
 import { getAnimalImage, getAnimalDisplayName, ALL_ANIMALS } from "../utils/animalUtils";
@@ -16,8 +16,7 @@ interface OnboardingScreenProps {
 }
 
 const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
-  const setUser = useUserStore((s) => s.setUser);
-  const initStats = useStatsStore((s) => s.initStats);
+  const setPreferences = useOnboardingStore((s) => s.setPreferences);
 
   const [step, setStep] = useState(1);
   const [username, setUsername] = useState("");
@@ -54,26 +53,15 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
   const handleComplete = () => {
     setShowCelebration(true);
     setTimeout(() => {
-      const userId = Date.now().toString();
-      setUser({
-        id: userId,
+      // Save preferences to onboarding store for AuthenticationScreen to use
+      setPreferences({
         username: username.trim() || "Student",
-        email: email.trim() || undefined,
+        email: email.trim(),
         role,
-        language: "en",
+        studyPalName,
+        animal,
         themeColor,
-        studyPalConfig: {
-          name: studyPalName,
-          animal,
-          animationsEnabled: false,
-        },
-        notificationEnabled: true,
-        notificationSound: true,
-        notificationVibration: true,
-        mindfulnessBreakEnabled: true,
-        createdAt: new Date(),
       });
-      initStats(userId);
       onComplete();
     }, 1500);
   };

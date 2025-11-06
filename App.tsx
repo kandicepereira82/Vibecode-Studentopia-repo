@@ -109,9 +109,9 @@ const AppContent = () => {
         <NavigationContainer>
           {showOnboarding ? (
             <OnboardingScreen onComplete={() => {
-              // After onboarding, user data is set, so hide onboarding and go directly to app
+              // After onboarding, show authentication screen for login/signup
               setShowOnboarding(false);
-              setShowAuth(false);
+              setShowAuth(true);
             }} />
           ) : showAuth ? (
             <AuthenticationScreen onComplete={() => setShowAuth(false)} />

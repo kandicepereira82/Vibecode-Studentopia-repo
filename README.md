@@ -4,6 +4,7 @@ Studentopia is a comprehensive mobile productivity app designed for students to 
 
 ## ✨ Latest Updates
 
+- ✅ **Authentication Flow Restored** - Onboarding now properly leads to email/password authentication screen for both new signups and returning users. User preferences collected during onboarding (name, animal, theme, role) are preserved and applied after authentication completes.
 - ✅ **Rules Button Fixed** - "Read Full Rules & Guidelines" button in create group modal now opens the full rules modal. Enhanced with event propagation handling, expanded touch area (hitSlop), and better pressable styling for reliable interaction.
 - ✅ **Teacher Dashboard Complete** - Teachers can now view student lists, see progress tracking for each group task (completion percentage, progress bars, individual student completion indicators), and assign tasks to groups. Student progress displayed with visual indicators showing who completed what.
 - ✅ **Onboarding Theme Fix** - Fixed theme not applying after onboarding. Users now go directly to the app with their selected theme instead of being redirected to authentication.

@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, Pressable, ScrollView, ActivityIndicator, Keyboard } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import useUserStore from "../state/userStore";
+import useStatsStore from "../state/statsStore";
+import useOnboardingStore from "../state/onboardingStore";
 import { authService } from "../utils/authService";
 import { cn } from "../utils/cn";
 
@@ -13,6 +15,10 @@ interface AuthenticationScreenProps {
 
 const AuthenticationScreen: React.FC<AuthenticationScreenProps> = ({ onComplete }) => {
   const setUser = useUserStore((s) => s.setUser);
+  const initStats = useStatsStore((s) => s.initStats);
+  const preferences = useOnboardingStore((s) => s.preferences);
+  const clearPreferences = useOnboardingStore((s) => s.clearPreferences);
+
   const [mode, setMode] = useState<"choice" | "login" | "signup">("choice");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,6 +28,14 @@ const AuthenticationScreen: React.FC<AuthenticationScreenProps> = ({ onComplete 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  // Pre-fill email and username from onboarding preferences
+  useEffect(() => {
+    if (preferences) {
+      setEmail(preferences.email || "");
+      setUsername(preferences.username || "");
+    }
+  }, [preferences]);
 
   const validateEmail = (emailValue: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -47,18 +61,17 @@ const AuthenticationScreen: React.FC<AuthenticationScreenProps> = ({ onComplete 
     const result = await authService.login(email, password);
 
     if (result.success && result.userId) {
-      // Fetch user data from AsyncStorage or create basic user object
-      // For now, create a basic user object
+      // Create user with onboarding preferences
       const newUser = {
         id: result.userId,
-        username: result.username || "User",
+        username: preferences?.username || result.username || "User",
         email: email,
-        role: "student" as const,
+        role: preferences?.role || ("student" as const),
         language: "en" as const,
-        themeColor: "nature" as const,
+        themeColor: preferences?.themeColor || ("nature" as const),
         studyPalConfig: {
-          name: "Tomo",
-          animal: "redpanda" as const,
+          name: preferences?.studyPalName || "Tomo",
+          animal: preferences?.animal || ("redpanda" as const),
           animationsEnabled: false,
         },
         notificationEnabled: true,
@@ -68,6 +81,8 @@ const AuthenticationScreen: React.FC<AuthenticationScreenProps> = ({ onComplete 
         createdAt: new Date(),
       };
       setUser(newUser);
+      initStats(result.userId);
+      clearPreferences();
       onComplete();
     } else {
       setErrors({ auth: result.error || "Login failed" });
@@ -97,17 +112,17 @@ const AuthenticationScreen: React.FC<AuthenticationScreenProps> = ({ onComplete 
     const result = await authService.register(email, password, username);
 
     if (result.success && result.userId) {
-      // Create new user object after successful registration
+      // Create user with onboarding preferences
       const newUser = {
         id: result.userId,
-        username: username,
+        username: preferences?.username || username,
         email: email,
-        role: "student" as const,
+        role: preferences?.role || ("student" as const),
         language: "en" as const,
-        themeColor: "nature" as const,
+        themeColor: preferences?.themeColor || ("nature" as const),
         studyPalConfig: {
-          name: "Tomo",
-          animal: "redpanda" as const,
+          name: preferences?.studyPalName || "Tomo",
+          animal: preferences?.animal || ("redpanda" as const),
           animationsEnabled: false,
         },
         notificationEnabled: true,
@@ -117,6 +132,8 @@ const AuthenticationScreen: React.FC<AuthenticationScreenProps> = ({ onComplete 
         createdAt: new Date(),
       };
       setUser(newUser);
+      initStats(result.userId);
+      clearPreferences();
       onComplete();
     } else {
       setErrors({ auth: result.error || "Registration failed" });
