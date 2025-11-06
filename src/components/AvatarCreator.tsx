@@ -171,7 +171,7 @@ const AvatarCreator: React.FC<AvatarCreatorProps> = ({
                   Companion Customisation
                 </Text>
                 <Text style={{ fontSize: 14, fontFamily: "Poppins_400Regular", color: theme.textSecondary, marginTop: 4 }}>
-                  Customize your study pal
+                  Customise your studentopia companion
                 </Text>
               </View>
               <Pressable
