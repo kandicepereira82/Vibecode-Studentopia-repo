@@ -211,7 +211,7 @@ const MindfulnessScreen = () => {
           <View className="flex-row items-center justify-between mb-3">
             <View className="flex-1">
               <Text style={{ fontSize: 32, fontFamily: "Poppins_700Bold", color: theme.textPrimary }}>
-                Mindfulness Break
+                Calm
               </Text>
             </View>
             <View className="ml-4">
@@ -237,7 +237,7 @@ const MindfulnessScreen = () => {
             borderColor: theme.primary + "40",
           }}>
             <Text style={{ fontSize: 12, fontFamily: "Poppins_500Medium", color: theme.textPrimary, lineHeight: 16 }}>
-              💙 Mindfulness helps calm your nerves and reduce stress. Take time to focus on your breath and bring peace to your mind.
+              💙 Taking time to calm yourself helps reduce stress and brings clarity. Focus on your breath and find your center.
             </Text>
           </View>
         </View>

@@ -259,7 +259,7 @@ const BottomTabNavigator = () => {
         name="Mindfulness"
         component={MindfulnessScreen}
         options={{
-          tabBarLabel: "Mindfulness",
+          tabBarLabel: "Calm",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="heart" size={size} color={getRainbowTabColor("Mindfulness") || color} />
           ),
