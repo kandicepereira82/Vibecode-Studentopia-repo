@@ -38,9 +38,9 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
       tiger: require("../../assets/image-1762363413.png"),
       turtle: require("../../assets/image-1762363411.png"),
       sloth: require("../../assets/image-1762363415.png"),
-      chipmunk: require("../../assets/image-1762363436.png"),
+      chipmunk: require("../../assets/image-1762363447.png"),
       reindeer: require("../../assets/image-1762363417.png"),
-      hedgehog: require("../../assets/image-1762363420.png"),
+      hedgehog: require("../../assets/image-1762363434.png"),
       penguin: require("../../assets/image-1762363422.png"),
       monkey: require("../../assets/image-1762363426.png"),
       owl: require("../../assets/image-1762363424.png"),
@@ -48,7 +48,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
       lion: require("../../assets/image-1762363428.png"),
       horse: require("../../assets/image-1762363432.png"),
       koala: require("../../assets/image-1762363431.png"),
-      hamster: require("../../assets/image-1762363434.png"),
+      hamster: require("../../assets/image-1762363420.png"),
       giraffe: require("../../assets/image-1762363438.png"),
       frog: require("../../assets/image-1762363440.png"),
       alpaca: require("../../assets/image-1762363444.png"),
@@ -59,7 +59,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
       bear: require("../../assets/image-1762363455.png"),
       elephant: require("../../assets/image-1762363456.png"),
       redpanda: require("../../assets/image-1762363418.png"),
-      lamb: require("../../assets/image-1762363447.png"),
+      lamb: require("../../assets/image-1762363436.png"),
     };
     return imageMap[animal] || imageMap.cat;
   };
