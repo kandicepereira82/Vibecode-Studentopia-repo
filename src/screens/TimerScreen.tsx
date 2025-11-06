@@ -75,10 +75,10 @@ const TimerScreen = () => {
   useEffect(() => {
     const loadSounds = async () => {
       const soundUrls = {
-        bell: "https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3", // Bell chimes
-        chime: "https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3", // Original chime
-        gong: "https://assets.mixkit.co/active_storage/sfx/2866/2866-preview.mp3", // Gong sound
-        gentle: "https://assets.mixkit.co/active_storage/sfx/2393/2393-preview.mp3" // Ocean waves
+        bell: require("../../assets/beep-6-96243.mpeg"), // Beep sound
+        chime: require("../../assets/wind-chime-small-64660.mpeg"), // Wind chime
+        gong: require("../../assets/gong-79191.mpeg"), // Gong sound
+        gentle: require("../../assets/ocean-waves-376898.mpeg") // Ocean waves
       };
 
       const loadedSounds: Record<AlarmSound, Audio.Sound | null> = {
@@ -90,10 +90,10 @@ const TimerScreen = () => {
 
       // Load all sounds in parallel
       await Promise.all(
-        Object.entries(soundUrls).map(async ([key, url]) => {
+        Object.entries(soundUrls).map(async ([key, source]) => {
           try {
             const { sound } = await Audio.Sound.createAsync(
-              { uri: url },
+              source,
               { shouldPlay: false, volume: alarmVolume, isLooping: false }
             );
             loadedSounds[key as AlarmSound] = sound;
