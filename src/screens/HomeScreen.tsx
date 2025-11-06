@@ -6,10 +6,12 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 import { startOfWeek, addDays, format, isSameDay, isToday } from "date-fns";
 import StudyPal from "../components/StudyPal";
+import OfflineIndicator from "../components/OfflineIndicator";
 import useUserStore from "../state/userStore";
 import useTaskStore from "../state/taskStore";
 import useStatsStore from "../state/statsStore";
 import useTimerStore from "../state/timerStore";
+import useConnectivityStore from "../state/connectivityStore";
 import { useTranslation } from "../utils/translations";
 import { getRandomQuote, getRandomTip } from "../utils/content";
 import { getTheme } from "../utils/themes";
@@ -118,6 +120,7 @@ const HomeScreen = () => {
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.backgroundGradient[0] }}>
+      <OfflineIndicator position="top" />
       <SafeAreaView style={{ flex: 1 }}>
         {/* Header with Time-Based Greeting */}
         <View style={{ paddingHorizontal: 24, paddingTop: 16, paddingBottom: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>

@@ -14,6 +14,9 @@ import BottomTabNavigator from "./src/navigation/BottomTabNavigator";
 import OnboardingScreen from "./src/screens/OnboardingScreen";
 import AuthenticationScreen from "./src/screens/AuthenticationScreen";
 import useUserStore from "./src/state/userStore";
+import useConnectivityStore from "./src/state/connectivityStore";
+import { connectivityService } from "./src/services/connectivityService";
+import { syncService } from "./src/services/syncService";
 
 /*
 IMPORTANT NOTICE: DO NOT REMOVE
@@ -56,6 +59,13 @@ export default function App() {
     const initializeApp = async () => {
       // Wait for fonts
       if (!fontsLoaded) return;
+
+      // Initialize connectivity monitoring
+      connectivityService.initialize();
+      useConnectivityStore.getState().initialize();
+
+      // Initialize sync service
+      syncService.initialize();
 
       // Give Zustand time to hydrate
       await new Promise(resolve => setTimeout(resolve, 200));
