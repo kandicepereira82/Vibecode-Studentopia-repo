@@ -9,6 +9,7 @@ import AIHelperScreen from "../screens/AIHelperScreen";
 import StudyTipsScreen from "../screens/StudyTipsScreen";
 import GroupsScreen from "../screens/GroupsScreen";
 import ProfileScreen from "../screens/ProfileScreen";
+import MindfulnessScreen from "../screens/MindfulnessScreen";
 import useUserStore from "../state/userStore";
 import { useTranslation } from "../utils/translations";
 
@@ -20,6 +21,7 @@ export type RootTabParamList = {
   AIHelper: undefined;
   StudyTips: undefined;
   Groups: undefined;
+  Mindfulness: undefined;
   Profile: undefined;
 };
 
@@ -210,6 +212,22 @@ const BottomTabNavigator = () => {
             fontWeight: "600",
             marginTop: 4,
             color: getRainbowTabColor("Groups") || undefined,
+          },
+        }}
+      />
+      <Tab.Screen
+        name="Mindfulness"
+        component={MindfulnessScreen}
+        options={{
+          tabBarLabel: "Mindfulness",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="heart" size={size} color={getRainbowTabColor("Mindfulness") || color} />
+          ),
+          tabBarLabelStyle: {
+            fontSize: 12,
+            fontWeight: "600",
+            marginTop: 4,
+            color: getRainbowTabColor("Mindfulness") || undefined,
           },
         }}
       />

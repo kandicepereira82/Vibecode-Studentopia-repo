@@ -4,6 +4,14 @@ Studentopia is a comprehensive mobile productivity app designed for students to 
 
 ## ✨ Latest Updates
 
+- ✅ **Mindfulness Break Page** - New dedicated tab for meditation and stress relief featuring calming design and serene visual style
+- ✅ **Mindfulness Timer** - Customizable timer with start/pause/resume/stop controls and visual progress feedback
+- ✅ **Breathwork Exercises** - Two guided breathing techniques: Box Breathing (4-4-4-4) and 4-6 Breathing with animated circle guidance
+- ✅ **Animated Breathing Guide** - Circle grows on inhale and shrinks on exhale to guide breathing rhythm
+- ✅ **Stress Management Tips** - Curated collection of mindfulness quotes from Eckhart Tolle, Thich Nhat Hanh, Buddha, and others
+- ✅ **Acupressure Guide** - Visual guide with 4 key acupressure points (Yintang, Shen Men, Neiguan, Hegu) with instructions and safety disclaimer
+- ✅ **Studentopia Companion Integration** - Red Panda breathes along and provides encouragement during mindfulness sessions
+- ✅ **Calming Design** - Soft pastels, rounded edges, minimalist layout with smooth animations
 - ✅ **Email Validation on Onboarding** - Step 1 now validates email format with real-time error feedback
 - ✅ **Form Validation** - Required field validation prevents proceeding without entering name
 - ✅ **Authentication System** - Full login/signup system with email and password protection
