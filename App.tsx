@@ -108,7 +108,11 @@ const AppContent = () => {
       <SafeAreaProvider>
         <NavigationContainer>
           {showOnboarding ? (
-            <OnboardingScreen onComplete={() => setShowAuth(true)} />
+            <OnboardingScreen onComplete={() => {
+              // After onboarding, user data is set, so hide onboarding and go directly to app
+              setShowOnboarding(false);
+              setShowAuth(false);
+            }} />
           ) : showAuth ? (
             <AuthenticationScreen onComplete={() => setShowAuth(false)} />
           ) : (
