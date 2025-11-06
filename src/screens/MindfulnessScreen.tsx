@@ -236,7 +236,7 @@ const MindfulnessScreen = () => {
             borderWidth: 1,
             borderColor: theme.primary + "40",
           }}>
-            <Text style={{ fontSize: 12, fontFamily: "Poppins_500Medium", color: theme.primary, lineHeight: 16 }}>
+            <Text style={{ fontSize: 12, fontFamily: "Poppins_500Medium", color: theme.textPrimary, lineHeight: 16 }}>
               💙 Mindfulness helps calm your nerves and reduce stress. Take time to focus on your breath and bring peace to your mind.
             </Text>
           </View>
@@ -668,7 +668,7 @@ const MindfulnessScreen = () => {
                     style={{
                       fontSize: 12,
                       fontFamily: "Poppins_500Medium",
-                      color: theme.secondary,
+                      color: theme.textPrimary,
                       lineHeight: 18,
                     }}
                   >
@@ -685,7 +685,7 @@ const MindfulnessScreen = () => {
                   borderColor: theme.primary + "40",
                 }}>
                   <View className="flex-row items-start gap-3 mb-2">
-                    <Text style={{ fontSize: 16, fontFamily: "Poppins_700Bold", color: theme.primary }}>
+                    <Text style={{ fontSize: 16, fontFamily: "Poppins_700Bold", color: theme.textPrimary }}>
                       👋 Ask a Parent for Help
                     </Text>
                   </View>
@@ -693,7 +693,7 @@ const MindfulnessScreen = () => {
                     style={{
                       fontSize: 12,
                       fontFamily: "Poppins_400Regular",
-                      color: theme.primary,
+                      color: theme.textPrimary,
                       lineHeight: 18,
                     }}
                   >
