@@ -301,7 +301,7 @@ const AvatarCreator: React.FC<AvatarCreatorProps> = ({
             )}
 
             {activeTab === "accessories" && (
-              <View style={{ gap: 20 }}>
+              <View>
                 {/* Accessories */}
                 <View>
                   <Text style={{ fontSize: 16, fontFamily: "Poppins_600SemiBold", color: theme.textPrimary, marginBottom: 12 }}>
@@ -335,74 +335,6 @@ const AvatarCreator: React.FC<AvatarCreatorProps> = ({
                       </Pressable>
                     ))}
                   </View>
-                </View>
-
-                {/* Glasses */}
-                <View>
-                  <Pressable
-                    onPress={() => setAvatar({ ...avatar, glasses: !avatar.glasses })}
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      backgroundColor: "white",
-                      padding: 16,
-                      borderRadius: 16,
-                      borderWidth: 2,
-                      borderColor: avatar.glasses ? theme.primary : "#E5E7EB",
-                    }}
-                  >
-                    <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
-                      <Text style={{ fontSize: 24 }}>👓</Text>
-                      <Text style={{ fontSize: 15, fontFamily: "Poppins_600SemiBold", color: theme.textPrimary }}>
-                        Glasses
-                      </Text>
-                    </View>
-                    <View style={{
-                      width: 24,
-                      height: 24,
-                      borderRadius: 12,
-                      backgroundColor: avatar.glasses ? theme.primary : "#E5E7EB",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}>
-                      {avatar.glasses && <Ionicons name="checkmark" size={16} color="white" />}
-                    </View>
-                  </Pressable>
-                </View>
-
-                {/* Headphones */}
-                <View>
-                  <Pressable
-                    onPress={() => setAvatar({ ...avatar, headphones: !avatar.headphones })}
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      backgroundColor: "white",
-                      padding: 16,
-                      borderRadius: 16,
-                      borderWidth: 2,
-                      borderColor: avatar.headphones ? theme.primary : "#E5E7EB",
-                    }}
-                  >
-                    <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
-                      <Text style={{ fontSize: 24 }}>🎧</Text>
-                      <Text style={{ fontSize: 15, fontFamily: "Poppins_600SemiBold", color: theme.textPrimary }}>
-                        Headphones
-                      </Text>
-                    </View>
-                    <View style={{
-                      width: 24,
-                      height: 24,
-                      borderRadius: 12,
-                      backgroundColor: avatar.headphones ? theme.primary : "#E5E7EB",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}>
-                      {avatar.headphones && <Ionicons name="checkmark" size={16} color="white" />}
-                    </View>
-                  </Pressable>
                 </View>
               </View>
             )}
