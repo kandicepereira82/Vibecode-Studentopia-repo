@@ -20,7 +20,6 @@ import {
 } from "../services/calendarService";
 import CustomAlert from "../components/CustomAlert";
 import { useGlobalToast } from "../context/ToastContext";
-import AvatarCreator from "../components/AvatarCreator";
 
 interface AlertState {
   visible: boolean;
@@ -33,12 +32,10 @@ const SettingsScreen = () => {
   const user = useUserStore((s) => s.user);
   const logout = useUserStore((s) => s.logout);
   const updateDailyReminderTime = useUserStore((s) => s.updateDailyReminderTime);
-  const updateAvatar = useUserStore((s) => s.updateAvatar);
   const theme = getTheme(user?.themeColor);
   const { t } = useTranslation(user?.language || "en");
   const toast = useGlobalToast();
 
-  const [showAvatarCreator, setShowAvatarCreator] = useState(false);
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [notificationSoundEnabled, setNotificationSoundEnabled] = useState(user?.notificationSound ?? true);
   const [notificationVibrationEnabled, setNotificationVibrationEnabled] = useState(user?.notificationVibration ?? true);
@@ -260,39 +257,6 @@ const SettingsScreen = () => {
         </View>
 
         <ScrollView className="flex-1 px-6 py-2" showsVerticalScrollIndicator={false}>
-          {/* Avatar Creator Section */}
-          <View className="mb-6">
-            <Text className="text-lg font-bold mb-3" style={{ color: theme.textPrimary }}>
-              Personalization
-            </Text>
-
-            <Pressable
-              onPress={() => setShowAvatarCreator(true)}
-              className="rounded-2xl p-4 mb-3"
-              style={{ backgroundColor: theme.cardBackground }}
-            >
-              <View className="flex-row items-center justify-between">
-                <View className="flex-row items-center flex-1">
-                  <View
-                    className="w-10 h-10 rounded-full items-center justify-center mr-3"
-                    style={{ backgroundColor: theme.primary + "20" }}
-                  >
-                    <Ionicons name="color-palette" size={20} color={theme.primary} />
-                  </View>
-                  <View className="flex-1">
-                    <Text className="text-base font-semibold" style={{ color: theme.textPrimary }}>
-                      Avatar Customisation
-                    </Text>
-                    <Text className="text-xs mt-0.5" style={{ color: theme.textSecondary }}>
-                      Personalize your study pal appearance
-                    </Text>
-                  </View>
-                </View>
-                <Ionicons name="chevron-forward" size={20} color={theme.textSecondary} />
-              </View>
-            </Pressable>
-          </View>
-
           {/* Notifications Section */}
           <View className="mb-6">
             <Text className="text-lg font-bold mb-3" style={{ color: theme.textPrimary }}>
@@ -1102,21 +1066,6 @@ const SettingsScreen = () => {
           </View>
         </View>
       </Modal>
-
-      {/* Avatar Creator Modal */}
-      {user && (
-        <AvatarCreator
-          visible={showAvatarCreator}
-          onClose={() => setShowAvatarCreator(false)}
-          currentAnimal={user.studyPalConfig.animal}
-          currentAvatar={user.studyPalConfig.avatar}
-          currentTheme={user.themeColor}
-          onSave={(avatar) => {
-            updateAvatar(avatar);
-            toast.success("Avatar updated successfully!");
-          }}
-        />
-      )}
     </View>
   );
 };

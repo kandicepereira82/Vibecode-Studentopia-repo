@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import useUserStore from "../state/userStore";
 import { useTranslation, languageNames } from "../utils/translations";
-import { Language, ThemeColor, StudyPalAnimal } from "../types";
+import { Language, ThemeColor, StudyPalAnimal, AvatarCustomization } from "../types";
 import { cn } from "../utils/cn";
 import { getAnimalImage, getAnimalDisplayName, ALL_ANIMALS } from "../utils/animalUtils";
 import { ALL_THEMES } from "../utils/themeUtils";
@@ -12,12 +12,14 @@ import StudyPal from "../components/StudyPal";
 import SettingsScreen from "./SettingsScreen";
 import { useGlobalToast } from "../context/ToastContext";
 import { validateName } from "../utils/contentModeration";
+import AvatarCreator from "../components/AvatarCreator";
 
 const ProfileScreen = () => {
   const user = useUserStore((s) => s.user);
   const updateLanguage = useUserStore((s) => s.updateLanguage);
   const updateThemeColor = useUserStore((s) => s.updateThemeColor);
   const updateStudyPal = useUserStore((s) => s.updateStudyPal);
+  const updateAvatar = useUserStore((s) => s.updateAvatar);
   const toggleAnimations = useUserStore((s) => s.toggleAnimations);
   const toggleNotifications = useUserStore((s) => s.toggleNotifications);
   const toast = useGlobalToast();
@@ -26,6 +28,7 @@ const ProfileScreen = () => {
   const [showThemeModal, setShowThemeModal] = useState(false);
   const [showAnimalModal, setShowAnimalModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [showAvatarCreator, setShowAvatarCreator] = useState(false);
   const [studyPalName, setStudyPalName] = useState(user?.studyPalConfig.name || "Buddy");
 
   const { t } = useTranslation(user?.language || "en");
@@ -143,14 +146,15 @@ const ProfileScreen = () => {
             Studentopia Companion
           </Text>
 
-          <View className="bg-white dark:bg-gray-800 rounded-2xl p-5 mb-3">
+          <View className="bg-white dark:bg-gray-800 rounded-2xl p-6 mb-3 items-center">
             <StudyPal
               animal={user.studyPalConfig.animal}
               name={user.studyPalConfig.name}
-              animationsEnabled={false}
-              size={80}
-              showName={false}
+              animationsEnabled={user.studyPalConfig.animationsEnabled}
+              size={100}
+              showName={true}
               showMessage={false}
+              customAvatar={user.studyPalConfig.avatar}
             />
           </View>
 
@@ -181,7 +185,7 @@ const ProfileScreen = () => {
             {/* Studentopia Companion Animal */}
             <Pressable
               onPress={() => setShowAnimalModal(true)}
-              className="flex-row items-center justify-between py-3"
+              className="flex-row items-center justify-between py-3 border-t border-gray-200 dark:border-gray-700"
             >
               <Text className="text-base text-gray-800 dark:text-gray-100">
                 {t("studyPalAnimal")}
@@ -218,6 +222,20 @@ const ProfileScreen = () => {
                 />
               </Pressable>
             </View>
+
+            {/* Avatar Customisation Button */}
+            <Pressable
+              onPress={() => setShowAvatarCreator(true)}
+              className="flex-row items-center justify-between py-3 border-t border-gray-200 dark:border-gray-700"
+            >
+              <Text className="text-base text-gray-800 dark:text-gray-100">
+                Avatar Customisation
+              </Text>
+              <View className="flex-row items-center">
+                <Ionicons name="color-palette" size={20} color="#3B82F6" style={{ marginRight: 8 }} />
+                <Ionicons name="chevron-forward" size={20} color="#9CA3AF" />
+              </View>
+            </Pressable>
           </View>
         </View>
 
@@ -459,6 +477,21 @@ const ProfileScreen = () => {
           </Pressable>
         </SafeAreaView>
       </Modal>
+
+      {/* Avatar Creator Modal */}
+      {user && (
+        <AvatarCreator
+          visible={showAvatarCreator}
+          onClose={() => setShowAvatarCreator(false)}
+          currentAnimal={user.studyPalConfig.animal}
+          currentAvatar={user.studyPalConfig.avatar}
+          currentTheme={user.themeColor}
+          onSave={(avatar) => {
+            updateAvatar(avatar);
+            toast.success("Avatar updated successfully!");
+          }}
+        />
+      )}
     </SafeAreaView>
   );
 };
