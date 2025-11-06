@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, ScrollView, Pressable, Switch } from "react-native";
+import { View, Text, ScrollView, Pressable, Switch, Modal } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
@@ -29,6 +29,7 @@ interface AlertState {
 const SettingsScreen = () => {
   const user = useUserStore((s) => s.user);
   const logout = useUserStore((s) => s.logout);
+  const updateDailyReminderTime = useUserStore((s) => s.updateDailyReminderTime);
   const theme = getTheme(user?.themeColor);
   const { t } = useTranslation(user?.language || "en");
 
@@ -37,6 +38,9 @@ const SettingsScreen = () => {
   const [dailyReminderEnabled, setDailyReminderEnabled] = useState(false);
   const [scheduledNotificationsCount, setScheduledNotificationsCount] = useState(0);
   const [availableCalendars, setAvailableCalendars] = useState<number>(0);
+  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [reminderHour, setReminderHour] = useState(user?.dailyReminderTime?.hour || 9);
+  const [reminderMinute, setReminderMinute] = useState(user?.dailyReminderTime?.minute || 0);
   const [alertState, setAlertState] = useState<AlertState>({
     visible: false,
     title: "",
@@ -109,16 +113,17 @@ const SettingsScreen = () => {
   const handleToggleDailyReminder = async (value: boolean) => {
     if (value) {
       const notificationId = await scheduleDailyStudyReminder(
-        9,
-        0,
+        reminderHour,
+        reminderMinute,
         "Good morning! Time to plan your study session 📚"
       );
       if (notificationId) {
         setDailyReminderEnabled(true);
+        updateDailyReminderTime(reminderHour, reminderMinute);
         loadScheduledNotifications();
         showAlert(
           "Daily Reminder Set",
-          "You will receive a reminder at 9:00 AM every day."
+          `You will receive a reminder at ${String(reminderHour).padStart(2, "0")}:${String(reminderMinute).padStart(2, "0")} every day.`
         );
       }
     } else {
@@ -136,6 +141,33 @@ const SettingsScreen = () => {
     );
     if (notificationId) {
       showAlert("Success", "Test notification sent!");
+    }
+  };
+
+  const handleSaveReminderTime = async () => {
+    updateDailyReminderTime(reminderHour, reminderMinute);
+    setShowTimePicker(false);
+
+    // If daily reminder is already enabled, reschedule with new time
+    if (dailyReminderEnabled) {
+      await cancelAllNotifications();
+      const notificationId = await scheduleDailyStudyReminder(
+        reminderHour,
+        reminderMinute,
+        "Good morning! Time to plan your study session 📚"
+      );
+      if (notificationId) {
+        loadScheduledNotifications();
+        showAlert(
+          "Reminder Time Updated",
+          `Daily reminder updated to ${String(reminderHour).padStart(2, "0")}:${String(reminderMinute).padStart(2, "0")}.`
+        );
+      }
+    } else {
+      showAlert(
+        "Time Saved",
+        `Reminder time set to ${String(reminderHour).padStart(2, "0")}:${String(reminderMinute).padStart(2, "0")}.`
+      );
     }
   };
 
@@ -228,24 +260,32 @@ const SettingsScreen = () => {
             </View>
 
             {/* Daily Reminder */}
-            <View className="rounded-2xl p-4 mb-3" style={{ backgroundColor: theme.cardBackground }}>
-              <View className="flex-row items-center justify-between mb-2">
-                <View className="flex-row items-center flex-1">
-                  <View
-                    className="w-10 h-10 rounded-full items-center justify-center mr-3"
-                    style={{ backgroundColor: theme.secondary + "20" }}
-                  >
-                    <Ionicons name="alarm" size={20} color={theme.secondary} />
-                  </View>
-                  <View className="flex-1">
-                    <Text className="text-base font-semibold" style={{ color: theme.textPrimary }}>
-                      Daily Study Reminder
-                    </Text>
-                    <Text className="text-xs mt-0.5" style={{ color: theme.textSecondary }}>
-                      9:00 AM daily reminder
-                    </Text>
-                  </View>
+            <Pressable
+              onPress={() => setShowTimePicker(true)}
+              disabled={!notificationsEnabled}
+              className="rounded-2xl p-4 mb-3 flex-row items-center justify-between"
+              style={{ backgroundColor: notificationsEnabled ? theme.cardBackground : theme.textSecondary + "20" }}
+            >
+              <View className="flex-row items-center flex-1">
+                <View
+                  className="w-10 h-10 rounded-full items-center justify-center mr-3"
+                  style={{ backgroundColor: theme.secondary + "20" }}
+                >
+                  <Ionicons name="alarm" size={20} color={theme.secondary} />
                 </View>
+                <View className="flex-1">
+                  <Text className="text-base font-semibold" style={{ color: theme.textPrimary }}>
+                    Daily Study Reminder
+                  </Text>
+                  <Text className="text-xs mt-0.5" style={{ color: theme.textSecondary }}>
+                    {String(reminderHour).padStart(2, "0")}:{String(reminderMinute).padStart(2, "0")} daily reminder
+                  </Text>
+                </View>
+              </View>
+              <View className="flex-row items-center gap-2">
+                <Text style={{ color: theme.primary, fontWeight: "600" }}>
+                  {String(reminderHour).padStart(2, "0")}:{String(reminderMinute).padStart(2, "0")}
+                </Text>
                 <Switch
                   value={dailyReminderEnabled}
                   onValueChange={handleToggleDailyReminder}
@@ -254,7 +294,7 @@ const SettingsScreen = () => {
                   disabled={!notificationsEnabled}
                 />
               </View>
-            </View>
+            </Pressable>
 
             {/* Scheduled Notifications Info */}
             <View className="rounded-2xl p-4 mb-3" style={{ backgroundColor: theme.cardBackground }}>
@@ -457,6 +497,191 @@ const SettingsScreen = () => {
         onClose={hideAlert}
         theme={theme}
       />
+
+      {/* Time Picker Modal */}
+      <Modal
+        visible={showTimePicker}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setShowTimePicker(false)}
+      >
+        <View style={{ flex: 1, justifyContent: "flex-end", backgroundColor: "rgba(0, 0, 0, 0.5)" }}>
+          <View
+            style={{
+              backgroundColor: theme.cardBackground,
+              borderTopLeftRadius: 24,
+              borderTopRightRadius: 24,
+              padding: 24,
+              paddingBottom: 32,
+            }}
+          >
+            {/* Header */}
+            <View className="flex-row items-center justify-between mb-6">
+              <Text style={{ fontSize: 20, fontFamily: "Poppins_700Bold", color: theme.textPrimary }}>
+                Set Reminder Time
+              </Text>
+              <Pressable onPress={() => setShowTimePicker(false)}>
+                <Ionicons name="close" size={24} color={theme.textPrimary} />
+              </Pressable>
+            </View>
+
+            {/* Hour and Minute Picker */}
+            <View className="flex-row items-center justify-center gap-4 mb-6">
+              {/* Hour */}
+              <View className="items-center">
+                <Text style={{ fontSize: 12, color: theme.textSecondary, marginBottom: 8 }}>Hour</Text>
+                <View className="flex-row items-center gap-3">
+                  <Pressable
+                    onPress={() => setReminderHour((h) => (h === 0 ? 23 : h - 1))}
+                    style={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: 20,
+                      backgroundColor: theme.primary + "20",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Ionicons name="chevron-up" size={24} color={theme.primary} />
+                  </Pressable>
+
+                  <View
+                    style={{
+                      width: 80,
+                      height: 80,
+                      borderRadius: 16,
+                      backgroundColor: theme.primary + "10",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderWidth: 2,
+                      borderColor: theme.primary,
+                    }}
+                  >
+                    <Text style={{ fontSize: 40, fontFamily: "Poppins_700Bold", color: theme.primary }}>
+                      {String(reminderHour).padStart(2, "0")}
+                    </Text>
+                  </View>
+
+                  <Pressable
+                    onPress={() => setReminderHour((h) => (h === 23 ? 0 : h + 1))}
+                    style={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: 20,
+                      backgroundColor: theme.primary + "20",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Ionicons name="chevron-down" size={24} color={theme.primary} />
+                  </Pressable>
+                </View>
+              </View>
+
+              {/* Separator */}
+              <Text style={{ fontSize: 40, fontFamily: "Poppins_700Bold", color: theme.textPrimary }}>:</Text>
+
+              {/* Minute */}
+              <View className="items-center">
+                <Text style={{ fontSize: 12, color: theme.textSecondary, marginBottom: 8 }}>Minute</Text>
+                <View className="flex-row items-center gap-3">
+                  <Pressable
+                    onPress={() => setReminderMinute((m) => (m === 0 ? 59 : m - 1))}
+                    style={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: 20,
+                      backgroundColor: theme.secondary + "20",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Ionicons name="chevron-up" size={24} color={theme.secondary} />
+                  </Pressable>
+
+                  <View
+                    style={{
+                      width: 80,
+                      height: 80,
+                      borderRadius: 16,
+                      backgroundColor: theme.secondary + "10",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderWidth: 2,
+                      borderColor: theme.secondary,
+                    }}
+                  >
+                    <Text style={{ fontSize: 40, fontFamily: "Poppins_700Bold", color: theme.secondary }}>
+                      {String(reminderMinute).padStart(2, "0")}
+                    </Text>
+                  </View>
+
+                  <Pressable
+                    onPress={() => setReminderMinute((m) => (m === 59 ? 0 : m + 1))}
+                    style={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: 20,
+                      backgroundColor: theme.secondary + "20",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Ionicons name="chevron-down" size={24} color={theme.secondary} />
+                  </Pressable>
+                </View>
+              </View>
+            </View>
+
+            {/* Preview */}
+            <View
+              className="rounded-2xl p-4 mb-6"
+              style={{
+                backgroundColor: theme.primary + "10",
+                borderWidth: 1,
+                borderColor: theme.primary + "30",
+              }}
+            >
+              <Text style={{ fontSize: 12, color: theme.textSecondary, textAlign: "center", marginBottom: 4 }}>
+                Reminder at
+              </Text>
+              <Text
+                style={{
+                  fontSize: 24,
+                  fontFamily: "Poppins_700Bold",
+                  color: theme.primary,
+                  textAlign: "center",
+                }}
+              >
+                {String(reminderHour).padStart(2, "0")}:{String(reminderMinute).padStart(2, "0")}
+              </Text>
+            </View>
+
+            {/* Action Buttons */}
+            <View className="flex-row gap-3">
+              <Pressable
+                onPress={() => setShowTimePicker(false)}
+                className="flex-1 rounded-2xl py-4 items-center justify-center"
+                style={{ backgroundColor: theme.textSecondary + "20" }}
+              >
+                <Text style={{ fontSize: 16, fontFamily: "Poppins_600SemiBold", color: theme.textPrimary }}>
+                  Cancel
+                </Text>
+              </Pressable>
+
+              <Pressable
+                onPress={handleSaveReminderTime}
+                className="flex-1 rounded-2xl py-4 items-center justify-center"
+                style={{ backgroundColor: theme.primary }}
+              >
+                <Text style={{ fontSize: 16, fontFamily: "Poppins_600SemiBold", color: "white" }}>
+                  Save
+                </Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };

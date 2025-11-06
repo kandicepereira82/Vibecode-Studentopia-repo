@@ -82,6 +82,7 @@ export interface User {
   themeColor: ThemeColor;
   studyPalConfig: StudyPalConfig;
   notificationEnabled: boolean;
+  dailyReminderTime?: { hour: number; minute: number }; // Daily study reminder time (24-hour format)
   createdAt: Date;
 }
 

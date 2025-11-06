@@ -11,6 +11,7 @@ interface UserStore {
   updateStudyPal: (name: string, animal: StudyPalAnimal) => void;
   toggleAnimations: () => void;
   toggleNotifications: () => void;
+  updateDailyReminderTime: (hour: number, minute: number) => void;
   logout: () => void;
 }
 
@@ -58,6 +59,15 @@ const useUserStore = create<UserStore>()(
             ? {
                 ...state.user,
                 notificationEnabled: !state.user.notificationEnabled,
+              }
+            : null,
+        })),
+      updateDailyReminderTime: (hour: number, minute: number) =>
+        set((state) => ({
+          user: state.user
+            ? {
+                ...state.user,
+                dailyReminderTime: { hour, minute },
               }
             : null,
         })),
