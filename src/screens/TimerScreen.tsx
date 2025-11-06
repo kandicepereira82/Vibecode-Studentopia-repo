@@ -79,19 +79,19 @@ const TimerScreen = () => {
 
   // Preload alarm sounds for instant playback
   useEffect(() => {
+    let loadedSoundsRef: Record<AlarmSound, Audio.Sound | null> = {
+      bell: null,
+      chime: null,
+      gong: null,
+      gentle: null
+    };
+
     const loadSounds = async () => {
       const soundAssets = {
         bell: beepSound,
         chime: chimeSound,
         gong: gongSound,
         gentle: gentleSound
-      };
-
-      const loadedSounds: Record<AlarmSound, Audio.Sound | null> = {
-        bell: null,
-        chime: null,
-        gong: null,
-        gentle: null
       };
 
       // Load all sounds in parallel
@@ -102,21 +102,21 @@ const TimerScreen = () => {
               assetModule as any,
               { shouldPlay: false, volume: alarmVolume, isLooping: false }
             );
-            loadedSounds[key as AlarmSound] = sound;
+            loadedSoundsRef[key as AlarmSound] = sound;
           } catch (error) {
             // Silently fail if sound doesn't load
           }
         })
       );
 
-      setPreloadedSounds(loadedSounds);
+      setPreloadedSounds(loadedSoundsRef);
     };
 
     loadSounds();
 
     // Cleanup: unload all preloaded sounds
     return () => {
-      Object.values(preloadedSounds).forEach(async (sound) => {
+      Object.values(loadedSoundsRef).forEach(async (sound) => {
         if (sound) {
           try {
             await sound.unloadAsync();
@@ -126,7 +126,7 @@ const TimerScreen = () => {
         }
       });
     };
-  }, [preloadedSounds]);
+  }, []); // Load only once on mount
 
   // Update volume on preloaded sounds when alarm volume changes
   useEffect(() => {
