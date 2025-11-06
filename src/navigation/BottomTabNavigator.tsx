@@ -243,7 +243,7 @@ const BottomTabNavigator = () => {
         name="StudyRooms"
         component={StudyRoomScreen}
         options={{
-          tabBarLabel: "Sessions",
+          tabBarLabel: "Live",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="videocam" size={size} color={getRainbowTabColor("StudyRooms") || color} />
           ),
