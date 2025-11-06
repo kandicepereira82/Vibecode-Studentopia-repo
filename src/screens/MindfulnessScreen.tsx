@@ -665,7 +665,7 @@ const MindfulnessScreen = () => {
                 <View className="bg-blue-50 dark:bg-blue-900 rounded-2xl p-4 border border-blue-200 dark:border-blue-700">
                   <View className="flex-row items-start gap-3 mb-2">
                     <Text style={{ fontSize: 16, fontFamily: "Poppins_700Bold", color: "#1E40AF" }}>
-                      👨‍👩‍👧 For Parents:
+                      👋 Ask a Parent for Help
                     </Text>
                   </View>
                   <Text
@@ -676,7 +676,7 @@ const MindfulnessScreen = () => {
                       lineHeight: 18,
                     }}
                   >
-                    Help your child locate each point using the descriptions below. Use your thumb or index finger to apply gentle, steady pressure. Encourage deep breathing while pressing each point. These techniques are safe, non-invasive, and can be done anywhere—at home, school, or during stressful moments.
+                    These acupressure points work best with a little help! Ask a parent, guardian, or trusted adult to help you locate and gently press each point. They can guide your fingers to the right spot and help you remember to breathe deeply. Learning together makes it even more helpful for reducing stress and anxiety.
                   </Text>
                 </View>
 
