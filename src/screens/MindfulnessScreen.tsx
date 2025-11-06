@@ -194,23 +194,25 @@ const MindfulnessScreen = () => {
         </View>
 
         {/* Tab Navigation */}
-        <View className="px-4 py-4">
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} className="gap-2">
+        <View style={{ paddingHorizontal: 24, paddingVertical: 16 }}>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 16 }}>
             {(["timer", "breathwork", "tips", "acupressure"] as Tab[]).map((tab) => (
               <Pressable
                 key={tab}
                 onPress={() => setActiveTab(tab)}
-                className={`px-4 py-2 rounded-full ${
-                  activeTab === tab
-                    ? "bg-white dark:bg-gray-800"
-                    : "bg-white/50 dark:bg-gray-800/50"
-                }`}
+                style={{
+                  paddingHorizontal: 20,
+                  paddingVertical: 12,
+                  borderRadius: 20,
+                  backgroundColor: activeTab === tab ? "white" : "rgba(255, 255, 255, 0.5)",
+                }}
               >
                 <Text
                   style={{
                     fontFamily: "Poppins_600SemiBold",
                     color: activeTab === tab ? theme.primary : theme.textSecondary,
-                    fontSize: 13,
+                    fontSize: 14,
+                    fontWeight: "600",
                   }}
                 >
                   {tab === "timer"
