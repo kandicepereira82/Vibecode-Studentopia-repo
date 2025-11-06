@@ -45,6 +45,15 @@ const FUR_COLORS = [
   { id: "cream", name: "Cream", color: "#FEF3C7" },
   { id: "golden", name: "Golden", color: "#F59E0B" },
   { id: "chocolate", name: "Chocolate", color: "#7C2D12" },
+  // Primary Colors
+  { id: "red", name: "Red", color: "#EF4444" },
+  { id: "pink", name: "Pink", color: "#EC4899" },
+  { id: "blue", name: "Blue", color: "#3B82F6" },
+  { id: "yellow", name: "Yellow", color: "#FBBF24" },
+  { id: "green", name: "Green", color: "#10B981" },
+  { id: "orange", name: "Orange", color: "#F97316" },
+  { id: "purple", name: "Purple", color: "#A855F7" },
+  { id: "cyan", name: "Cyan", color: "#06B6D4" },
 ];
 
 const OUTFITS = [
@@ -167,41 +176,15 @@ const AvatarCreator: React.FC<AvatarCreatorProps> = ({
             <Text style={{ fontSize: 16, fontFamily: "Poppins_600SemiBold", color: theme.textSecondary, marginBottom: 16 }}>
               Preview
             </Text>
-            <View style={{ position: "relative" }}>
-              <StudyPal
-                animal={currentAnimal}
-                name=""
-                animationsEnabled={false}
-                size={120}
-                showName={false}
-                showMessage={false}
-                customAvatar={avatar}
-              />
-              {/* Avatar customization overlays */}
-              <View style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, alignItems: "center", justifyContent: "center" }}>
-                {avatar.glasses && (
-                  <Text style={{ position: "absolute", top: 30, fontSize: 32 }}>👓</Text>
-                )}
-                {avatar.headphones && (
-                  <Text style={{ position: "absolute", top: 15, fontSize: 40 }}>🎧</Text>
-                )}
-                {avatar.hairStyle !== "none" && (
-                  <Text style={{ position: "absolute", top: 5, fontSize: 28 }}>
-                    {HAIR_STYLES.find(h => h.id === avatar.hairStyle)?.emoji}
-                  </Text>
-                )}
-                {avatar.accessory !== "none" && (
-                  <Text style={{ position: "absolute", bottom: 10, right: -10, fontSize: 24 }}>
-                    {ACCESSORIES.find(a => a.id === avatar.accessory)?.emoji}
-                  </Text>
-                )}
-                {avatar.outfit && (
-                  <Text style={{ position: "absolute", bottom: 20, fontSize: 28 }}>
-                    {OUTFITS.find(o => o.id === avatar.outfit)?.emoji}
-                  </Text>
-                )}
-              </View>
-            </View>
+            <StudyPal
+              animal={currentAnimal}
+              name=""
+              animationsEnabled={false}
+              size={120}
+              showName={false}
+              showMessage={false}
+              customAvatar={avatar}
+            />
           </View>
 
           {/* Tabs */}

@@ -428,8 +428,38 @@ const StudyPal: React.FC<StudyPalProps> = React.memo(({
 
   const displayMessage = message || getMoodMessage();
 
+  // Get fur color from avatar customization
+  const getFurColorTint = (): string | undefined => {
+    if (!customAvatar?.furColor) return undefined;
+
+    const furColorMap: Record<string, string> = {
+      natural: "#D97706",
+      light: "#FDE68A",
+      dark: "#78350F",
+      grey: "#6B7280",
+      white: "#F3F4F6",
+      cream: "#FEF3C7",
+      golden: "#F59E0B",
+      chocolate: "#7C2D12",
+      red: "#EF4444",
+      pink: "#EC4899",
+      blue: "#3B82F6",
+      yellow: "#FBBF24",
+      green: "#10B981",
+      orange: "#F97316",
+      purple: "#A855F7",
+      cyan: "#06B6D4",
+    };
+
+    return furColorMap[customAvatar.furColor];
+  };
+
   // Get background color based on animal type for kawaii styling
   const getAnimalBackgroundColor = (animal: StudyPalAnimal): string => {
+    // If custom fur color, use that
+    const customFurColor = getFurColorTint();
+    if (customFurColor) return customFurColor;
+
     const colorMap: Record<StudyPalAnimal, string> = {
       cat: "#FFE5B4",      // Peach
       redpanda: "#FFB366", // Light orange
@@ -460,14 +490,87 @@ const StudyPal: React.FC<StudyPalProps> = React.memo(({
     return colorMap[animal] || "#FFE5B4";
   };
 
+  // Get outfit emoji
+  const getOutfitEmoji = (): string | null => {
+    if (!customAvatar?.outfit) return null;
+
+    const outfitMap: Record<string, string> = {
+      casual: "👕",
+      formal: "👔",
+      sporty: "🏃",
+      cozy: "🧶",
+      hoodie: "🧥",
+      sweater: "🧵",
+      uniform: "🎓",
+    };
+
+    return outfitMap[customAvatar.outfit] || null;
+  };
+
+  // Get accessory emoji
+  const getAccessoryEmoji = (): string | null => {
+    if (!customAvatar?.accessory || customAvatar.accessory === "none") return null;
+
+    const accessoryMap: Record<string, string> = {
+      backpack: "🎒",
+      book: "📚",
+      pencil: "✏️",
+      scarf: "🧣",
+      hat: "🎩",
+      bowtie: "🎀",
+    };
+
+    return accessoryMap[customAvatar.accessory] || null;
+  };
+
+  // Get hair emoji
+  const getHairEmoji = (): string | null => {
+    if (!customAvatar?.hairStyle || customAvatar.hairStyle === "none") return null;
+
+    const hairMap: Record<string, string> = {
+      short: "✂️",
+      long: "💇",
+      curly: "🌀",
+      spiky: "⚡",
+      ponytail: "🎀",
+      bun: "🍔",
+    };
+
+    return hairMap[customAvatar.hairStyle] || null;
+  };
+
   return (
     <View className="items-center">
       {/* Kawaii style animal with circular background */}
-      {animationsEnabled ? (
-        <Animated.View
-          style={[
-            animatedStyle,
-            {
+      <View style={{ position: "relative" }}>
+        {animationsEnabled ? (
+          <Animated.View
+            style={[
+              animatedStyle,
+              {
+                backgroundColor: getAnimalBackgroundColor(animal),
+                width: size * 1.4,
+                height: size * 1.4,
+                borderRadius: size * 0.7,
+                justifyContent: "center",
+                alignItems: "center",
+                shadowColor: "#000",
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.15,
+                shadowRadius: 4,
+                elevation: 4,
+              }
+            ]}
+          >
+            <Image
+              source={getAnimalImage(animal)}
+              style={{ width: size, height: size }}
+              resizeMode="contain"
+            />
+          </Animated.View>
+        ) : (
+          <View
+            style={{
               backgroundColor: getAnimalBackgroundColor(animal),
               width: size * 1.4,
               height: size * 1.4,
@@ -479,38 +582,56 @@ const StudyPal: React.FC<StudyPalProps> = React.memo(({
               shadowOpacity: 0.15,
               shadowRadius: 4,
               elevation: 4,
-            }
-          ]}
-        >
-          <Image
-            source={getAnimalImage(animal)}
-            style={{ width: size, height: size }}
-            resizeMode="contain"
-          />
-        </Animated.View>
-      ) : (
-        <View
-          style={{
-            backgroundColor: getAnimalBackgroundColor(animal),
-            width: size * 1.4,
-            height: size * 1.4,
-            borderRadius: size * 0.7,
-            justifyContent: "center",
-            alignItems: "center",
-            shadowColor: "#000",
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.15,
-            shadowRadius: 4,
-            elevation: 4,
-          }}
-        >
-          <Image
-            source={getAnimalImage(animal)}
-            style={{ width: size, height: size }}
-            resizeMode="contain"
-          />
-        </View>
-      )}
+            }}
+          >
+            <Image
+              source={getAnimalImage(animal)}
+              style={{ width: size, height: size }}
+              resizeMode="contain"
+            />
+          </View>
+        )}
+
+        {/* Avatar Customization Overlays */}
+        {customAvatar && (
+          <View style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, alignItems: "center", justifyContent: "center" }}>
+            {/* Hair on top */}
+            {getHairEmoji() && (
+              <Text style={{ position: "absolute", top: size * -0.15, fontSize: size * 0.4, zIndex: 10 }}>
+                {getHairEmoji()}
+              </Text>
+            )}
+
+            {/* Glasses in middle */}
+            {customAvatar.glasses && (
+              <Text style={{ position: "absolute", top: size * 0.3, fontSize: size * 0.45, zIndex: 5 }}>
+                👓
+              </Text>
+            )}
+
+            {/* Headphones on top */}
+            {customAvatar.headphones && (
+              <Text style={{ position: "absolute", top: size * 0.05, fontSize: size * 0.55, zIndex: 8 }}>
+                🎧
+              </Text>
+            )}
+
+            {/* Outfit at bottom center */}
+            {getOutfitEmoji() && (
+              <Text style={{ position: "absolute", bottom: size * 0.1, fontSize: size * 0.4, zIndex: 3 }}>
+                {getOutfitEmoji()}
+              </Text>
+            )}
+
+            {/* Accessory on the side */}
+            {getAccessoryEmoji() && (
+              <Text style={{ position: "absolute", bottom: size * 0.15, right: size * -0.1, fontSize: size * 0.35, zIndex: 4 }}>
+                {getAccessoryEmoji()}
+              </Text>
+            )}
+          </View>
+        )}
+      </View>
 
       {/* Name label below animal */}
       {showName && (
