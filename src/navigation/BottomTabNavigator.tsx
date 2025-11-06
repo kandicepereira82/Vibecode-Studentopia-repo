@@ -269,7 +269,6 @@ const BottomTabNavigator = () => {
             marginTop: 4,
             color: getRainbowTabColor("Mindfulness") || undefined,
           },
-          tabBarButton: () => null, // Hide from tab bar (accessible via Profile)
         }}
       />
       <Tab.Screen
