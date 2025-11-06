@@ -17,10 +17,10 @@ import StudyPal from "../components/StudyPal";
 import ClickableCompanion from "../components/ClickableCompanion";
 
 // Import alarm sound files
-const beepSound = require("../../assets/beep-6-96243.mpeg");
-const chimeSound = require("../../assets/wind-chime-small-64660.mpeg");
-const gongSound = require("../../assets/gong-79191.mpeg");
-const gentleSound = require("../../assets/ocean-waves-376898.mpeg");
+const beepSound = require("../../assets/beep-6-96243.mp3");
+const chimeSound = require("../../assets/wind-chime-small-64660.mp3");
+const gongSound = require("../../assets/gong-79191.mp3");
+const gentleSound = require("../../assets/ocean-waves-376898.mp3");
 
 type AlarmSound = "bell" | "chime" | "gong" | "gentle";
 

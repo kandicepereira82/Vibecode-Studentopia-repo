@@ -29,7 +29,7 @@ export const musicLibrary: MusicTrack[] = [
     mood: "peaceful",
     genre: "classical",
     pixabayUrl: "",
-    localFile: require("../../assets/chopin-nocturne-op-9-no-2-slowed-rainmp3.mpeg"),
+    localFile: require("../../assets/chopin-nocturne-op-9-no-2-slowed-rainmp3.mp3"),
   },
   {
     id: "calm-soul-meditation",
@@ -39,7 +39,7 @@ export const musicLibrary: MusicTrack[] = [
     mood: "calming",
     genre: "ambient",
     pixabayUrl: "",
-    localFile: require("../../assets/calm-soul-meditation.mpeg"),
+    localFile: require("../../assets/calm-soul-meditation.mp3"),
   },
   {
     id: "meditation-432hz",
@@ -49,7 +49,7 @@ export const musicLibrary: MusicTrack[] = [
     mood: "peaceful",
     genre: "ambient",
     pixabayUrl: "",
-    localFile: require("../../assets/432-hz-meditation-short.mpeg"),
+    localFile: require("../../assets/432-hz-meditation-short.mp3"),
   },
   {
     id: "release-negative-energy",
@@ -59,7 +59,7 @@ export const musicLibrary: MusicTrack[] = [
     mood: "uplifting",
     genre: "ambient",
     pixabayUrl: "",
-    localFile: require("../../assets/432-528-hz-release-negative-energy-.mpeg"),
+    localFile: require("../../assets/432-528-hz-release-negative-energy-.mp3"),
   },
 ];
 
