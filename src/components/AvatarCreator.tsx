@@ -104,7 +104,7 @@ const ACCESSORIES = [
   { id: "pencil", name: "Pen", emoji: "🖊️" },
   { id: "water", name: "Microphone", emoji: "🎤" },
   { id: "plant", name: "Study Plant", emoji: "🪴" },
-  { id: "study_pet", name: "Bamboo", emoji: "🎍" },
+  { id: "study_pet", name: "Bamboo", emoji: "🎋" },
   { id: "knitting", name: "Knitting Yarn", emoji: "🧶" },
   { id: "stars", name: "Stars", emoji: "⭐" },
   { id: "paws", name: "Paws", emoji: "🐾" },
