@@ -63,31 +63,31 @@ const ProfileScreen = () => {
 
   const getAnimalImage = (animal: StudyPalAnimal) => {
     const imageMap: Record<StudyPalAnimal, any> = {
-      cat: require("../../assets/image-1762363451.png"),
-      redpanda: require("../../assets/image-1762363436.png"),
-      owl: require("../../assets/image-1762363424.png"),
-      penguin: require("../../assets/image-1762363422.png"),
-      horse: require("../../assets/image-1762363432.png"),
-      dog: require("../../assets/image-1762363445.png"),
-      chick: require("../../assets/image-1762363449.png"),
-      bear: require("../../assets/image-1762363455.png"),
-      hedgehog: require("../../assets/image-1762363434.png"),
-      tiger: require("../../assets/image-1762375639.png"),
-      turtle: require("../../assets/image-1762375633.png"),
-      bunny: require("../../assets/image-1762363453.png"),
-      giraffe: require("../../assets/image-1762363438.png"),
-      lamb: require("../../assets/image-1762363456.png"),
-      alpaca: require("../../assets/image-1762363444.png"),
-      lion: require("../../assets/image-1762363428.png"),
-      frog: require("../../assets/image-1762363440.png"),
-      koala: require("../../assets/image-1762363431.png"),
+      tiger: require("../../assets/image-1762363413.png"),
+      turtle: require("../../assets/image-1762363411.png"),
       sloth: require("../../assets/image-1762363415.png"),
+      chipmunk: require("../../assets/image-1762363447.png"),
+      reindeer: require("../../assets/image-1762363417.png"),
+      hedgehog: require("../../assets/image-1762363434.png"),
+      penguin: require("../../assets/image-1762363422.png"),
       monkey: require("../../assets/image-1762363426.png"),
-      hamster: require("../../assets/image-1762363417.png"),
-      reindeer: require("../../assets/image-1762363447.png"),
-      chipmunk: require("../../assets/image-1762363442.png"),
-      elephant: require("../../assets/image-1762363418.png"),
-      goldfish: require("../../assets/image-1762363420.png"),
+      owl: require("../../assets/image-1762363424.png"),
+      chick: require("../../assets/image-1762363449.png"),
+      lion: require("../../assets/image-1762363428.png"),
+      horse: require("../../assets/image-1762363432.png"),
+      koala: require("../../assets/image-1762363431.png"),
+      hamster: require("../../assets/image-1762363420.png"),
+      giraffe: require("../../assets/image-1762363438.png"),
+      frog: require("../../assets/image-1762363440.png"),
+      alpaca: require("../../assets/image-1762363456.png"),
+      goldfish: require("../../assets/image-1762363442.png"),
+      dog: require("../../assets/image-1762363445.png"),
+      bunny: require("../../assets/image-1762363453.png"),
+      cat: require("../../assets/image-1762363451.png"),
+      bear: require("../../assets/image-1762363455.png"),
+      elephant: require("../../assets/image-1762363444.png"),
+      redpanda: require("../../assets/image-1762363418.png"),
+      lamb: require("../../assets/image-1762363436.png"),
     };
     return imageMap[animal] || imageMap.cat;
   };
@@ -107,14 +107,14 @@ const ProfileScreen = () => {
       turtle: "Turtle",
       bunny: "Bunny",
       giraffe: "Giraffe",
-      lamb: "Lamb",
+      lamb: "Hamster",
       alpaca: "Alpaca",
       lion: "Lion",
       frog: "Frog",
       koala: "Koala",
       sloth: "Sloth",
       monkey: "Monkey",
-      hamster: "Hamster",
+      hamster: "Pig",
       reindeer: "Reindeer",
       chipmunk: "Chipmunk",
       elephant: "Elephant",
@@ -201,10 +201,10 @@ const ProfileScreen = () => {
           </View>
         </View>
 
-        {/* Study Pal Settings */}
+        {/* Studentopia Companion Settings */}
         <View className="px-6 py-4">
           <Text className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-3">
-            Study Pal
+            Studentopia Companion
           </Text>
 
           <View className="bg-white dark:bg-gray-800 rounded-2xl p-5 mb-3">
