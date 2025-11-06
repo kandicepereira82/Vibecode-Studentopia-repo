@@ -32,7 +32,7 @@ export type StudyPalAnimal =
   | "turtle"
   | "bunny"
   | "giraffe"
-  | "lamb"
+  | "pig"
   | "alpaca"
   | "lion"
   | "frog"

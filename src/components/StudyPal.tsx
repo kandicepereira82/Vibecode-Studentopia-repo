@@ -1,3 +1,4 @@
+// StudyPal Component - Displays animated study companion animal
 import React, { useEffect } from "react";
 import { View, Text, Image } from "react-native";
 import Animated, {
@@ -293,7 +294,7 @@ const StudyPal: React.FC<StudyPalProps> = ({
             false,
           );
           break;
-        case "lamb":
+        case "pig":
           translateY.value = withRepeat(
             withSequence(
               withTiming(-8, { duration: 350, easing: Easing.out(Easing.ease) }),
@@ -372,7 +373,7 @@ const StudyPal: React.FC<StudyPalProps> = ({
       bear: require("../../assets/image-1762363455.png"),
       elephant: require("../../assets/image-1762363444.png"),
       redpanda: require("../../assets/image-1762363418.png"),
-      lamb: require("../../assets/image-1762363436.png"),
+      pig: require("../../assets/image-1762363420.png"),
     };
     return imageMap[animal] || imageMap.cat;
   };
@@ -392,7 +393,7 @@ const StudyPal: React.FC<StudyPalProps> = ({
       turtle: "🐢",
       bunny: "🐰",
       giraffe: "🦒",
-      lamb: "🐑",
+      pig: "🐷",
       alpaca: "🦙",
       lion: "🦁",
       frog: "🐸",
@@ -441,7 +442,7 @@ const StudyPal: React.FC<StudyPalProps> = ({
       turtle: "#90EE90",   // Light green
       bunny: "#FFD4E5",    // Light pink
       giraffe: "#F4E4C1",  // Cream
-      lamb: "#FFFFFF",     // White
+      pig: "#FFC0CB",      // Pink
       alpaca: "#F4E4C1",   // Cream
       lion: "#FFD700",     // Gold
       frog: "#90EE90",     // Light green

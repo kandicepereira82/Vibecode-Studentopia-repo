@@ -18,7 +18,7 @@ export const getAnimalDisplayName = (animal: StudyPalAnimal): string => {
     turtle: "Turtle",
     bunny: "Bunny",
     giraffe: "Giraffe",
-    lamb: "Lamb",
+    pig: "Pig",
     alpaca: "Alpaca",
     lion: "Lion",
     frog: "Frog",
@@ -63,7 +63,7 @@ export const getAnimalImage = (animal: StudyPalAnimal) => {
     bear: require("../../assets/image-1762363455.png"),
     elephant: require("../../assets/image-1762363444.png"),
     redpanda: require("../../assets/image-1762363418.png"),
-    lamb: require("../../assets/image-1762363420.png"),
+    pig: require("../../assets/image-1762363420.png"),
   };
   return imageMap[animal] || imageMap.cat;
 };
@@ -74,7 +74,7 @@ export const getAnimalImage = (animal: StudyPalAnimal) => {
 export const ALL_ANIMALS: StudyPalAnimal[] = [
   "cat", "redpanda", "owl", "penguin", "horse",
   "dog", "chick", "bear", "hedgehog", "tiger",
-  "turtle", "bunny", "giraffe", "lamb", "alpaca",
+  "turtle", "bunny", "giraffe", "pig", "alpaca",
   "lion", "frog", "koala", "sloth", "monkey",
   "hamster", "reindeer", "chipmunk", "elephant", "goldfish"
 ];
