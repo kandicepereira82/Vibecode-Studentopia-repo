@@ -4,6 +4,7 @@ Studentopia is a comprehensive mobile productivity app designed for students to 
 
 ## ✨ Latest Updates
 
+- ✅ **Breathwork Session Timer** - Customizable total session time with +/- controls (1-60 minutes) for breathwork exercises
 - ✅ **Theme-Aware Buttons** - All Mindfulness page buttons now match the selected theme color scheme
 - ✅ **Improved Breathwork Animation** - Circle stays enlarged during hold phase and small during exhale hold phase
 - ✅ **Parent Support Guide** - Added "Ask a Parent for Help" section to acupressure guide

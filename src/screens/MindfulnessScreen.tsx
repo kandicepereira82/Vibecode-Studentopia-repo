@@ -37,6 +37,10 @@ const MindfulnessScreen = () => {
   const [isBreathworkActive, setIsBreathworkActive] = useState(false);
   const [breathPhase, setBreathPhase] = useState<"inhale" | "hold" | "exhale" | "pause">("inhale");
   const [breathCount, setBreathCount] = useState(0);
+  const [breathworkMinutes, setBreathworkMinutes] = useState(5);
+  const [breathworkSeconds, setBreathworkSeconds] = useState(0);
+  const [breathworkTotalTime, setBreathworkTotalTime] = useState(5 * 60);
+  const [breathworkElapsedTime, setBreathworkElapsedTime] = useState(0);
 
   // Animations
   const circleScale = useSharedValue(1);
@@ -196,6 +200,31 @@ const MindfulnessScreen = () => {
         : Easing.linear,
     });
   }, [breathPhase, isBreathworkActive, animationsEnabled, breathCount]);
+
+  // Breathwork timer effect
+  useEffect(() => {
+    if (!isBreathworkActive) return;
+
+    const interval = setInterval(() => {
+      setBreathworkElapsedTime((prev) => {
+        const newTime = prev + 1;
+        if (newTime >= breathworkTotalTime) {
+          setIsBreathworkActive(false);
+          return newTime;
+        }
+        return newTime;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [isBreathworkActive, breathworkTotalTime]);
+
+  // Update breathwork timer display
+  useEffect(() => {
+    const remaining = breathworkTotalTime - breathworkElapsedTime;
+    setBreathworkMinutes(Math.floor(remaining / 60));
+    setBreathworkSeconds(remaining % 60);
+  }, [breathworkElapsedTime, breathworkTotalTime]);
 
   const circleAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: circleScale.value }],
@@ -581,6 +610,85 @@ const MindfulnessScreen = () => {
                         ? "1. Breathe in through your nose for 4\n2. Hold for 4\n3. Exhale through your mouth for 4\n4. Hold for 4\nRepeat."
                         : "1. Breathe in through your nose for 4 counts\n2. Exhale through your mouth for 6 counts\nRepeat."}
                     </Text>
+                  </View>
+
+                  {/* Breathwork Session Timer */}
+                  <View style={{
+                    backgroundColor: theme.primary + "10",
+                    borderRadius: 16,
+                    padding: 16,
+                    marginBottom: 16,
+                    alignItems: "center",
+                    width: "100%",
+                  }}>
+                    <Text style={{
+                      fontSize: 12,
+                      fontFamily: "Poppins_500Medium",
+                      color: theme.textSecondary,
+                      marginBottom: 8,
+                    }}>
+                      Total Session Time
+                    </Text>
+                    <Text style={{
+                      fontSize: 32,
+                      fontFamily: "Poppins_700Bold",
+                      color: theme.primary,
+                      marginBottom: 12,
+                    }}>
+                      {String(breathworkMinutes).padStart(2, "0")}:{String(breathworkSeconds).padStart(2, "0")}
+                    </Text>
+                    <View style={{
+                      flexDirection: "row",
+                      gap: 12,
+                      alignItems: "center",
+                      width: "100%",
+                      justifyContent: "center",
+                    }}>
+                      <Pressable
+                        onPress={() => setBreathworkMinutes(Math.max(1, breathworkMinutes - 1))}
+                        style={{
+                          width: 40,
+                          height: 40,
+                          borderRadius: 20,
+                          backgroundColor: theme.primary + "20",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <Ionicons name="remove" size={20} color={theme.primary} />
+                      </Pressable>
+
+                      <View style={{
+                        flex: 1,
+                        backgroundColor: "white",
+                        borderRadius: 12,
+                        paddingHorizontal: 12,
+                        paddingVertical: 8,
+                        alignItems: "center",
+                      }}>
+                        <Text style={{
+                          fontSize: 14,
+                          fontFamily: "Poppins_600SemiBold",
+                          color: theme.textPrimary,
+                        }}>
+                          {breathworkMinutes} min
+                        </Text>
+                      </View>
+
+                      <Pressable
+                        onPress={() => setBreathworkMinutes(Math.min(60, breathworkMinutes + 1))}
+                        style={{
+                          width: 40,
+                          height: 40,
+                          borderRadius: 20,
+                          backgroundColor: theme.primary + "20",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <Ionicons name="add" size={20} color={theme.primary} />
+                      </Pressable>
+                    </View>
                   </View>
 
                   {/* Control Buttons */}
