@@ -302,7 +302,7 @@ const GroupsScreen = () => {
                 color: theme.textSecondary,
                 marginTop: 4
               }}>
-                Create, join, and manage study groups
+                Create, join, and manage class groups
               </Text>
             </View>
           </View>
@@ -420,7 +420,7 @@ const GroupsScreen = () => {
                 No Groups Yet
               </Text>
               <Text className="text-sm text-center" style={{ color: theme.textSecondary, fontFamily: 'Poppins_400Regular' }}>
-                Create your own group or join an existing one
+                Create your own class group or join an existing one
               </Text>
             </View>
           ) : (
@@ -436,7 +436,7 @@ const GroupsScreen = () => {
                       color: theme.textPrimary,
                       marginLeft: 8
                     }}>
-                      Created Groups ({filteredCreatedGroups.length})
+                      My Class Groups ({filteredCreatedGroups.length})
                     </Text>
                   </View>
                   {filteredCreatedGroups.map((group) => {
@@ -863,7 +863,7 @@ const GroupsScreen = () => {
                       color: theme.textPrimary,
                       marginLeft: 8
                     }}>
-                      Joined Groups ({filteredJoinedGroups.length})
+                      Joined Class Groups ({filteredJoinedGroups.length})
                     </Text>
                   </View>
                   {filteredJoinedGroups.map((group) => {
