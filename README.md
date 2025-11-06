@@ -4,6 +4,7 @@ Studentopia is a comprehensive mobile productivity app designed for students to 
 
 ## ✨ Latest Updates
 
+- ✅ **Time-Based Study Reminder Messages** - Daily study reminders now show contextual greetings (Good morning, Good afternoon, Good evening, Good night) based on reminder time
 - ✅ **Daily Study Reminder 12-Hour Time Picker** - Settings now feature 12-hour format with AM/PM toggle, direct time input fields, and correct up/down button logic
 - ✅ **Daily Study Reminder Time Picker** - Settings now include option to choose custom time for daily study reminders with hour/minute selector
 - ✅ **Theme-Consistent Mindfulness Page** - All UI elements on Mindfulness page now dynamically use the user's selected theme color scheme (primary, secondary colors)

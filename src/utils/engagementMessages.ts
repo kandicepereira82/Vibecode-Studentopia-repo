@@ -140,6 +140,36 @@ export const getTimeOfDay = (hour: number = new Date().getHours()): "morning" | 
 };
 
 /**
+ * Get study time reminder message based on hour of day
+ */
+export const getStudyTimeMessage = (hour: number = new Date().getHours()): string => {
+  if (hour >= 5 && hour < 12) {
+    return "Good morning! Time to plan your study session 📚";
+  } else if (hour >= 12 && hour < 17) {
+    return "Good afternoon! Ready to focus on your studies? 📚";
+  } else if (hour >= 17 && hour < 21) {
+    return "Good evening! Let's hit those study goals 📚";
+  } else {
+    return "Good night! Time to wind down and prepare for tomorrow 🌙";
+  }
+};
+
+/**
+ * Get study time reminder message based on 12-hour format with AM/PM
+ */
+export const getStudyTimeMessage12Hour = (hour12: number, period: "AM" | "PM"): string => {
+  // Convert to 24-hour format first
+  let hour24 = hour12;
+  if (period === "AM" && hour12 === 12) {
+    hour24 = 0;
+  } else if (period === "PM" && hour12 !== 12) {
+    hour24 = hour12 + 12;
+  }
+
+  return getStudyTimeMessage(hour24);
+};
+
+/**
  * Get study session encouragement
  */
 export const getStudySessionMessage = (minutesStudiedToday: number): string | null => {

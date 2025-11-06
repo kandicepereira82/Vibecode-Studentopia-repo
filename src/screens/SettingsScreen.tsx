@@ -6,6 +6,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import useUserStore from "../state/userStore";
 import { getTheme } from "../utils/themes";
 import { useTranslation } from "../utils/translations";
+import { getStudyTimeMessage12Hour } from "../utils/engagementMessages";
 import {
   requestNotificationPermissions,
   scheduleDailyStudyReminder,
@@ -126,10 +127,13 @@ const SettingsScreen = () => {
         hour24 = reminderHour + 12; // Convert PM to 24-hour (except 12 PM)
       }
 
+      // Get time-appropriate greeting message
+      const timeBasedMessage = getStudyTimeMessage12Hour(reminderHour, reminderPeriod);
+
       const notificationId = await scheduleDailyStudyReminder(
         hour24,
         reminderMinute,
-        "Good morning! Time to plan your study session 📚"
+        timeBasedMessage
       );
       if (notificationId) {
         setDailyReminderEnabled(true);
@@ -137,7 +141,7 @@ const SettingsScreen = () => {
         loadScheduledNotifications();
         showAlert(
           "Daily Reminder Set",
-          `You will receive a reminder at ${String(reminderHour).padStart(2, "0")}:${String(reminderMinute).padStart(2, "0")} ${reminderPeriod} every day.`
+          `You will receive a reminder at ${String(reminderHour).padStart(2, "0")}:${String(reminderMinute).padStart(2, "0")} ${reminderPeriod} every day.\n\nMessage: "${timeBasedMessage}"`
         );
       }
     } else {
@@ -170,25 +174,28 @@ const SettingsScreen = () => {
     updateDailyReminderTime(hour24, reminderMinute);
     setShowTimePicker(false);
 
+    // Get time-appropriate greeting message
+    const timeBasedMessage = getStudyTimeMessage12Hour(reminderHour, reminderPeriod);
+
     // If daily reminder is already enabled, reschedule with new time
     if (dailyReminderEnabled) {
       await cancelAllNotifications();
       const notificationId = await scheduleDailyStudyReminder(
         hour24,
         reminderMinute,
-        "Good morning! Time to plan your study session 📚"
+        timeBasedMessage
       );
       if (notificationId) {
         loadScheduledNotifications();
         showAlert(
           "Reminder Time Updated",
-          `Daily reminder updated to ${String(reminderHour).padStart(2, "0")}:${String(reminderMinute).padStart(2, "0")} ${reminderPeriod}.`
+          `Daily reminder updated to ${String(reminderHour).padStart(2, "0")}:${String(reminderMinute).padStart(2, "0")} ${reminderPeriod}.\n\nMessage: "${timeBasedMessage}"`
         );
       }
     } else {
       showAlert(
         "Time Saved",
-        `Reminder time set to ${String(reminderHour).padStart(2, "0")}:${String(reminderMinute).padStart(2, "0")} ${reminderPeriod}.`
+        `Reminder time set to ${String(reminderHour).padStart(2, "0")}:${String(reminderMinute).padStart(2, "0")} ${reminderPeriod}.\n\nMessage: "${timeBasedMessage}"`
       );
     }
   };
