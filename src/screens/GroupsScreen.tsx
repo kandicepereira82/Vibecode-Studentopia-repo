@@ -173,9 +173,9 @@ const GroupsScreen = () => {
       return;
     }
 
-    if (!editingGroupId) return;
+    if (!editingGroupId || !user) return;
 
-    const success = updateGroup(editingGroupId, {
+    const success = updateGroup(editingGroupId, user.id, {
       name: groupName,
       description: groupDescription,
       school: school.trim() || undefined,
@@ -193,7 +193,7 @@ const GroupsScreen = () => {
       setShowEditModal(false);
       showAlert("Success", "Group updated successfully!");
     } else {
-      showAlert("Error", "Failed to update group");
+      showAlert("Error", "Failed to update group. You must be the group creator to edit.");
     }
   };
 
@@ -203,6 +203,10 @@ const GroupsScreen = () => {
   };
 
   const handleRegenerateCode = (groupId: string, groupName: string) => {
+    if (!user) return;
+
+    const userId = user.id; // Capture userId for closure
+
     showAlert(
       "Regenerate Code",
       `This will create a new share code for "${groupName}". The old code will no longer work. Continue?`,
@@ -212,8 +216,12 @@ const GroupsScreen = () => {
           text: "Regenerate",
           style: "default",
           onPress: () => {
-            const newCode = regenerateShareCode(groupId);
-            showAlert("Success", `New code: ${newCode}`);
+            const newCode = regenerateShareCode(groupId, userId);
+            if (newCode) {
+              showAlert("Success", `New code: ${newCode}`);
+            } else {
+              showAlert("Error", "Failed to regenerate code. You must be the group creator.");
+            }
           },
         },
       ]

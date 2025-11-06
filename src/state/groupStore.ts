@@ -6,11 +6,11 @@ import { Group } from "../types";
 interface GroupStore {
   groups: Group[];
   addGroup: (group: Omit<Group, "id" | "createdAt" | "shareCode">) => void;
-  updateGroup: (groupId: string, updates: Partial<Omit<Group, "id" | "createdAt" | "shareCode" | "teacherId" | "studentIds">>) => boolean;
+  updateGroup: (groupId: string, userId: string, updates: Partial<Omit<Group, "id" | "createdAt" | "shareCode" | "teacherId" | "studentIds">>) => boolean;
   joinGroupWithCode: (shareCode: string, studentId: string) => boolean;
   joinGroup: (groupId: string, studentId: string) => void;
   leaveGroup: (groupId: string, studentId: string) => void;
-  regenerateShareCode: (groupId: string) => string;
+  regenerateShareCode: (groupId: string, userId: string) => string | null;
   getGroupsByStudent: (studentId: string) => Group[];
   getGroupsByTeacher: (teacherId: string) => Group[];
   getGroupByShareCode: (shareCode: string) => Group | undefined;
@@ -39,9 +39,15 @@ const useGroupStore = create<GroupStore>()(
         };
         set((state) => ({ groups: [...state.groups, newGroup] }));
       },
-      updateGroup: (groupId, updates) => {
+      updateGroup: (groupId, userId, updates) => {
         const group = get().groups.find((g) => g.id === groupId);
         if (!group) return false;
+
+        // Permission check: Only the group creator (teacher) can update group details
+        if (group.teacherId !== userId) {
+          console.error("Permission denied: Only the group creator can update this group");
+          return false;
+        }
 
         set((state) => ({
           groups: state.groups.map((g) =>
@@ -74,24 +80,49 @@ const useGroupStore = create<GroupStore>()(
               : group,
           ),
         })),
-      leaveGroup: (groupId, studentId) =>
+      leaveGroup: (groupId, studentId) => {
+        const group = get().groups.find((g) => g.id === groupId);
+        if (!group) return;
+
+        // Permission check: Teachers cannot leave groups they created
+        if (group.teacherId === studentId) {
+          console.error("Permission denied: Group creators cannot leave their own groups");
+          return;
+        }
+
+        // Permission check: Only members can leave
+        if (!group.studentIds.includes(studentId)) {
+          console.error("Permission denied: You are not a member of this group");
+          return;
+        }
+
         set((state) => ({
-          groups: state.groups.map((group) =>
-            group.id === groupId
+          groups: state.groups.map((g) =>
+            g.id === groupId
               ? {
-                  ...group,
-                  studentIds: group.studentIds.filter((id) => id !== studentId),
+                  ...g,
+                  studentIds: g.studentIds.filter((id) => id !== studentId),
                 }
-              : group,
+              : g,
           ),
-        })),
-      regenerateShareCode: (groupId: string) => {
+        }));
+      },
+      regenerateShareCode: (groupId: string, userId: string) => {
+        const group = get().groups.find((g) => g.id === groupId);
+        if (!group) return null;
+
+        // Permission check: Only the group creator (teacher) can regenerate share codes
+        if (group.teacherId !== userId) {
+          console.error("Permission denied: Only the group creator can regenerate share codes");
+          return null;
+        }
+
         const newCode = generateShareCode();
         set((state) => ({
-          groups: state.groups.map((group) =>
-            group.id === groupId
-              ? { ...group, shareCode: newCode }
-              : group
+          groups: state.groups.map((g) =>
+            g.id === groupId
+              ? { ...g, shareCode: newCode }
+              : g
           ),
         }));
         return newCode;
