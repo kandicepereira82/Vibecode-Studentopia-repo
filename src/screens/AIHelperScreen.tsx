@@ -19,8 +19,10 @@ import { getOpenAITextResponse } from "../api/chat-service";
 import { AIChatMessage, AIChatMode } from "../types";
 import { cn } from "../utils/cn";
 import StudyPal from "../components/StudyPal";
+import MessageText from "../components/MessageText";
 import { useGlobalToast } from "../context/ToastContext";
 import { parseError, logError } from "../utils/errorUtils";
+import { generateVideoSuggestionsForPrompt } from "../utils/videoLibrary";
 
 const AIHelperScreen = () => {
   const user = useUserStore((s) => s.user);
@@ -49,9 +51,23 @@ const AIHelperScreen = () => {
     setIsLoading(true);
 
     try {
+      // Generate video suggestions based on the question
+      const videoSuggestions = generateVideoSuggestionsForPrompt(inputText);
+
       const systemPrompt = mode === "grammar"
-        ? `You are a grammar checker. Check the following text for grammar, spelling, and punctuation errors. Provide corrections and explanations. Respond in ${user?.language || "English"}.`
-        : `You are a helpful AI tutor assistant for students. Help them with homework, projects, research, and studying. Provide clear explanations and suggest relevant resources when appropriate. Respond in ${user?.language || "English"}.`;
+        ? `You are a friendly, motivating grammar checker for students. Check the following text for grammar, spelling, and punctuation errors. Provide corrections and explanations in an encouraging, supportive way. Always maintain a positive, helpful tone. Respond in ${user?.language || "English"}.`
+        : `You are a friendly, motivating AI tutor assistant for students at Studentopia. Help them with homework, projects, research, and studying with enthusiasm and encouragement.
+
+Your personality:
+- Friendly and supportive, like a caring tutor who believes in their students
+- Use encouraging phrases like "Great question!", "You're on the right track!", "Let's figure this out together!"
+- Break down complex topics into simple, easy-to-understand explanations
+- When relevant videos are available, include them naturally in your response with the 📺 emoji
+
+IMPORTANT: When you mention video resources, format them EXACTLY like this:
+📺 Watch this video on [topic]: [full URL]
+
+Be conversational, motivating, and make learning feel exciting! Respond in ${user?.language || "English"}.${videoSuggestions}`;
 
       const response = await getOpenAITextResponse([
         { role: "system", content: systemPrompt },
@@ -219,11 +235,42 @@ const AIHelperScreen = () => {
                 size={80}
                 color={theme.textSecondary}
               />
-              <Text className="text-lg mt-4 text-center" style={{ color: theme.textSecondary }}>
+              <Text
+                style={{
+                  fontSize: 18,
+                  fontFamily: 'Poppins_600SemiBold',
+                  color: theme.textPrimary,
+                  marginTop: 16,
+                  textAlign: 'center',
+                  paddingHorizontal: 32
+                }}
+              >
                 {mode === "chat"
-                  ? "Ask me anything about your homework or studies!"
-                  : "Paste your text to check for grammar errors"}
+                  ? `Hi ${user?.username || "there"}! 👋`
+                  : "Grammar Checker Ready"}
               </Text>
+              <Text
+                style={{
+                  fontSize: 15,
+                  fontFamily: 'Poppins_400Regular',
+                  color: theme.textSecondary,
+                  marginTop: 8,
+                  textAlign: 'center',
+                  paddingHorizontal: 32,
+                  lineHeight: 22
+                }}
+              >
+                {mode === "chat"
+                  ? "Ask me anything about your homework or studies! I'll help explain topics and suggest helpful videos to watch."
+                  : "Paste your text below and I'll check it for grammar, spelling, and punctuation errors."}
+              </Text>
+              {mode === "chat" && (
+                <View style={{ marginTop: 20, paddingHorizontal: 32 }}>
+                  <Text style={{ fontSize: 13, fontFamily: 'Poppins_500Medium', color: theme.textSecondary, textAlign: 'center' }}>
+                    📚 Math • Science • English • History • Study Skills
+                  </Text>
+                </View>
+              )}
             </View>
           ) : (
             <View>
@@ -240,21 +287,21 @@ const AIHelperScreen = () => {
                     style={{
                       backgroundColor: message.role === "user"
                         ? theme.primary
-                        : theme.cardBackground
+                        : theme.cardBackground,
+                      shadowColor: '#000',
+                      shadowOffset: { width: 0, height: 1 },
+                      shadowOpacity: 0.05,
+                      shadowRadius: 3,
+                      elevation: 2
                     }}
                   >
-                    <Text
-                      className="text-base"
-                      style={{
-                        color: message.role === "user"
-                          ? "white"
-                          : theme.textPrimary
-                      }}
-                    >
-                      {message.content}
-                    </Text>
+                    <MessageText
+                      content={message.content}
+                      color={message.role === "user" ? "white" : theme.textPrimary}
+                      isUserMessage={message.role === "user"}
+                    />
                   </View>
-                  <Text className="text-xs mt-1 px-2" style={{ color: theme.textSecondary }}>
+                  <Text className="text-xs mt-1 px-2" style={{ color: theme.textSecondary, fontFamily: 'Poppins_400Regular' }}>
                     {new Date(message.timestamp).toLocaleTimeString([], {
                       hour: "2-digit",
                       minute: "2-digit",

@@ -4,6 +4,7 @@ Studentopia is a comprehensive mobile productivity app designed for students to 
 
 ## ✨ Latest Updates
 
+- ✅ **AI Helper Video Recommendations** - AI Helper now detects topics and suggests relevant educational videos with clickable links. Curated library includes 15+ age-appropriate videos on Math, Science, English, History, and Study Skills. Links open in browser with friendly, motivating explanations from the AI tutor.
 - ✅ **Authentication Flow Restored** - Onboarding now properly leads to email/password authentication screen for both new signups and returning users. User preferences collected during onboarding (name, animal, theme, role) are preserved and applied after authentication completes.
 - ✅ **Rules Button Fixed** - "Read Full Rules & Guidelines" button in create group modal now opens the full rules modal. Enhanced with event propagation handling, expanded touch area (hitSlop), and better pressable styling for reliable interaction.
 - ✅ **Teacher Dashboard Complete** - Teachers can now view student lists, see progress tracking for each group task (completion percentage, progress bars, individual student completion indicators), and assign tasks to groups. Student progress displayed with visual indicators showing who completed what.
