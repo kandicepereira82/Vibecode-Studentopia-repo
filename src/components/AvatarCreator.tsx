@@ -102,9 +102,9 @@ const ACCESSORIES = [
   { id: "backpack", name: "Backpack", emoji: "🎒" },
   { id: "book", name: "Books", emoji: "📚" },
   { id: "pencil", name: "Pen", emoji: "🖊️" },
-  { id: "water", name: "Water Bottle", emoji: "🍶" },
+  { id: "water", name: "Microphone", emoji: "🎤" },
   { id: "plant", name: "Study Plant", emoji: "🪴" },
-  { id: "study_pet", name: "Smaller Study Pet", emoji: "🐹" },
+  { id: "study_pet", name: "Bamboo", emoji: "🎍" },
   { id: "knitting", name: "Knitting Yarn", emoji: "🧶" },
   { id: "stars", name: "Stars", emoji: "⭐" },
   { id: "paws", name: "Paws", emoji: "🐾" },
@@ -115,7 +115,7 @@ const ACCESSORIES = [
   { id: "speaker", name: "Music Speaker", emoji: "🔊" },
   { id: "paint", name: "Paint Paddle", emoji: "🎨" },
   { id: "smiley", name: "Smiley", emoji: "😊" },
-  { id: "dancing", name: "Dancing", emoji: "🕺" },
+  { id: "dancing", name: "Cloud Dancing", emoji: "☁️" },
 ];
 
 const AvatarCreator: React.FC<AvatarCreatorProps> = ({
@@ -176,7 +176,7 @@ const AvatarCreator: React.FC<AvatarCreatorProps> = ({
             <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
               <View style={{ flex: 1 }}>
                 <Text style={{ fontSize: 28, fontFamily: "Poppins_700Bold", color: theme.textPrimary }}>
-                  Companion Customisation
+                  Avatar Customisation
                 </Text>
                 <Text style={{ fontSize: 14, fontFamily: "Poppins_400Regular", color: theme.textSecondary, marginTop: 4 }}>
                   Customise your studentopia companion

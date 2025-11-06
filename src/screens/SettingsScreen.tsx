@@ -281,7 +281,7 @@ const SettingsScreen = () => {
                   </View>
                   <View className="flex-1">
                     <Text className="text-base font-semibold" style={{ color: theme.textPrimary }}>
-                      Companion Customisation
+                      Avatar Customisation
                     </Text>
                     <Text className="text-xs mt-0.5" style={{ color: theme.textSecondary }}>
                       Personalize your study pal appearance
