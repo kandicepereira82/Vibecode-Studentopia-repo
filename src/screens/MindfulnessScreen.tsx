@@ -502,6 +502,27 @@ const MindfulnessScreen = () => {
                       >
                         <Ionicons name="add" size={20} color={theme.primary} />
                       </Pressable>
+
+                      <Pressable
+                        onPress={() => {
+                          setBreathworkMinutes(5);
+                          setBreathworkSeconds(0);
+                          setBreathworkElapsedTime(0);
+                          setIsBreathworkActive(false);
+                          setBreathCount(0);
+                          setBreathPhase("inhale");
+                        }}
+                        style={{
+                          width: 40,
+                          height: 40,
+                          borderRadius: 20,
+                          backgroundColor: theme.secondary + "20",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <Ionicons name="refresh" size={20} color={theme.secondary} />
+                      </Pressable>
                     </View>
                   </View>
 

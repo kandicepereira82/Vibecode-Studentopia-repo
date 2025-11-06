@@ -4,6 +4,7 @@ Studentopia is a comprehensive mobile productivity app designed for students to 
 
 ## ✨ Latest Updates
 
+- ✅ **Reset Button on Breathwork Timer** - Added refresh icon button to reset breathwork session to default 5-minute duration
 - ✅ **First Name Only Greeting** - Home page now displays first name only in personalized greeting
 - ✅ **Companion in Mindfulness Header** - Studentopia Companion now appears to the right of "Mindfulness Break" heading
 - ✅ **Mindfulness Importance Note** - Informational message highlighting how mindfulness reduces stress and calms nerves
