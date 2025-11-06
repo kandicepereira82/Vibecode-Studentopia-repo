@@ -320,12 +320,26 @@ const MindfulnessScreen = () => {
                 <View className="flex-row gap-4 mb-6 items-center">
                   <Pressable
                     onPress={() => setTimerMinutes(Math.max(1, timerMinutes - 1))}
-                    className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 items-center justify-center"
+                    style={{
+                      width: 48,
+                      height: 48,
+                      borderRadius: 24,
+                      backgroundColor: theme.primary + "20",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
                   >
                     <Ionicons name="remove" size={24} color={theme.primary} />
                   </Pressable>
 
-                  <View className="flex-1 bg-gray-100 dark:bg-gray-700 rounded-2xl px-4 py-3 items-center">
+                  <View style={{
+                    flex: 1,
+                    backgroundColor: theme.primary + "10",
+                    borderRadius: 16,
+                    paddingHorizontal: 16,
+                    paddingVertical: 12,
+                    alignItems: "center",
+                  }}>
                     <Text style={{ fontSize: 16, fontFamily: "Poppins_600SemiBold", color: theme.textPrimary }}>
                       {timerMinutes} min
                     </Text>
@@ -333,7 +347,14 @@ const MindfulnessScreen = () => {
 
                   <Pressable
                     onPress={() => setTimerMinutes(Math.min(60, timerMinutes + 1))}
-                    className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 items-center justify-center"
+                    style={{
+                      width: 48,
+                      height: 48,
+                      borderRadius: 24,
+                      backgroundColor: theme.primary + "20",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
                   >
                     <Ionicons name="add" size={24} color={theme.primary} />
                   </Pressable>
@@ -366,7 +387,7 @@ const MindfulnessScreen = () => {
                     className="flex-1"
                   >
                     <LinearGradient
-                      colors={["#F59E0B", "#D97706"]}
+                      colors={[theme.secondary, theme.secondary + "CC"]}
                       style={{ borderRadius: 16, paddingVertical: 16, alignItems: "center" }}
                     >
                       <Text style={{ fontSize: 16, fontFamily: "Poppins_700Bold", color: "white" }}>
@@ -383,10 +404,10 @@ const MindfulnessScreen = () => {
                     className="flex-1"
                   >
                     <LinearGradient
-                      colors={["#EF4444", "#DC2626"]}
+                      colors={[theme.secondary + "66", theme.secondary + "33"]}
                       style={{ borderRadius: 16, paddingVertical: 16, alignItems: "center" }}
                     >
-                      <Text style={{ fontSize: 16, fontFamily: "Poppins_700Bold", color: "white" }}>
+                      <Text style={{ fontSize: 16, fontFamily: "Poppins_700Bold", color: theme.textPrimary }}>
                         Stop
                       </Text>
                     </LinearGradient>
@@ -426,11 +447,13 @@ const MindfulnessScreen = () => {
                       setBreathCount(0);
                       setBreathPhase("inhale");
                     }}
-                    className={`rounded-2xl p-4 ${
-                      breathworkType === "box"
-                        ? "bg-blue-100 dark:bg-blue-900 border-2 border-blue-500"
-                        : "bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700"
-                    }`}
+                    style={{
+                      borderRadius: 16,
+                      padding: 16,
+                      backgroundColor: breathworkType === "box" ? theme.primary + "20" : "white",
+                      borderWidth: 2,
+                      borderColor: breathworkType === "box" ? theme.primary : "#E5E7EB",
+                    }}
                   >
                     <Text style={{ fontSize: 16, fontFamily: "Poppins_700Bold", color: theme.textPrimary }}>
                       Box Breathing (4-4-4-4)
@@ -453,11 +476,13 @@ const MindfulnessScreen = () => {
                       setBreathCount(0);
                       setBreathPhase("inhale");
                     }}
-                    className={`rounded-2xl p-4 ${
-                      breathworkType === "46"
-                        ? "bg-blue-100 dark:bg-blue-900 border-2 border-blue-500"
-                        : "bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700"
-                    }`}
+                    style={{
+                      borderRadius: 16,
+                      padding: 16,
+                      backgroundColor: breathworkType === "46" ? theme.primary + "20" : "white",
+                      borderWidth: 2,
+                      borderColor: breathworkType === "46" ? theme.primary : "#E5E7EB",
+                    }}
                   >
                     <Text style={{ fontSize: 16, fontFamily: "Poppins_700Bold", color: theme.textPrimary }}>
                       4-6 Breathing
