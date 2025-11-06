@@ -578,8 +578,8 @@ const MindfulnessScreen = () => {
                       }}
                     >
                       {breathworkType === "box"
-                        ? "Breathe in through your nose for 4, hold for 4, exhale through your mouth for 4, hold for 4. Repeat."
-                        : "Breathe in gently through your nose for 4 counts, exhale slowly through your mouth for 6 counts. Repeat."}
+                        ? "1. Breathe in through your nose for 4\n2. Hold for 4\n3. Exhale through your mouth for 4\n4. Hold for 4\nRepeat."
+                        : "1. Breathe in through your nose for 4 counts\n2. Exhale through your mouth for 6 counts\nRepeat."}
                     </Text>
                   </View>
 
