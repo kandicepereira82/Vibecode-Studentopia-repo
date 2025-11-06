@@ -26,6 +26,11 @@ const GroupAnalyticsScreen: React.FC<GroupAnalyticsScreenProps> = ({ groupId, on
     return null;
   }
 
+  // Security check: Only show analytics if user is the teacher (creator)
+  if (group.teacherId !== user.id) {
+    return null;
+  }
+
   const analytics = calculateGroupAnalytics(group, tasks);
   const engagementSummary = getGroupEngagementSummary(analytics);
 
