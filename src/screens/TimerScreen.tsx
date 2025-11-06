@@ -14,6 +14,7 @@ import { TimerMode } from "../types";
 import { cn } from "../utils/cn";
 import { musicService, musicLibrary, MusicTrack } from "../services/musicService";
 import StudyPal from "../components/StudyPal";
+import ClickableCompanion from "../components/ClickableCompanion";
 
 // Import alarm sound files
 const beepSound = require("../../assets/beep-6-96243.mpeg");
@@ -404,13 +405,14 @@ const TimerScreen = () => {
             </Text>
             {user && (
               <View style={{ marginLeft: 16 }}>
-                <StudyPal
+                <ClickableCompanion
                   animal={user.studyPalConfig.animal}
                   name={user.studyPalConfig.name}
                   animationsEnabled={false}
                   size={35}
                   showName={false}
                   showMessage={false}
+                  customAvatar={user.studyPalConfig.avatar}
                 />
               </View>
             )}

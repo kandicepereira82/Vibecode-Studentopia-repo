@@ -7,6 +7,7 @@ import useUserStore from "../state/userStore";
 import { getTheme } from "../utils/themes";
 import { useTranslation } from "../utils/translations";
 import StudyPal from "../components/StudyPal";
+import ClickableCompanion from "../components/ClickableCompanion";
 
 interface StudyTip {
   id: string;
@@ -227,13 +228,14 @@ const StudyTipsScreen = () => {
             </Text>
             {user && (
               <View style={{ marginLeft: 16 }}>
-                <StudyPal
+                <ClickableCompanion
                   animal={user.studyPalConfig.animal}
                   name={user.studyPalConfig.name}
                   animationsEnabled={false}
                   size={35}
                   showName={false}
                   showMessage={false}
+                  customAvatar={user.studyPalConfig.avatar}
                 />
               </View>
             )}

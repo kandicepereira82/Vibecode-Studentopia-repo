@@ -14,6 +14,7 @@ import useUserStore from "../state/userStore";
 import { THEMES } from "../utils/themes";
 import { ThemeConfig } from "../utils/themes";
 import StudyPal from "../components/StudyPal";
+import ClickableCompanion from "../components/ClickableCompanion";
 
 type Tab = "breathwork" | "tips" | "acupressure";
 type BreathworkType = "box" | "46";
@@ -215,13 +216,14 @@ const MindfulnessScreen = () => {
               </Text>
             </View>
             <View className="ml-4">
-              <StudyPal
+              <ClickableCompanion
                 animal={user?.studyPalConfig.animal || "redpanda"}
                 name={user?.studyPalConfig.name || "Tomo"}
                 animationsEnabled={false}
                 size={50}
                 showName={false}
                 showMessage={false}
+                customAvatar={user?.studyPalConfig.avatar}
               />
             </View>
           </View>
@@ -353,13 +355,14 @@ const MindfulnessScreen = () => {
                 {/* Breathing Circle Animation */}
                 <View className="bg-white dark:bg-gray-800 rounded-3xl p-8 items-center shadow-lg" style={{ elevation: 5 }}>
                   <View className="mb-6">
-                    <StudyPal
+                    <ClickableCompanion
                       animal={user?.studyPalConfig.animal || "redpanda"}
                       name={user?.studyPalConfig.name || "Tomo"}
                       animationsEnabled={false}
                       size={50}
                       showName={false}
                       showMessage={false}
+                      customAvatar={user?.studyPalConfig.avatar}
                     />
                   </View>
 

@@ -9,6 +9,7 @@ import useActivityFeedStore from "../state/activityFeedStore";
 import { getTheme } from "../utils/themes";
 import { useGlobalToast } from "../context/ToastContext";
 import StudyPal from "../components/StudyPal";
+import ClickableCompanion from "../components/ClickableCompanion";
 import { presenceService } from "../services/presenceService";
 import { UserPresence } from "../types";
 
@@ -163,13 +164,14 @@ const FriendsScreen = () => {
             </Text>
             {user && (
               <View style={{ marginLeft: 16 }}>
-                <StudyPal
+                <ClickableCompanion
                   animal={user.studyPalConfig.animal}
                   name={user.studyPalConfig.name}
                   animationsEnabled={false}
                   size={35}
                   showName={false}
                   showMessage={false}
+                  customAvatar={user.studyPalConfig.avatar}
                 />
               </View>
             )}

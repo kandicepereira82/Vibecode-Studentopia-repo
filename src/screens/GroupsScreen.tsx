@@ -13,6 +13,7 @@ import { useTranslation } from "../utils/translations";
 import { cn } from "../utils/cn";
 import CustomAlert from "../components/CustomAlert";
 import StudyPal from "../components/StudyPal";
+import ClickableCompanion from "../components/ClickableCompanion";
 import { useGlobalToast } from "../context/ToastContext";
 import GroupAnalyticsScreen from "./GroupAnalyticsScreen";
 import StudyRoomScreen from "./StudyRoomScreen";
@@ -293,13 +294,14 @@ const GroupsScreen = () => {
                 </Text>
                 {user && (
                   <View style={{ marginLeft: 16 }}>
-                    <StudyPal
+                    <ClickableCompanion
                       animal={user.studyPalConfig.animal}
                       name={user.studyPalConfig.name}
                       animationsEnabled={false}
                       size={35}
                       showName={false}
                       showMessage={false}
+                      customAvatar={user.studyPalConfig.avatar}
                     />
                   </View>
                 )}

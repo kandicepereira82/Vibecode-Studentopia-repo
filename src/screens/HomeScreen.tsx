@@ -6,6 +6,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 import { startOfWeek, addDays, format, isSameDay, isToday } from "date-fns";
 import StudyPal from "../components/StudyPal";
+import ClickableCompanion from "../components/ClickableCompanion";
 import OfflineIndicator from "../components/OfflineIndicator";
 import useUserStore from "../state/userStore";
 import useTaskStore from "../state/taskStore";
@@ -145,24 +146,15 @@ const HomeScreen = () => {
               {getGreetingSubMessage()}
             </Text>
           </View>
-          <Pressable
-            onPress={() => navigation.navigate("Profile" as never)}
-            style={({ pressed }) => ({
-              marginLeft: 12,
-              transform: [{ scale: pressed ? 0.95 : 1 }],
-              opacity: pressed ? 0.8 : 1,
-            })}
-          >
-            <StudyPal
-              animal={user.studyPalConfig.animal}
-              name={user.studyPalConfig.name}
-              animationsEnabled={false}
-              size={50}
-              showName={false}
-              showMessage={false}
-              customAvatar={user.studyPalConfig.avatar}
-            />
-          </Pressable>
+          <ClickableCompanion
+            animal={user.studyPalConfig.animal}
+            name={user.studyPalConfig.name}
+            animationsEnabled={false}
+            size={50}
+            showName={false}
+            showMessage={false}
+            customAvatar={user.studyPalConfig.avatar}
+          />
         </View>
 
         {/* Daily Study Reminder Card */}

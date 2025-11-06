@@ -19,6 +19,7 @@ import { getOpenAITextResponse } from "../api/chat-service";
 import { AIChatMessage, AIChatMode } from "../types";
 import { cn } from "../utils/cn";
 import StudyPal from "../components/StudyPal";
+import ClickableCompanion from "../components/ClickableCompanion";
 import MessageText from "../components/MessageText";
 import { useGlobalToast } from "../context/ToastContext";
 import { parseError, logError } from "../utils/errorUtils";
@@ -131,13 +132,14 @@ Be professional, supportive, and focus on helping teachers succeed in their educ
               </Text>
               {user && (
                 <View style={{ marginLeft: 16 }}>
-                  <StudyPal
+                  <ClickableCompanion
                     animal={user.studyPalConfig.animal}
                     name={user.studyPalConfig.name}
                     animationsEnabled={false}
                     size={35}
                     showName={false}
                     showMessage={false}
+                    customAvatar={user.studyPalConfig.avatar}
                   />
                 </View>
               )}
