@@ -164,12 +164,38 @@ const MindfulnessScreen = () => {
   useEffect(() => {
     if (!animationsEnabled || !isBreathworkActive) return;
 
-    const targetScale = breathPhase === "inhale" ? 1.5 : 0.8;
+    // 4-4-4-4 breathing cycle:
+    // 0-4s: Inhale (circle grows to 1.5)
+    // 4-8s: Hold (circle stays enlarged at 1.5)
+    // 8-12s: Exhale (circle shrinks to 0.8)
+    // 12-16s: Hold (circle stays small at 0.8)
+
+    let targetScale = 1;
+    let duration = 4000; // 4 seconds
+
+    if (breathPhase === "inhale") {
+      targetScale = 1.5; // Grow during inhale
+      duration = 4000;
+    } else if (breathPhase === "hold" && breathCount < 8) {
+      // First hold (after inhale) - stay enlarged
+      targetScale = 1.5;
+      duration = 4000;
+    } else if (breathPhase === "exhale") {
+      targetScale = 0.8; // Shrink during exhale
+      duration = 4000;
+    } else if (breathPhase === "pause") {
+      // Second hold (after exhale) - stay small
+      targetScale = 0.8;
+      duration = 4000;
+    }
+
     circleScale.value = withTiming(targetScale, {
-      duration: breathPhase === "hold" || breathPhase === "pause" ? 0 : 4000,
-      easing: Easing.inOut(Easing.ease),
+      duration,
+      easing: breathPhase === "inhale" || breathPhase === "exhale"
+        ? Easing.inOut(Easing.ease)
+        : Easing.linear,
     });
-  }, [breathPhase, isBreathworkActive, animationsEnabled]);
+  }, [breathPhase, isBreathworkActive, animationsEnabled, breathCount]);
 
   const circleAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: circleScale.value }],
