@@ -304,3 +304,22 @@ export const hasCalendarPermissions = async (): Promise<boolean> => {
     return false;
   }
 };
+
+/**
+ * Connect to Apple Calendar (EventKit)
+ * This requests calendar permissions on iOS
+ */
+export const connectAppleCalendar = async (): Promise<boolean> => {
+  try {
+    if (Platform.OS !== "ios") {
+      console.warn("Apple Calendar is only available on iOS");
+      return false;
+    }
+
+    const { status } = await Calendar.requestCalendarPermissionsAsync();
+    return status === "granted";
+  } catch (error) {
+    console.error("Error connecting to Apple Calendar:", error);
+    return false;
+  }
+};

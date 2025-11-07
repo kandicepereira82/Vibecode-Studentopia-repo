@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, ScrollView, Pressable, Switch, Modal, TextInput, ActivityIndicator } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
+import * as AuthSession from "expo-auth-session";
 import useUserStore from "../state/userStore";
 import useCalendarStore from "../state/calendarStore";
 import { getTheme } from "../utils/themes";
@@ -11,7 +12,14 @@ import {
   getAllStudentopiaCalendars,
   deleteStudentopiaCalendar,
   requestCalendarPermissions,
+  connectAppleCalendar,
 } from "../services/calendarService";
+import {
+  getGoogleOAuthConfig,
+  exchangeGoogleAuthCode,
+  getAvailableProviders,
+  CalendarProvider as OAuthProvider,
+} from "../services/calendarOAuthService";
 import { CalendarConnection } from "../types";
 import CustomAlert from "../components/CustomAlert";
 import { useGlobalToast } from "../context/ToastContext";
@@ -38,6 +46,8 @@ const CalendarConnectionsScreen = ({ navigation }: any) => {
 
   const [loading, setLoading] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showProviderModal, setShowProviderModal] = useState(false);
+  const [selectedProvider, setSelectedProvider] = useState<"device" | "google" | "apple">("device");
   const [childName, setChildName] = useState(user?.username || "");
   const [alertState, setAlertState] = useState<AlertState>({
     visible: false,
@@ -204,7 +214,7 @@ const CalendarConnectionsScreen = ({ navigation }: any) => {
             </View>
           </View>
           <Pressable
-            onPress={() => setShowAddModal(true)}
+            onPress={() => setShowProviderModal(true)}
             style={{
               width: 48,
               height: 48,
