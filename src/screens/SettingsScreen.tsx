@@ -247,13 +247,29 @@ const SettingsScreen = ({ navigation }: any) => {
     <View style={{ flex: 1, backgroundColor: "#E8F5E9" }}>
       <SafeAreaView style={{ flex: 1 }}>
         {/* Header */}
-        <View className="px-6 pt-4 pb-2">
-          <Text className="text-3xl font-bold" style={{ color: theme.textPrimary }}>
-            Settings
-          </Text>
-          <Text className="text-sm mt-1" style={{ color: theme.textSecondary }}>
-            Notifications & Calendar Sync
-          </Text>
+        <View className="px-6 pt-4 pb-2 flex-row items-center">
+          <Pressable
+            onPress={() => navigation.goBack()}
+            style={{
+              width: 40,
+              height: 40,
+              borderRadius: 20,
+              backgroundColor: theme.textSecondary + "20",
+              alignItems: "center",
+              justifyContent: "center",
+              marginRight: 12,
+            }}
+          >
+            <Ionicons name="arrow-back" size={24} color={theme.textPrimary} />
+          </Pressable>
+          <View className="flex-1">
+            <Text className="text-3xl font-bold" style={{ color: theme.textPrimary }}>
+              Settings
+            </Text>
+            <Text className="text-sm mt-1" style={{ color: theme.textSecondary }}>
+              Notifications & Calendar Sync
+            </Text>
+          </View>
         </View>
 
         <ScrollView className="flex-1 px-6 py-2" showsVerticalScrollIndicator={false}>

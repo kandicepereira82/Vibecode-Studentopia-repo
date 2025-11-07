@@ -179,13 +179,29 @@ const CalendarConnectionsScreen = ({ navigation }: any) => {
       <SafeAreaView style={{ flex: 1 }}>
         {/* Header */}
         <View className="px-6 pt-4 pb-2 flex-row items-center justify-between">
-          <View className="flex-1">
-            <Text className="text-3xl font-bold" style={{ color: theme.textPrimary }}>
-              Calendar Sync
-            </Text>
-            <Text className="text-sm mt-1" style={{ color: theme.textSecondary }}>
-              Manage calendar connections
-            </Text>
+          <View className="flex-row items-center flex-1">
+            <Pressable
+              onPress={() => navigation.goBack()}
+              style={{
+                width: 40,
+                height: 40,
+                borderRadius: 20,
+                backgroundColor: theme.textSecondary + "20",
+                alignItems: "center",
+                justifyContent: "center",
+                marginRight: 12,
+              }}
+            >
+              <Ionicons name="arrow-back" size={24} color={theme.textPrimary} />
+            </Pressable>
+            <View className="flex-1">
+              <Text className="text-3xl font-bold" style={{ color: theme.textPrimary }}>
+                Calendar Sync
+              </Text>
+              <Text className="text-sm mt-1" style={{ color: theme.textSecondary }}>
+                Manage calendar connections
+              </Text>
+            </View>
           </View>
           <Pressable
             onPress={() => setShowAddModal(true)}
