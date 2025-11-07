@@ -71,6 +71,7 @@ export interface Task {
   createdAt: Date;
   completedAt?: Date;
   assignedBy?: string; // teacher userId if assigned
+  calendarEventId?: string; // Synced calendar event ID
 }
 
 export interface User {
@@ -249,4 +250,43 @@ export interface UserStats {
   longestStreak: number;
   totalStudyMinutes: number;
   achievements: Achievement[];
+}
+
+// Calendar Sync Types
+export type CalendarProvider = "device" | "google" | "apple" | "outlook";
+export type CalendarSyncStatus = "connected" | "syncing" | "error" | "disconnected";
+
+export interface CalendarConnection {
+  id: string;
+  userId: string; // Student's user ID
+  childName: string; // Child's name from profile (username)
+  calendarId: string; // Device calendar ID
+  calendarName: string; // "Studentopia – [Child's Name]"
+  provider: CalendarProvider;
+  isVisible: boolean; // Show/hide calendar events
+  syncEnabled: boolean; // Enable/disable sync
+  lastSyncedAt?: Date;
+  createdAt: Date;
+}
+
+export interface LinkedAccount {
+  id: string;
+  parentUserId: string; // Parent's user ID
+  childUserId: string; // Child's user ID
+  childName: string; // Child's username
+  accessLevel: "view-only" | "full"; // View-only or full access
+  notificationsEnabled: boolean; // Parent receives notifications about child's tasks
+  linkedAt: Date;
+}
+
+export interface CalendarEvent {
+  id: string;
+  calendarConnectionId: string;
+  title: string;
+  description?: string;
+  startDate: Date;
+  endDate: Date;
+  isFromStudentopia: boolean; // True if created by Studentopia
+  taskId?: string; // Link to Task if synced from task
+  externalEventId?: string; // External calendar event ID
 }

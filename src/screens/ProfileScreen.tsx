@@ -9,12 +9,11 @@ import { cn } from "../utils/cn";
 import { getAnimalImage, getAnimalDisplayName, ALL_ANIMALS } from "../utils/animalUtils";
 import { ALL_THEMES } from "../utils/themeUtils";
 import StudyPal from "../components/StudyPal";
-import SettingsScreen from "./SettingsScreen";
 import { useGlobalToast } from "../context/ToastContext";
 import { validateName } from "../utils/contentModeration";
 import AvatarCreator from "../components/AvatarCreator";
 
-const ProfileScreen = () => {
+const ProfileScreen = ({ navigation }: any) => {
   const user = useUserStore((s) => s.user);
   const updateLanguage = useUserStore((s) => s.updateLanguage);
   const updateThemeColor = useUserStore((s) => s.updateThemeColor);
@@ -27,7 +26,6 @@ const ProfileScreen = () => {
   const [showLanguageModal, setShowLanguageModal] = useState(false);
   const [showThemeModal, setShowThemeModal] = useState(false);
   const [showAnimalModal, setShowAnimalModal] = useState(false);
-  const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [showAvatarCreator, setShowAvatarCreator] = useState(false);
   const [studyPalName, setStudyPalName] = useState(user?.studyPalConfig.name || "Buddy");
 
@@ -116,7 +114,7 @@ const ProfileScreen = () => {
             {t("profile")}
           </Text>
           <Pressable
-            onPress={() => setShowSettingsModal(true)}
+            onPress={() => navigation.navigate("Settings")}
             className="w-10 h-10 bg-blue-500 rounded-full items-center justify-center"
           >
             <Ionicons name="settings" size={20} color="white" />
@@ -457,24 +455,6 @@ const ProfileScreen = () => {
               </Pressable>
             ))}
           </ScrollView>
-        </SafeAreaView>
-      </Modal>
-
-      {/* Settings Modal */}
-      <Modal
-        visible={showSettingsModal}
-        animationType="slide"
-        presentationStyle="pageSheet"
-        onRequestClose={() => setShowSettingsModal(false)}
-      >
-        <SettingsScreen />
-        <SafeAreaView edges={["bottom"]}>
-          <Pressable
-            onPress={() => setShowSettingsModal(false)}
-            className="mx-6 mb-4 bg-blue-500 rounded-2xl py-4 items-center"
-          >
-            <Text className="text-white font-semibold text-lg">Close</Text>
-          </Pressable>
         </SafeAreaView>
       </Modal>
 

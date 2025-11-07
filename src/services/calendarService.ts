@@ -39,27 +39,29 @@ export const getDeviceCalendars = async () => {
 };
 
 /**
- * Get or create the StudyPal calendar
+ * Get or create a child-specific Studentopia calendar
+ * Format: "Studentopia – [Child's Name]"
  */
-export const getOrCreateStudyPalCalendar = async (): Promise<string | null> => {
+export const getOrCreateStudentopiaCalendar = async (childName: string): Promise<string | null> => {
   try {
     const hasPermission = await requestCalendarPermissions();
     if (!hasPermission) {
       return null;
     }
 
+    const calendarTitle = `Studentopia – ${childName}`;
     const calendars = await Calendar.getCalendarsAsync(Calendar.EntityTypes.EVENT);
-    const studyPalCalendar = calendars.find((cal) => cal.title === "StudyPal");
+    const existingCalendar = calendars.find((cal) => cal.title === calendarTitle);
 
-    if (studyPalCalendar) {
-      return studyPalCalendar.id;
+    if (existingCalendar) {
+      return existingCalendar.id;
     }
 
-    // Create new StudyPal calendar
+    // Create new child-specific Studentopia calendar
     const defaultCalendarSource =
       Platform.OS === "ios"
         ? await getDefaultCalendarSource()
-        : { isLocalAccount: true, name: "StudyPal", type: Calendar.SourceType.LOCAL };
+        : { isLocalAccount: true, name: "Studentopia", type: Calendar.SourceType.LOCAL };
 
     if (!defaultCalendarSource) {
       console.error("No default calendar source available");
@@ -67,20 +69,52 @@ export const getOrCreateStudyPalCalendar = async (): Promise<string | null> => {
     }
 
     const newCalendarId = await Calendar.createCalendarAsync({
-      title: "StudyPal",
-      color: "#4CAF50",
+      title: calendarTitle,
+      color: "#4CAF50", // Studentopia green
       entityType: Calendar.EntityTypes.EVENT,
       sourceId: defaultCalendarSource.id,
       source: defaultCalendarSource,
-      name: "StudyPal",
+      name: calendarTitle,
       ownerAccount: "personal",
       accessLevel: Calendar.CalendarAccessLevel.OWNER,
     });
 
     return newCalendarId;
   } catch (error) {
-    console.error("Error getting or creating StudyPal calendar:", error);
+    console.error("Error getting or creating Studentopia calendar:", error);
     return null;
+  }
+};
+
+/**
+ * Get all Studentopia calendars (for multiple children)
+ */
+export const getAllStudentopiaCalendars = async () => {
+  try {
+    const hasPermission = await requestCalendarPermissions();
+    if (!hasPermission) {
+      return [];
+    }
+
+    const calendars = await Calendar.getCalendarsAsync(Calendar.EntityTypes.EVENT);
+    // Filter calendars that start with "Studentopia"
+    return calendars.filter((cal) => cal.title.startsWith("Studentopia"));
+  } catch (error) {
+    console.error("Error getting Studentopia calendars:", error);
+    return [];
+  }
+};
+
+/**
+ * Delete a child-specific Studentopia calendar
+ */
+export const deleteStudentopiaCalendar = async (calendarId: string): Promise<boolean> => {
+  try {
+    await Calendar.deleteCalendarAsync(calendarId);
+    return true;
+  } catch (error) {
+    console.error("Error deleting Studentopia calendar:", error);
+    return false;
   }
 };
 
@@ -107,10 +141,11 @@ export const addTaskToCalendar = async (
   taskTitle: string,
   taskDescription: string,
   dueDate: Date,
+  childName: string,
   reminderMinutes: number = 60
 ): Promise<string | null> => {
   try {
-    const calendarId = await getOrCreateStudyPalCalendar();
+    const calendarId = await getOrCreateStudentopiaCalendar(childName);
     if (!calendarId) {
       return null;
     }
@@ -142,10 +177,11 @@ export const addStudySessionToCalendar = async (
   sessionTitle: string,
   startTime: Date,
   durationMinutes: number,
+  childName: string,
   notes?: string
 ): Promise<string | null> => {
   try {
-    const calendarId = await getOrCreateStudyPalCalendar();
+    const calendarId = await getOrCreateStudentopiaCalendar(childName);
     if (!calendarId) {
       return null;
     }
@@ -157,7 +193,7 @@ export const addStudySessionToCalendar = async (
       title: `📖 Study: ${sessionTitle}`,
       startDate,
       endDate,
-      notes: notes || "StudyPal study session",
+      notes: notes || "Studentopia study session",
       alarms: [{ relativeOffset: -5 }], // 5 minutes before
       timeZone: "GMT",
     });
@@ -208,10 +244,11 @@ export const deleteCalendarEvent = async (eventId: string): Promise<boolean> => 
  */
 export const getCalendarEvents = async (
   startDate: Date,
-  endDate: Date
+  endDate: Date,
+  childName: string
 ): Promise<Calendar.Event[]> => {
   try {
-    const calendarId = await getOrCreateStudyPalCalendar();
+    const calendarId = await getOrCreateStudentopiaCalendar(childName);
     if (!calendarId) {
       return [];
     }
@@ -232,6 +269,7 @@ export const syncTaskWithCalendar = async (
   taskTitle: string,
   taskDescription: string,
   dueDate: Date,
+  childName: string,
   existingEventId?: string
 ): Promise<string | null> => {
   try {
@@ -246,7 +284,7 @@ export const syncTaskWithCalendar = async (
       return success ? existingEventId : null;
     } else {
       // Create new event
-      return await addTaskToCalendar(taskTitle, taskDescription, dueDate);
+      return await addTaskToCalendar(taskTitle, taskDescription, dueDate, childName);
     }
   } catch (error) {
     console.error("Error syncing task with calendar:", error);

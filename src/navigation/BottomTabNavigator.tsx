@@ -9,7 +9,7 @@ import AIHelperScreen from "../screens/AIHelperScreen";
 import StudyTipsScreen from "../screens/StudyTipsScreen";
 import GroupsScreen from "../screens/GroupsScreen";
 import FriendsScreen from "../screens/FriendsScreen";
-import ProfileScreen from "../screens/ProfileScreen";
+import ProfileStack from "./ProfileStack";
 import MindfulnessScreen from "../screens/MindfulnessScreen";
 import useUserStore from "../state/userStore";
 import { useTranslation } from "../utils/translations";
@@ -256,7 +256,7 @@ const BottomTabNavigator = () => {
       />
       <Tab.Screen
         name="Profile"
-        component={ProfileScreen}
+        component={ProfileStack}
         options={{
           tabBarLabel: t("profile"),
           tabBarIcon: ({ color, size}) => (

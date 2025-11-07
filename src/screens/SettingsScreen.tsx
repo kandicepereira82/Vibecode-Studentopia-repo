@@ -28,7 +28,7 @@ interface AlertState {
   buttons?: Array<{ text: string; onPress?: () => void; style?: "default" | "cancel" | "destructive" }>;
 }
 
-const SettingsScreen = () => {
+const SettingsScreen = ({ navigation }: any) => {
   const user = useUserStore((s) => s.user);
   const logout = useUserStore((s) => s.logout);
   const updateDailyReminderTime = useUserStore((s) => s.updateDailyReminderTime);
@@ -496,8 +496,12 @@ const SettingsScreen = () => {
             </View>
 
             {/* Enable Calendar Sync */}
-            <View className="rounded-2xl p-4 mb-3" style={{ backgroundColor: theme.cardBackground }}>
-              <View className="flex-row items-center justify-between mb-2">
+            <Pressable
+              onPress={() => navigation.navigate("CalendarConnections")}
+              className="rounded-2xl p-4 mb-3"
+              style={{ backgroundColor: theme.cardBackground }}
+            >
+              <View className="flex-row items-center justify-between">
                 <View className="flex-row items-center flex-1">
                   <View
                     className="w-10 h-10 rounded-full items-center justify-center mr-3"
@@ -507,10 +511,33 @@ const SettingsScreen = () => {
                   </View>
                   <View className="flex-1">
                     <Text className="text-base font-semibold" style={{ color: theme.textPrimary }}>
-                      Calendar Sync
+                      Manage Calendars
                     </Text>
                     <Text className="text-xs mt-0.5" style={{ color: theme.textSecondary }}>
-                      Sync tasks with device calendar
+                      Connect and sync multiple calendars
+                    </Text>
+                  </View>
+                </View>
+                <Ionicons name="chevron-forward" size={20} color={theme.textSecondary} />
+              </View>
+            </Pressable>
+
+            {/* Legacy Toggle - Keep for backward compatibility */}
+            <View className="rounded-2xl p-4 mb-3" style={{ backgroundColor: theme.cardBackground }}>
+              <View className="flex-row items-center justify-between mb-2">
+                <View className="flex-row items-center flex-1">
+                  <View
+                    className="w-10 h-10 rounded-full items-center justify-center mr-3"
+                    style={{ backgroundColor: theme.secondary + "20" }}
+                  >
+                    <Ionicons name="sync" size={20} color={theme.secondary} />
+                  </View>
+                  <View className="flex-1">
+                    <Text className="text-base font-semibold" style={{ color: theme.textPrimary }}>
+                      Quick Calendar Sync
+                    </Text>
+                    <Text className="text-xs mt-0.5" style={{ color: theme.textSecondary }}>
+                      Enable basic calendar sync
                     </Text>
                   </View>
                 </View>
