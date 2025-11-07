@@ -73,6 +73,7 @@ class MusicService {
   private lastError: AudioError | null = null;
   private retryCount: number = 0;
   private maxRetries: number = 3;
+  private onTrackEndCallback: (() => void) | null = null;
 
   async initializeAudio(): Promise<boolean> {
     try {
@@ -342,6 +343,11 @@ class MusicService {
         this.isPlaying = false;
         this.currentPosition = 0;
         console.log("[MusicService] Track finished");
+
+        // Call the callback when track ends (for playlist auto-advance)
+        if (this.onTrackEndCallback) {
+          this.onTrackEndCallback();
+        }
       }
 
       // Check for errors in playback
@@ -430,6 +436,21 @@ class MusicService {
       console.error("[MusicService] Audio system check failed:", error);
       return false;
     }
+  }
+
+  // Set callback for when track ends (used for playlist auto-advance)
+  setOnTrackEndCallback(callback: (() => void) | null): void {
+    this.onTrackEndCallback = callback;
+  }
+
+  // Skip to next track (used by playlist)
+  async skipToNext(): Promise<boolean> {
+    return await this.stop();
+  }
+
+  // Skip to previous track (used by playlist)
+  async skipToPrevious(): Promise<boolean> {
+    return await this.stop();
   }
 }
 

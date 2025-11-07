@@ -8,6 +8,7 @@ import Slider from "@react-native-community/slider";
 import useUserStore from "../state/userStore";
 import useStatsStore from "../state/statsStore";
 import useTimerStore from "../state/timerStore";
+import usePlaylistStore from "../state/playlistStore";
 import { useTranslation } from "../utils/translations";
 import { getTheme } from "../utils/themes";
 import { TimerMode } from "../types";
@@ -51,6 +52,23 @@ const TimerScreen = () => {
   const pauseTimer = useTimerStore((s) => s.pauseTimer);
   const stopTimer = useTimerStore((s) => s.stopTimer);
 
+  // Playlist store
+  const playlist = usePlaylistStore((s) => s.playlist);
+  const currentTrackIndex = usePlaylistStore((s) => s.currentTrackIndex);
+  const isShuffleEnabled = usePlaylistStore((s) => s.isShuffleEnabled);
+  const repeatMode = usePlaylistStore((s) => s.repeatMode);
+  const addTrack = usePlaylistStore((s) => s.addTrack);
+  const removeTrack = usePlaylistStore((s) => s.removeTrack);
+  const clearPlaylist = usePlaylistStore((s) => s.clearPlaylist);
+  const setCurrentTrackIndex = usePlaylistStore((s) => s.setCurrentTrackIndex);
+  const nextTrack = usePlaylistStore((s) => s.nextTrack);
+  const previousTrack = usePlaylistStore((s) => s.previousTrack);
+  const toggleShuffle = usePlaylistStore((s) => s.toggleShuffle);
+  const setRepeatMode = usePlaylistStore((s) => s.setRepeatMode);
+  const getCurrentTrack = usePlaylistStore((s) => s.getCurrentTrack);
+  const hasNextTrack = usePlaylistStore((s) => s.hasNextTrack);
+  const hasPreviousTrack = usePlaylistStore((s) => s.hasPreviousTrack);
+
   const [musicEnabled, setMusicEnabled] = useState(false);
   const [selectedTrack, setSelectedTrack] = useState<MusicTrack | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -58,6 +76,7 @@ const TimerScreen = () => {
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(0.7);
   const [showMusicSelector, setShowMusicSelector] = useState(false);
+  const [showPlaylistModal, setShowPlaylistModal] = useState(false);
   const [showCustomTimeModal, setShowCustomTimeModal] = useState(false);
   const [showAlarmModal, setShowAlarmModal] = useState(false);
   const [customTimeType, setCustomTimeType] = useState<"study" | "break">("study");
@@ -159,6 +178,20 @@ const TimerScreen = () => {
   useEffect(() => {
     musicService.initializeAudio();
 
+    // Set up auto-advance when track ends
+    musicService.setOnTrackEndCallback(() => {
+      if (repeatMode === "one") {
+        // Replay current track
+        musicService.play();
+      } else {
+        // Try to advance to next track
+        const nextIndex = nextTrack();
+        if (nextIndex !== null && playlist[nextIndex]) {
+          handlePlayTrack(playlist[nextIndex], nextIndex);
+        }
+      }
+    });
+
     // Update playback status every 500ms
     const interval = setInterval(async () => {
       if (musicEnabled) {
@@ -173,13 +206,14 @@ const TimerScreen = () => {
 
     return () => {
       clearInterval(interval);
+      musicService.setOnTrackEndCallback(null);
       musicService.unload();
       // Stop any playing preview sound
       if (previewSound) {
         previewSound.stopAsync().catch(() => {});
       }
     };
-  }, [musicEnabled, previewSound]);
+  }, [musicEnabled, previewSound, repeatMode, playlist, nextTrack]);
 
   // Watch for timer completion and handle mode switching
   useEffect(() => {
@@ -361,14 +395,70 @@ const TimerScreen = () => {
     await musicService.setVolume(value);
   };
 
-  const handleSelectTrack = async (track: MusicTrack) => {
+  const handlePlayTrack = async (track: MusicTrack, index?: number) => {
     setSelectedTrack(track);
+    if (index !== undefined) {
+      setCurrentTrackIndex(index);
+    }
     // Load track - will use localFile from track if no URI provided
     const success = await musicService.loadTrack(track);
     if (success) {
-      setShowMusicSelector(false);
       await musicService.play();
     }
+  };
+
+  const handleSelectTrack = async (track: MusicTrack) => {
+    // Add to playlist
+    addTrack(track);
+
+    // If it's the first track or nothing is playing, start playing it
+    if (playlist.length === 0 || !isPlaying) {
+      const newIndex = playlist.length; // This will be the index after adding
+      await handlePlayTrack(track, newIndex);
+      setShowMusicSelector(false);
+    } else {
+      setShowMusicSelector(false);
+    }
+  };
+
+  const handleSkipNext = async () => {
+    const nextIndex = nextTrack();
+    if (nextIndex !== null && playlist[nextIndex]) {
+      await handlePlayTrack(playlist[nextIndex], nextIndex);
+    }
+  };
+
+  const handleSkipPrevious = async () => {
+    const prevIndex = previousTrack();
+    if (prevIndex !== null && playlist[prevIndex]) {
+      await handlePlayTrack(playlist[prevIndex], prevIndex);
+    }
+  };
+
+  const handleToggleShuffle = () => {
+    toggleShuffle();
+  };
+
+  const handleCycleRepeat = () => {
+    const modes: Array<"off" | "one" | "all"> = ["off", "one", "all"];
+    const currentIndex = modes.indexOf(repeatMode);
+    const nextMode = modes[(currentIndex + 1) % modes.length];
+    setRepeatMode(nextMode);
+  };
+
+  const handleRemoveFromPlaylist = (trackId: string) => {
+    removeTrack(trackId);
+    // If removed track was playing, stop playback
+    const currentPlayingTrack = getCurrentTrack();
+    if (currentPlayingTrack?.id === trackId) {
+      musicService.stop();
+      setSelectedTrack(null);
+    }
+  };
+
+  const handlePlayFromPlaylist = async (track: MusicTrack, index: number) => {
+    await handlePlayTrack(track, index);
+    setShowPlaylistModal(false);
   };
 
   const formatTime = (millis: number) => {
@@ -870,6 +960,22 @@ const TimerScreen = () => {
                     {/* Playback Controls */}
                     <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 16, marginBottom: 12 }}>
                       <Pressable
+                        onPress={handleSkipPrevious}
+                        disabled={!hasPreviousTrack() || playlist.length === 0}
+                        style={{
+                          width: 40,
+                          height: 40,
+                          borderRadius: 20,
+                          backgroundColor: theme.textSecondary + "20",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          opacity: hasPreviousTrack() && playlist.length > 0 ? 1 : 0.4,
+                        }}
+                      >
+                        <Ionicons name="play-skip-back" size={20} color={theme.textPrimary} />
+                      </Pressable>
+
+                      <Pressable
                         onPress={handleStop}
                         style={{
                           width: 40,
@@ -903,7 +1009,23 @@ const TimerScreen = () => {
                       </Pressable>
 
                       <Pressable
-                        onPress={() => setShowMusicSelector(true)}
+                        onPress={handleSkipNext}
+                        disabled={!hasNextTrack() || playlist.length === 0}
+                        style={{
+                          width: 40,
+                          height: 40,
+                          borderRadius: 20,
+                          backgroundColor: theme.textSecondary + "20",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          opacity: hasNextTrack() && playlist.length > 0 ? 1 : 0.4,
+                        }}
+                      >
+                        <Ionicons name="play-skip-forward" size={20} color={theme.textPrimary} />
+                      </Pressable>
+
+                      <Pressable
+                        onPress={() => setShowPlaylistModal(true)}
                         style={{
                           width: 40,
                           height: 40,
@@ -914,6 +1036,62 @@ const TimerScreen = () => {
                         }}
                       >
                         <Ionicons name="list" size={20} color={theme.secondary} />
+                        {playlist.length > 0 && (
+                          <View style={{
+                            position: "absolute",
+                            top: -4,
+                            right: -4,
+                            backgroundColor: theme.accentColor,
+                            borderRadius: 10,
+                            width: 20,
+                            height: 20,
+                            alignItems: "center",
+                            justifyContent: "center"
+                          }}>
+                            <Text style={{ color: "white", fontSize: 10, fontFamily: "Poppins_600SemiBold" }}>
+                              {playlist.length}
+                            </Text>
+                          </View>
+                        )}
+                      </Pressable>
+                    </View>
+
+                    {/* Shuffle and Repeat Controls */}
+                    <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 24, marginBottom: 12 }}>
+                      <Pressable
+                        onPress={handleToggleShuffle}
+                        style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
+                      >
+                        <Ionicons
+                          name="shuffle"
+                          size={20}
+                          color={isShuffleEnabled ? theme.primary : theme.textSecondary}
+                        />
+                        <Text style={{
+                          fontSize: 12,
+                          fontFamily: "Poppins_500Medium",
+                          color: isShuffleEnabled ? theme.primary : theme.textSecondary
+                        }}>
+                          Shuffle
+                        </Text>
+                      </Pressable>
+
+                      <Pressable
+                        onPress={handleCycleRepeat}
+                        style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
+                      >
+                        <Ionicons
+                          name={repeatMode === "one" ? "repeat-outline" : "repeat"}
+                          size={20}
+                          color={repeatMode !== "off" ? theme.primary : theme.textSecondary}
+                        />
+                        <Text style={{
+                          fontSize: 12,
+                          fontFamily: "Poppins_500Medium",
+                          color: repeatMode !== "off" ? theme.primary : theme.textSecondary
+                        }}>
+                          {repeatMode === "off" ? "Repeat Off" : repeatMode === "one" ? "Repeat One" : "Repeat All"}
+                        </Text>
                       </Pressable>
                     </View>
 
@@ -1308,6 +1486,209 @@ const TimerScreen = () => {
               </Pressable>
             </Pressable>
           </Pressable>
+        </Modal>
+
+        {/* Playlist Modal */}
+        <Modal
+          visible={showPlaylistModal}
+          animationType="slide"
+          transparent={true}
+          onRequestClose={() => setShowPlaylistModal(false)}
+        >
+          <View style={{
+            flex: 1,
+            backgroundColor: "rgba(0,0,0,0.5)",
+            justifyContent: "flex-end"
+          }}>
+            <View style={{
+              backgroundColor: "white",
+              borderTopLeftRadius: 24,
+              borderTopRightRadius: 24,
+              maxHeight: "80%",
+              paddingBottom: 24
+            }}>
+              <SafeAreaView edges={["bottom"]}>
+                {/* Header */}
+                <View style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  padding: 20,
+                  borderBottomWidth: 1,
+                  borderBottomColor: theme.textSecondary + "20"
+                }}>
+                  <View>
+                    <Text style={{ fontSize: 24, fontFamily: "Poppins_700Bold", color: theme.textPrimary }}>
+                      Playlist
+                    </Text>
+                    <Text style={{ fontSize: 14, fontFamily: "Poppins_400Regular", color: theme.textSecondary, marginTop: 2 }}>
+                      {playlist.length} {playlist.length === 1 ? "song" : "songs"}
+                    </Text>
+                  </View>
+                  <Pressable onPress={() => setShowPlaylistModal(false)}>
+                    <Ionicons name="close" size={28} color={theme.textPrimary} />
+                  </Pressable>
+                </View>
+
+                {/* Playlist Items */}
+                <ScrollView style={{ maxHeight: 400 }} showsVerticalScrollIndicator={false}>
+                  {playlist.length === 0 ? (
+                    <View style={{ padding: 40, alignItems: "center" }}>
+                      <Ionicons name="musical-notes-outline" size={64} color={theme.textSecondary + "50"} style={{ marginBottom: 16 }} />
+                      <Text style={{ fontSize: 16, fontFamily: "Poppins_600SemiBold", color: theme.textSecondary, marginBottom: 8 }}>
+                        No songs in playlist
+                      </Text>
+                      <Text style={{ fontSize: 14, fontFamily: "Poppins_400Regular", color: theme.textSecondary, textAlign: "center" }}>
+                        Add songs from the music library to build your playlist
+                      </Text>
+                      <Pressable
+                        onPress={() => {
+                          setShowPlaylistModal(false);
+                          setShowMusicSelector(true);
+                        }}
+                        style={{
+                          marginTop: 20,
+                          paddingHorizontal: 24,
+                          paddingVertical: 12,
+                          borderRadius: 12,
+                          backgroundColor: theme.primary
+                        }}
+                      >
+                        <Text style={{ fontSize: 14, fontFamily: "Poppins_600SemiBold", color: "white" }}>
+                          Browse Music
+                        </Text>
+                      </Pressable>
+                    </View>
+                  ) : (
+                    playlist.map((track, index) => {
+                      const isCurrentTrack = index === currentTrackIndex;
+                      return (
+                        <Pressable
+                          key={track.id}
+                          onPress={() => handlePlayFromPlaylist(track, index)}
+                          style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                            padding: 16,
+                            marginHorizontal: 16,
+                            marginTop: 8,
+                            borderRadius: 12,
+                            backgroundColor: isCurrentTrack ? theme.primary + "15" : "transparent",
+                            borderWidth: isCurrentTrack ? 2 : 0,
+                            borderColor: isCurrentTrack ? theme.primary : "transparent"
+                          }}
+                        >
+                          <View style={{
+                            width: 48,
+                            height: 48,
+                            borderRadius: 8,
+                            backgroundColor: theme.primary + "20",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            marginRight: 12
+                          }}>
+                            {isCurrentTrack && isPlaying ? (
+                              <Ionicons name="pause" size={24} color={theme.primary} />
+                            ) : (
+                              <Ionicons name="play" size={24} color={theme.primary} />
+                            )}
+                          </View>
+
+                          <View style={{ flex: 1 }}>
+                            <Text style={{
+                              fontSize: 16,
+                              fontFamily: "Poppins_600SemiBold",
+                              color: isCurrentTrack ? theme.primary : theme.textPrimary,
+                              marginBottom: 2
+                            }}>
+                              {track.title}
+                            </Text>
+                            <Text style={{
+                              fontSize: 12,
+                              fontFamily: "Poppins_400Regular",
+                              color: theme.textSecondary
+                            }}>
+                              {track.artist}
+                            </Text>
+                          </View>
+
+                          <Pressable
+                            onPress={(e) => {
+                              e.stopPropagation();
+                              handleRemoveFromPlaylist(track.id);
+                            }}
+                            style={{
+                              padding: 8,
+                              borderRadius: 8,
+                              backgroundColor: theme.textSecondary + "10"
+                            }}
+                          >
+                            <Ionicons name="trash-outline" size={20} color={theme.accentColor} />
+                          </Pressable>
+                        </Pressable>
+                      );
+                    })
+                  )}
+                </ScrollView>
+
+                {/* Footer Actions */}
+                {playlist.length > 0 && (
+                  <View style={{
+                    flexDirection: "row",
+                    padding: 16,
+                    gap: 12,
+                    borderTopWidth: 1,
+                    borderTopColor: theme.textSecondary + "20"
+                  }}>
+                    <Pressable
+                      onPress={() => {
+                        setShowPlaylistModal(false);
+                        setShowMusicSelector(true);
+                      }}
+                      style={{
+                        flex: 1,
+                        paddingVertical: 12,
+                        borderRadius: 12,
+                        backgroundColor: theme.secondary + "20",
+                        alignItems: "center",
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        gap: 8
+                      }}
+                    >
+                      <Ionicons name="add" size={20} color={theme.secondary} />
+                      <Text style={{ fontSize: 14, fontFamily: "Poppins_600SemiBold", color: theme.secondary }}>
+                        Add Songs
+                      </Text>
+                    </Pressable>
+
+                    <Pressable
+                      onPress={() => {
+                        clearPlaylist();
+                        musicService.stop();
+                        setSelectedTrack(null);
+                      }}
+                      style={{
+                        flex: 1,
+                        paddingVertical: 12,
+                        borderRadius: 12,
+                        backgroundColor: theme.accentColor + "20",
+                        alignItems: "center",
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        gap: 8
+                      }}
+                    >
+                      <Ionicons name="trash-outline" size={20} color={theme.accentColor} />
+                      <Text style={{ fontSize: 14, fontFamily: "Poppins_600SemiBold", color: theme.accentColor }}>
+                        Clear All
+                      </Text>
+                    </Pressable>
+                  </View>
+                )}
+              </SafeAreaView>
+            </View>
+          </View>
         </Modal>
       </ScrollView>
       </SafeAreaView>
