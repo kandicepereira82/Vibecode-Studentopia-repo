@@ -51,6 +51,16 @@ export const musicLibrary: MusicTrack[] = [
     pixabayUrl: "",
     localFile: require("../../assets/432-528-hz-release-negative-energy-.mp3"),
   },
+  {
+    id: "bach-chopin-forest",
+    title: "Bach Talking to Chopin in the Forest",
+    artist: "Classical Composition",
+    duration: 360,
+    mood: "peaceful",
+    genre: "classical",
+    pixabayUrl: "",
+    localFile: require("../../assets/bach-talking-to-chopin-in-the-forest.mpeg"),
+  },
 ];
 
 class MusicService {
