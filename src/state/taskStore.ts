@@ -4,6 +4,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Task, TaskCategory, TaskStatus } from "../types";
 import useActivityFeedStore from "./activityFeedStore";
 import useUserStore from "./userStore";
+import useCalendarStore from "./calendarStore";
+import { syncTaskWithCalendar, deleteCalendarEvent } from "../services/calendarService";
 
 interface TaskStore {
   tasks: Task[];
@@ -30,6 +32,48 @@ const useTaskStore = create<TaskStore>()(
           status: "pending",
         };
         set((state) => ({ tasks: [...state.tasks, newTask] }));
+
+        // Automatically sync to calendar if enabled
+        setTimeout(async () => {
+          try {
+            const user = useUserStore.getState().user;
+            if (!user) return;
+
+            const connections = useCalendarStore.getState().connections;
+            const userConnections = connections.filter(
+              (c) => c.userId === user.id && c.syncEnabled
+            );
+
+            if (userConnections.length > 0) {
+              // Sync to the first enabled connection (primary calendar)
+              const primaryConnection = userConnections[0];
+              const eventId = await syncTaskWithCalendar(
+                newTask.id,
+                newTask.title,
+                newTask.description,
+                newTask.dueDate,
+                primaryConnection.childName,
+                newTask.calendarEventId
+              );
+
+              if (eventId) {
+                // Update task with calendar event ID
+                set((state) => ({
+                  tasks: state.tasks.map((t) =>
+                    t.id === newTask.id ? { ...t, calendarEventId: eventId } : t
+                  ),
+                }));
+
+                // Update last synced timestamp
+                useCalendarStore.getState().updateConnection(primaryConnection.id, {
+                  lastSyncedAt: new Date(),
+                });
+              }
+            }
+          } catch (error) {
+            console.error("Error syncing task to calendar:", error);
+          }
+        }, 0);
       },
       updateTask: (id, userId, updates) => {
         const task = get().tasks.find((t) => t.id === id);
@@ -49,6 +93,53 @@ const useTaskStore = create<TaskStore>()(
             task.id === id ? { ...task, ...safeUpdates } : task,
           ),
         }));
+
+        // Automatically sync to calendar if enabled and task details changed
+        if (safeUpdates.title || safeUpdates.description || safeUpdates.dueDate) {
+          setTimeout(async () => {
+            try {
+              const user = useUserStore.getState().user;
+              if (!user) return;
+
+              const connections = useCalendarStore.getState().connections;
+              const userConnections = connections.filter(
+                (c) => c.userId === user.id && c.syncEnabled
+              );
+
+              if (userConnections.length > 0) {
+                const primaryConnection = userConnections[0];
+                const updatedTask = get().tasks.find((t) => t.id === id);
+                if (!updatedTask) return;
+
+                const eventId = await syncTaskWithCalendar(
+                  updatedTask.id,
+                  updatedTask.title,
+                  updatedTask.description,
+                  updatedTask.dueDate,
+                  primaryConnection.childName,
+                  updatedTask.calendarEventId
+                );
+
+                if (eventId && !updatedTask.calendarEventId) {
+                  // Update task with new calendar event ID
+                  set((state) => ({
+                    tasks: state.tasks.map((t) =>
+                      t.id === id ? { ...t, calendarEventId: eventId } : t
+                    ),
+                  }));
+                }
+
+                // Update last synced timestamp
+                useCalendarStore.getState().updateConnection(primaryConnection.id, {
+                  lastSyncedAt: new Date(),
+                });
+              }
+            } catch (error) {
+              console.error("Error syncing updated task to calendar:", error);
+            }
+          }, 0);
+        }
+
         return true;
       },
       deleteTask: (id, userId) => {
@@ -59,6 +150,17 @@ const useTaskStore = create<TaskStore>()(
         if (task.userId !== userId) {
           console.error("Permission denied: You can only delete your own tasks");
           return false;
+        }
+
+        // Delete calendar event if exists
+        if (task.calendarEventId) {
+          setTimeout(async () => {
+            try {
+              await deleteCalendarEvent(task.calendarEventId!);
+            } catch (error) {
+              console.error("Error deleting calendar event:", error);
+            }
+          }, 0);
         }
 
         set((state) => ({
