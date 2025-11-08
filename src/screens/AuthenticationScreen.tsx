@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, Pressable, ScrollView, ActivityIndicator, Keyboard } from "react-native";
+import { View, Text, TextInput, Pressable, ScrollView, ActivityIndicator, Keyboard, Modal } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import useUserStore from "../state/userStore";
 import useStatsStore from "../state/statsStore";
 import useOnboardingStore from "../state/onboardingStore";
@@ -31,6 +32,35 @@ const AuthenticationScreen: React.FC<AuthenticationScreenProps> = ({ onComplete 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
+  const [resetEmailSent, setResetEmailSent] = useState(false);
+
+  // Load saved credentials on mount (autofill)
+  useEffect(() => {
+    loadSavedCredentials();
+  }, []);
+
+  const loadSavedCredentials = async () => {
+    try {
+      const savedEmail = await AsyncStorage.getItem("@studentopia_saved_email");
+      const savedUsername = await AsyncStorage.getItem("@studentopia_saved_username");
+
+      if (savedEmail) setEmail(savedEmail);
+      if (savedUsername) setUsername(savedUsername);
+    } catch (error) {
+      console.log("Failed to load saved credentials:", error);
+    }
+  };
+
+  const saveCredentials = async (emailValue: string, usernameValue: string) => {
+    try {
+      await AsyncStorage.setItem("@studentopia_saved_email", emailValue);
+      await AsyncStorage.setItem("@studentopia_saved_username", usernameValue);
+    } catch (error) {
+      console.log("Failed to save credentials:", error);
+    }
+  };
 
   // Pre-fill email and username from onboarding preferences
   useEffect(() => {
@@ -65,6 +95,9 @@ const AuthenticationScreen: React.FC<AuthenticationScreenProps> = ({ onComplete 
       const result = await authService.login(email, password);
 
       if (result.success && result.userId) {
+        // Save credentials for autofill
+        await saveCredentials(email, username || result.username || "User");
+
         // Create user with onboarding preferences
         const newUser = {
           id: result.userId,
@@ -126,6 +159,9 @@ const AuthenticationScreen: React.FC<AuthenticationScreenProps> = ({ onComplete 
       const result = await authService.register(email, password, username);
 
       if (result.success && result.userId) {
+        // Save credentials for autofill
+        await saveCredentials(email, username);
+
         // Create user with onboarding preferences
         const newUser = {
           id: result.userId,
@@ -162,6 +198,38 @@ const AuthenticationScreen: React.FC<AuthenticationScreenProps> = ({ onComplete 
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleForgotPassword = async () => {
+    if (!resetEmail.trim()) {
+      toast.error("Please enter your email");
+      return;
+    }
+
+    if (!validateEmail(resetEmail)) {
+      toast.error("Please enter a valid email");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      // In a real app, this would send a password reset email via backend
+      // For now, simulate the process
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
+      setResetEmailSent(true);
+      toast.success("Password reset link sent to your email!");
+    } catch (error) {
+      toast.error("Failed to send reset email");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleContinueWithoutAccount = () => {
+    // Skip authentication and continue to app
+    toast.info("Continuing as guest");
+    onComplete();
   };
 
   return (
@@ -242,10 +310,7 @@ const AuthenticationScreen: React.FC<AuthenticationScreenProps> = ({ onComplete 
               </Pressable>
 
               <Pressable
-                onPress={() => {
-                  setMode("choice");
-                  setErrors({});
-                }}
+                onPress={handleContinueWithoutAccount}
                 className="bg-purple-50 dark:bg-purple-900 rounded-2xl p-4 mt-4"
               >
                 <Text style={{ fontSize: 14, fontFamily: "Poppins_500Medium", color: "#6B21A8", textAlign: "center" }}>
@@ -331,6 +396,19 @@ const AuthenticationScreen: React.FC<AuthenticationScreenProps> = ({ onComplete 
                     {errors.password}
                   </Text>
                 )}
+                <Pressable
+                  onPress={() => {
+                    setResetEmail(email);
+                    setResetEmailSent(false);
+                    setShowForgotPasswordModal(true);
+                  }}
+                  disabled={loading}
+                  style={{ alignSelf: "flex-end", marginTop: 8 }}
+                >
+                  <Text style={{ fontSize: 13, fontFamily: "Poppins_500Medium", color: "#3B82F6" }}>
+                    Forgot Password?
+                  </Text>
+                </Pressable>
               </View>
 
               {errors.auth && (
@@ -585,6 +663,125 @@ const AuthenticationScreen: React.FC<AuthenticationScreenProps> = ({ onComplete 
           <View className="h-12" />
         </View>
       </ScrollView>
+
+      {/* Forgot Password Modal */}
+      <Modal
+        visible={showForgotPasswordModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowForgotPasswordModal(false)}
+      >
+        <View style={{ flex: 1, backgroundColor: "rgba(0,0,0,0.5)", justifyContent: "center", alignItems: "center", paddingHorizontal: 24 }}>
+          <View style={{ backgroundColor: "white", borderRadius: 24, width: "100%", maxWidth: 400, padding: 24 }}>
+            {!resetEmailSent ? (
+              <>
+                <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+                  <Text style={{ fontSize: 20, fontFamily: "Poppins_700Bold", color: "#1F2937" }}>
+                    Forgot Password?
+                  </Text>
+                  <Pressable onPress={() => setShowForgotPasswordModal(false)}>
+                    <Ionicons name="close" size={28} color="#6B7280" />
+                  </Pressable>
+                </View>
+
+                <Text style={{ fontSize: 14, fontFamily: "Poppins_400Regular", color: "#6B7280", marginBottom: 20, lineHeight: 20 }}>
+                  Enter your email address and we will send you a link to reset your password.
+                </Text>
+
+                <View style={{ marginBottom: 20 }}>
+                  <Text style={{ fontSize: 14, fontFamily: "Poppins_600SemiBold", color: "#1F2937", marginBottom: 8 }}>
+                    Email
+                  </Text>
+                  <TextInput
+                    value={resetEmail}
+                    onChangeText={setResetEmail}
+                    placeholder="Enter your email"
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    editable={!loading}
+                    style={{
+                      backgroundColor: "#F3F4F6",
+                      borderRadius: 12,
+                      paddingHorizontal: 16,
+                      paddingVertical: 12,
+                      fontSize: 16,
+                      fontFamily: "Poppins_400Regular",
+                      color: "#1F2937",
+                      borderWidth: 1,
+                      borderColor: "#E5E7EB",
+                    }}
+                  />
+                </View>
+
+                <View style={{ flexDirection: "row", gap: 12 }}>
+                  <Pressable
+                    onPress={() => setShowForgotPasswordModal(false)}
+                    disabled={loading}
+                    style={{
+                      flex: 1,
+                      paddingVertical: 14,
+                      borderRadius: 12,
+                      backgroundColor: "#F3F4F6",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Text style={{ fontSize: 15, fontFamily: "Poppins_600SemiBold", color: "#6B7280" }}>
+                      Cancel
+                    </Text>
+                  </Pressable>
+                  <Pressable
+                    onPress={handleForgotPassword}
+                    disabled={loading}
+                    style={{
+                      flex: 1,
+                      borderRadius: 12,
+                      overflow: "hidden",
+                    }}
+                  >
+                    <LinearGradient colors={["#3B82F6", "#1D4ED8"]} style={{ paddingVertical: 14, alignItems: "center" }}>
+                      {loading ? (
+                        <ActivityIndicator color="white" size="small" />
+                      ) : (
+                        <Text style={{ fontSize: 15, fontFamily: "Poppins_600SemiBold", color: "white" }}>
+                          Send Link
+                        </Text>
+                      )}
+                    </LinearGradient>
+                  </Pressable>
+                </View>
+              </>
+            ) : (
+              <>
+                <View style={{ alignItems: "center", paddingVertical: 20 }}>
+                  <View style={{ width: 80, height: 80, borderRadius: 40, backgroundColor: "#10B981", alignItems: "center", justifyContent: "center", marginBottom: 20 }}>
+                    <Ionicons name="checkmark" size={50} color="white" />
+                  </View>
+                  <Text style={{ fontSize: 22, fontFamily: "Poppins_700Bold", color: "#1F2937", marginBottom: 12, textAlign: "center" }}>
+                    Check Your Email
+                  </Text>
+                  <Text style={{ fontSize: 14, fontFamily: "Poppins_400Regular", color: "#6B7280", textAlign: "center", lineHeight: 20, marginBottom: 24 }}>
+                    We have sent a password reset link to {resetEmail}
+                  </Text>
+                  <Pressable
+                    onPress={() => setShowForgotPasswordModal(false)}
+                    style={{
+                      width: "100%",
+                      borderRadius: 12,
+                      overflow: "hidden",
+                    }}
+                  >
+                    <LinearGradient colors={["#3B82F6", "#1D4ED8"]} style={{ paddingVertical: 14, alignItems: "center" }}>
+                      <Text style={{ fontSize: 15, fontFamily: "Poppins_600SemiBold", color: "white" }}>
+                        Got It
+                      </Text>
+                    </LinearGradient>
+                  </Pressable>
+                </View>
+              </>
+            )}
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
