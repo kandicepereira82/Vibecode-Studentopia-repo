@@ -19,6 +19,7 @@ import useUserStore from "./src/state/userStore";
 import useConnectivityStore from "./src/state/connectivityStore";
 import { connectivityService } from "./src/services/connectivityService";
 import { syncService } from "./src/services/syncService";
+import { preloadCompanionImages } from "./src/services/imagePreloadService";
 import { ToastProvider } from "./src/context/ToastContext";
 import ToastContainer from "./src/components/ToastContainer";
 import { useToast } from "./src/hooks/useToast";
@@ -73,6 +74,9 @@ const AppContent = () => {
 
       // Initialize sync service
       syncService.initialize();
+
+      // Preload companion images in parallel for instant loading
+      preloadCompanionImages();
 
       // Give Zustand time to hydrate
       await new Promise(resolve => setTimeout(resolve, 200));
