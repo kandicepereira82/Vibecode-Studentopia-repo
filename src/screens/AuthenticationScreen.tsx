@@ -226,12 +226,6 @@ const AuthenticationScreen: React.FC<AuthenticationScreenProps> = ({ onComplete 
     }
   };
 
-  const handleContinueWithoutAccount = () => {
-    // Skip authentication and continue to app
-    toast.info("Continuing as guest");
-    onComplete();
-  };
-
   return (
     <SafeAreaView className="flex-1 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800">
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
@@ -307,15 +301,6 @@ const AuthenticationScreen: React.FC<AuthenticationScreenProps> = ({ onComplete 
                   </View>
                   <Ionicons name="chevron-forward" size={24} color="#9CA3AF" />
                 </View>
-              </Pressable>
-
-              <Pressable
-                onPress={handleContinueWithoutAccount}
-                className="bg-purple-50 dark:bg-purple-900 rounded-2xl p-4 mt-4"
-              >
-                <Text style={{ fontSize: 14, fontFamily: "Poppins_500Medium", color: "#6B21A8", textAlign: "center" }}>
-                  Continue without account
-                </Text>
               </Pressable>
             </View>
           )}
