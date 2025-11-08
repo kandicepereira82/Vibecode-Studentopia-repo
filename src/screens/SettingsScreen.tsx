@@ -40,7 +40,8 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
   const user = useUserStore((s) => s.user);
   const logout = useUserStore((s) => s.logout);
   const updateDailyReminderTime = useUserStore((s) => s.updateDailyReminderTime);
-  const theme = getTheme(user?.themeColor);
+  const toggleDarkMode = useUserStore((s) => s.toggleDarkMode);
+  const theme = getTheme(user?.themeColor, user?.darkMode);
   const { t } = useTranslation(user?.language || "en");
   const toast = useGlobalToast();
 
@@ -283,6 +284,41 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
         </View>
 
         <ScrollView className="flex-1 px-6 py-2" showsVerticalScrollIndicator={false}>
+          {/* Appearance Section */}
+          <View className="mb-6">
+            <Text className="text-lg font-bold mb-3" style={{ color: theme.textPrimary }}>
+              Appearance
+            </Text>
+
+            {/* Dark Mode Toggle */}
+            <View className="rounded-2xl p-4 mb-3" style={{ backgroundColor: theme.cardBackground }}>
+              <View className="flex-row items-center justify-between">
+                <View className="flex-row items-center flex-1">
+                  <View
+                    className="w-10 h-10 rounded-full items-center justify-center mr-3"
+                    style={{ backgroundColor: theme.primary + "20" }}
+                  >
+                    <Ionicons name={user?.darkMode ? "moon" : "sunny"} size={20} color={theme.primary} />
+                  </View>
+                  <View className="flex-1">
+                    <Text className="text-base font-semibold" style={{ color: theme.textPrimary }}>
+                      Dark Mode
+                    </Text>
+                    <Text className="text-xs mt-0.5" style={{ color: theme.textSecondary }}>
+                      Switch between light and dark themes
+                    </Text>
+                  </View>
+                </View>
+                <Switch
+                  value={user?.darkMode || false}
+                  onValueChange={toggleDarkMode}
+                  trackColor={{ false: theme.textSecondary + "30", true: theme.primary }}
+                  thumbColor="#FFFFFF"
+                />
+              </View>
+            </View>
+          </View>
+
           {/* Notifications Section */}
           <View className="mb-6">
             <Text className="text-lg font-bold mb-3" style={{ color: theme.textPrimary }}>

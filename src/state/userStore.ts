@@ -19,6 +19,7 @@ interface UserStore {
   updateNotificationVibration: (enabled: boolean) => void;
   updateMindfulnessBreak: (enabled: boolean) => void;
   updateDailyReminderTime: (hour: number, minute: number) => void;
+  toggleDarkMode: () => void;
   logout: () => void;
 }
 
@@ -114,6 +115,15 @@ const useUserStore = create<UserStore>()(
             ? {
                 ...state.user,
                 dailyReminderTime: { hour, minute },
+              }
+            : null,
+        })),
+      toggleDarkMode: () =>
+        set((state) => ({
+          user: state.user
+            ? {
+                ...state.user,
+                darkMode: !state.user.darkMode,
               }
             : null,
         })),

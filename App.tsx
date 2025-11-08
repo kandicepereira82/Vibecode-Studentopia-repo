@@ -3,6 +3,7 @@ import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   useFonts,
   Poppins_400Regular,
@@ -13,6 +14,7 @@ import {
 import BottomTabNavigator from "./src/navigation/BottomTabNavigator";
 import OnboardingScreen from "./src/screens/OnboardingScreen";
 import AuthenticationScreen from "./src/screens/AuthenticationScreen";
+import TutorialScreen from "./src/screens/TutorialScreen";
 import useUserStore from "./src/state/userStore";
 import useConnectivityStore from "./src/state/connectivityStore";
 import { connectivityService } from "./src/services/connectivityService";
@@ -46,6 +48,7 @@ const AppContent = () => {
   const user = useUserStore((s) => s.user);
   const logout = useUserStore((s) => s.logout);
   const [isReady, setIsReady] = useState(false);
+  const [showTutorial, setShowTutorial] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(true);
   const [showAuth, setShowAuth] = useState(false);
   const { toasts, dismiss } = useToast();
@@ -74,15 +77,24 @@ const AppContent = () => {
       // Give Zustand time to hydrate
       await new Promise(resolve => setTimeout(resolve, 200));
 
+      // Check if tutorial has been completed
+      const tutorialCompleted = await AsyncStorage.getItem("@studentopia_tutorial_completed");
+
       // Check if user is properly initialized (has required fields)
       const isValidUser = user && user.id && user.username && user.language;
 
       if (!isValidUser) {
         // Clear corrupted/partial user data
         logout();
-        setShowOnboarding(true);
+        // Show tutorial first if not completed
+        if (!tutorialCompleted) {
+          setShowTutorial(true);
+        } else {
+          setShowOnboarding(true);
+        }
       } else {
         setShowOnboarding(false);
+        setShowTutorial(false);
       }
 
       setIsReady(true);
@@ -107,7 +119,12 @@ const AppContent = () => {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
         <NavigationContainer>
-          {showOnboarding ? (
+          {showTutorial ? (
+            <TutorialScreen onComplete={() => {
+              setShowTutorial(false);
+              setShowOnboarding(true);
+            }} />
+          ) : showOnboarding ? (
             <OnboardingScreen onComplete={() => {
               // After onboarding, show authentication screen for login/signup
               setShowOnboarding(false);

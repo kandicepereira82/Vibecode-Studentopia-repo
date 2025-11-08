@@ -81,6 +81,7 @@ export interface User {
   role: UserRole;
   language: Language;
   themeColor: ThemeColor;
+  darkMode?: boolean; // Dark mode preference (default: false)
   studyPalConfig: StudyPalConfig;
   notificationEnabled: boolean;
   notificationSound: boolean; // Sound enabled for notifications
