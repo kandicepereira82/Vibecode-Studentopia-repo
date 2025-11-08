@@ -39,10 +39,13 @@ const StudyRoomScreen = () => {
 
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showInviteModal, setShowInviteModal] = useState(false);
+  const [showTimeInputModal, setShowTimeInputModal] = useState(false);
   const [roomName, setRoomName] = useState("");
   const [isPrivate, setIsPrivate] = useState(false);
   const [messageText, setMessageText] = useState("");
   const [showChat, setShowChat] = useState(true);
+  const [customMinutes, setCustomMinutes] = useState("25");
+  const [customSeconds, setCustomSeconds] = useState("0");
 
   const scrollViewRef = useRef<ScrollView>(null);
   const currentRoom = getCurrentRoom();
@@ -50,18 +53,45 @@ const StudyRoomScreen = () => {
   const myFriends = user ? getFriends(user.id) : [];
   const roomMessages = currentRoom ? getRoomMessages(currentRoom.id) : [];
   const userIsHost = currentRoom && user ? isHost(currentRoom.id, user.id) : false;
+  const setTimerDuration = useStudyRoomStore((s) => s.setTimerDuration);
 
-  // Timer synchronization effect
+  // Timer countdown logic
   useEffect(() => {
     if (!currentRoom || !currentRoom.timerRunning) return;
 
     const interval = setInterval(() => {
-      // Force re-render to update timer display
-      // In production, this would sync with server
+      const room = getCurrentRoom();
+      if (!room || !room.timerRunning) return;
+
+      let minutes = room.timerMinutes;
+      let seconds = room.timerSeconds;
+
+      // Countdown logic
+      if (seconds === 0) {
+        if (minutes === 0) {
+          // Timer finished
+          if (user && userIsHost) {
+            pauseTimer(currentRoom.id, user.id);
+            sendSystemMessage(currentRoom.id, "Timer completed!");
+            toast.success("Timer finished!");
+          }
+          clearInterval(interval);
+          return;
+        }
+        minutes -= 1;
+        seconds = 59;
+      } else {
+        seconds -= 1;
+      }
+
+      // Update timer in store
+      if (user && userIsHost) {
+        setTimerDuration(room.id, user.id, minutes, seconds);
+      }
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [currentRoom?.timerRunning]);
+  }, [currentRoom?.timerRunning, currentRoom?.id]);
 
   // Auto-scroll chat to bottom
   useEffect(() => {
@@ -156,6 +186,34 @@ const StudyRoomScreen = () => {
     if (success) {
       toast.success(`Invited ${friendUsername}!`);
       setShowInviteModal(false);
+    }
+  };
+
+  const handleSetCustomTime = () => {
+    if (!user || !currentRoom || !userIsHost) return;
+
+    const minutes = parseInt(customMinutes) || 0;
+    const seconds = parseInt(customSeconds) || 0;
+
+    if (minutes < 0 || minutes > 120) {
+      toast.error("Minutes must be between 0-120");
+      return;
+    }
+
+    if (seconds < 0 || seconds > 59) {
+      toast.error("Seconds must be between 0-59");
+      return;
+    }
+
+    if (minutes === 0 && seconds === 0) {
+      toast.error("Time must be greater than 0");
+      return;
+    }
+
+    const success = setTimerDuration(currentRoom.id, user.id, minutes, seconds);
+    if (success) {
+      setShowTimeInputModal(false);
+      toast.success("Timer duration updated!");
     }
   };
 
@@ -268,9 +326,28 @@ const StudyRoomScreen = () => {
               <Text style={{ fontSize: 16, fontFamily: "Poppins_600SemiBold", color: theme.textSecondary, marginBottom: 12, letterSpacing: 0.5 }}>
                 {currentRoom.timerMode === "study" ? "Focus Time" : "Break Time"}
               </Text>
-              <Text style={{ fontSize: 72, fontFamily: "Poppins_700Bold", color: theme.primary, letterSpacing: -2, marginBottom: 4 }}>
-                {String(currentRoom.timerMinutes).padStart(2, "0")}:{String(currentRoom.timerSeconds).padStart(2, "0")}
-              </Text>
+
+              {/* Time Display - clickable for host */}
+              <Pressable
+                onPress={() => {
+                  if (userIsHost && !currentRoom.timerRunning) {
+                    setCustomMinutes(String(currentRoom.timerMinutes));
+                    setCustomSeconds(String(currentRoom.timerSeconds));
+                    setShowTimeInputModal(true);
+                  }
+                }}
+                disabled={!userIsHost || currentRoom.timerRunning}
+                style={{ opacity: userIsHost && !currentRoom.timerRunning ? 1 : 1 }}
+              >
+                <Text style={{ fontSize: 72, fontFamily: "Poppins_700Bold", color: theme.primary, letterSpacing: -2, marginBottom: 4 }}>
+                  {String(currentRoom.timerMinutes).padStart(2, "0")}:{String(currentRoom.timerSeconds).padStart(2, "0")}
+                </Text>
+                {userIsHost && !currentRoom.timerRunning && (
+                  <Text style={{ fontSize: 12, fontFamily: "Poppins_400Regular", color: theme.textSecondary, textAlign: "center", marginTop: 4 }}>
+                    Tap to set custom time
+                  </Text>
+                )}
+              </Pressable>
 
               {/* Host Controls */}
               {userIsHost && (
@@ -523,6 +600,104 @@ const StudyRoomScreen = () => {
                     })
                   )}
                 </ScrollView>
+              </View>
+            </View>
+          </Modal>
+
+          {/* Time Input Modal */}
+          <Modal visible={showTimeInputModal} transparent animationType="fade" onRequestClose={() => setShowTimeInputModal(false)}>
+            <View style={{ flex: 1, backgroundColor: "rgba(0,0,0,0.5)", justifyContent: "center", alignItems: "center", paddingHorizontal: 24 }}>
+              <View style={{ backgroundColor: "white", borderRadius: 24, width: "100%", maxWidth: 400, padding: 24 }}>
+                <Text style={{ fontSize: 22, fontFamily: "Poppins_700Bold", color: theme.textPrimary, marginBottom: 8 }}>
+                  Set Timer Duration
+                </Text>
+                <Text style={{ fontSize: 14, fontFamily: "Poppins_400Regular", color: theme.textSecondary, marginBottom: 24 }}>
+                  Set custom time for your {currentRoom.timerMode} session
+                </Text>
+
+                <View style={{ flexDirection: "row", gap: 16, marginBottom: 24 }}>
+                  {/* Minutes Input */}
+                  <View style={{ flex: 1 }}>
+                    <Text style={{ fontSize: 13, fontFamily: "Poppins_600SemiBold", color: theme.textPrimary, marginBottom: 8 }}>
+                      Minutes
+                    </Text>
+                    <TextInput
+                      value={customMinutes}
+                      onChangeText={setCustomMinutes}
+                      keyboardType="number-pad"
+                      maxLength={3}
+                      style={{
+                        backgroundColor: "#F3F4F6",
+                        borderRadius: 12,
+                        paddingHorizontal: 16,
+                        paddingVertical: 14,
+                        fontSize: 16,
+                        fontFamily: "Poppins_500Medium",
+                        color: theme.textPrimary,
+                        textAlign: "center",
+                      }}
+                      placeholder="25"
+                      placeholderTextColor={theme.textSecondary}
+                    />
+                  </View>
+
+                  {/* Seconds Input */}
+                  <View style={{ flex: 1 }}>
+                    <Text style={{ fontSize: 13, fontFamily: "Poppins_600SemiBold", color: theme.textPrimary, marginBottom: 8 }}>
+                      Seconds
+                    </Text>
+                    <TextInput
+                      value={customSeconds}
+                      onChangeText={setCustomSeconds}
+                      keyboardType="number-pad"
+                      maxLength={2}
+                      style={{
+                        backgroundColor: "#F3F4F6",
+                        borderRadius: 12,
+                        paddingHorizontal: 16,
+                        paddingVertical: 14,
+                        fontSize: 16,
+                        fontFamily: "Poppins_500Medium",
+                        color: theme.textPrimary,
+                        textAlign: "center",
+                      }}
+                      placeholder="00"
+                      placeholderTextColor={theme.textSecondary}
+                    />
+                  </View>
+                </View>
+
+                {/* Buttons */}
+                <View style={{ flexDirection: "row", gap: 12 }}>
+                  <Pressable
+                    onPress={() => setShowTimeInputModal(false)}
+                    style={{
+                      flex: 1,
+                      paddingVertical: 14,
+                      borderRadius: 12,
+                      backgroundColor: "#F3F4F6",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Text style={{ fontSize: 15, fontFamily: "Poppins_600SemiBold", color: theme.textSecondary }}>
+                      Cancel
+                    </Text>
+                  </Pressable>
+                  <Pressable
+                    onPress={handleSetCustomTime}
+                    style={{
+                      flex: 1,
+                      paddingVertical: 14,
+                      borderRadius: 12,
+                      backgroundColor: theme.primary,
+                      alignItems: "center",
+                    }}
+                  >
+                    <Text style={{ fontSize: 15, fontFamily: "Poppins_600SemiBold", color: "white" }}>
+                      Set Time
+                    </Text>
+                  </Pressable>
+                </View>
               </View>
             </View>
           </Modal>
