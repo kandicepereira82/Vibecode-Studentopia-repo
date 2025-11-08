@@ -210,14 +210,15 @@ Studentopia is a comprehensive mobile productivity app designed for students to 
 - **Event ID Tracking**: Tasks store calendar event IDs for bidirectional sync
 - **Auto-Discovery**: Automatically detects existing Studentopia calendars on device
 - **Platform Consistency**: Same naming format across Google Calendar, Apple Calendar, and Outlook
-- **Device Calendar Integration**: Syncs with all calendars configured on your device
+- **Device Calendar Integration**: Syncs with all calendars configured on your device (iCloud, Google, Exchange, etc.)
 - **Month & Week Views**: Toggle between comprehensive month view and focused week view
 - **Interactive Calendar**: Long-press any date to quickly create tasks for that day
 - **Date Selection**: Tap any date to view all tasks scheduled for that day
 - **Task Indicators**: Visual dots showing pending (orange) and completed (green) tasks
 - **Smart Navigation**: Easy navigation between months or weeks with previous/next buttons
 - **Background Sync**: Sync operations run asynchronously without blocking UI
-- **Export/Import**: Export tasks as .ics files for calendar apps
+- **Cross-Platform**: Works seamlessly on iOS (Apple Calendar/iCloud) and Android (Google Calendar)
+- **See Full Guide**: Complete step-by-step instructions in `CALENDAR_INTEGRATION.md`
 
 ### ⏱️ Study Timer (Pomodoro)
 - **Customizable Sessions**: Adjustable study (1-120 min) and break (1-60 min) durations

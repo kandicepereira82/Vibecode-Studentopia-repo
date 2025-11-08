@@ -1,170 +1,272 @@
 # Calendar Integration Guide
 
-StudyPal allows you to sync your tasks with Google Calendar and Apple Calendar for seamless productivity management across all your devices.
+Studentopia automatically syncs your tasks to your device's calendar, making them available in Google Calendar, Apple Calendar, Outlook, and any other calendar app on your device.
 
-## 📱 Apple Calendar Integration (iOS)
+## 🚀 How Calendar Sync Works
 
-### Method 1: Manual Export/Import
+Studentopia creates a labeled calendar on your device (like "Studentopia – Emma") that automatically syncs with all your calendar apps. Any tasks you add, update, or complete in Studentopia will automatically appear in your calendars.
 
-1. **Export Tasks from StudyPal**:
-   - Go to Settings → Export Data
-   - Select "Export as iCal (.ics)"
-   - Save the file to your device
+---
 
-2. **Import to Apple Calendar**:
-   - Open the exported .ics file
-   - Tap "Add All" to import events
-   - Choose which calendar to add them to
-   - Tap "Done"
+## 📱 For iOS Users (iPhone/iPad)
 
-### Method 2: Using EventKit (Built-in)
+### Step 1: Set Up Calendar Sync in Studentopia
 
-StudyPal uses EventKit framework for native iOS calendar integration:
+1. Open **Studentopia** app
+2. Tap your profile picture → **Settings** (gear icon)
+3. Tap **Calendar Integration** → **Manage Calendars**
+4. Tap the **+ button** in the top right
+5. Enter the child's name (e.g., "Emma" or "Jordan")
+6. Tap **Create Calendar**
+7. When prompted, tap **Allow** to grant calendar permissions
 
-1. **Enable Calendar Sync in StudyPal**:
-   - Go to Settings → Calendar Sync
-   - Toggle "Sync with Apple Calendar"
-   - Grant calendar permissions when prompted
+### Step 2: View Tasks in Apple Calendar (iCloud)
 
-2. **Choose Sync Options**:
-   - Select which categories to sync (Homework, Projects, Exams)
-   - Enable two-way sync for automatic updates
-   - Set sync frequency (Instant, Hourly, Daily)
+Your tasks will automatically appear in the Apple Calendar app!
 
-3. **View in Apple Calendar**:
-   - Open Apple Calendar app
-   - StudyPal tasks appear as events
-   - Color-coded by category
-   - Includes due dates and times
+1. Open the **Calendar** app on your iPhone/iPad
+2. Tap **Calendars** at the bottom
+3. Look for **"Studentopia – [Child's Name]"** under **iCloud**
+4. Make sure it's checked ✓
+5. Tap **Done**
 
-## 🌐 Google Calendar Integration
+Your Studentopia tasks will now appear as calendar events!
 
-### Method 1: Manual Export/Import
+### Step 3: View on Other Apple Devices
 
-1. **Export Tasks from StudyPal**:
-   - Go to Settings → Export Data
-   - Select "Export as iCal (.ics)"
-   - Share the file to yourself via email or cloud storage
+If you use the same iCloud account on multiple devices:
+- **Mac**: Open Calendar app → your Studentopia calendar will appear automatically
+- **iPad**: Same as iPhone instructions above
+- **Apple Watch**: Tasks will appear in the Calendar complication
 
-2. **Import to Google Calendar**:
-   - Open Google Calendar on your computer
-   - Click the gear icon → Settings
-   - Select "Import & Export" from the left sidebar
-   - Click "Select file from your computer"
-   - Choose your .ics file
-   - Select which calendar to add events to
-   - Click "Import"
+**Tip**: Tasks sync across all devices signed into the same iCloud account within seconds!
 
-### Method 2: Using Calendar API (Coming Soon)
+### Step 4: View in Google Calendar (iOS)
 
-We're working on direct Google Calendar API integration:
+If you want to see Studentopia tasks in Google Calendar on iPhone:
 
-1. **Connect Google Account**:
-   - Go to Settings → Calendar Sync
-   - Tap "Connect Google Calendar"
-   - Sign in with your Google account
-   - Grant StudyPal calendar permissions
+1. Open **Settings** app on your iPhone
+2. Scroll down to **Calendar** → **Accounts**
+3. Tap **Add Account** → **Google**
+4. Sign in with your Google account
+5. Toggle **Calendars** ON
+6. Tap **Save**
 
-2. **Configure Sync Settings**:
-   - Choose calendar to sync with
-   - Enable two-way sync
-   - Set sync frequency
-   - Select categories to sync
+Now open Google Calendar app and your Studentopia calendar will sync automatically!
 
-3. **Automatic Sync**:
-   - Tasks automatically appear in Google Calendar
-   - Updates sync in both directions
-   - Completed tasks marked in both apps
+---
 
-## 🔄 Two-Way Sync Features
+## 🤖 For Android Users
 
-When enabled, two-way sync provides:
+### Step 1: Set Up Calendar Sync in Studentopia
 
-- **StudyPal → Calendar**: All tasks appear as calendar events
-- **Calendar → StudyPal**: Events created in calendar sync back as tasks
-- **Real-time Updates**: Changes sync instantly across devices
-- **Completion Status**: Mark tasks complete in either app
-- **Notifications**: Receive reminders from both apps
+1. Open **Studentopia** app
+2. Tap your profile picture → **Settings** (gear icon)
+3. Tap **Calendar Integration** → **Manage Calendars**
+4. Tap the **+ button** in the top right
+5. Enter the child's name (e.g., "Emma" or "Jordan")
+6. Tap **Create Calendar**
+7. When prompted, tap **Allow** to grant calendar permissions
 
-## ⚙️ Sync Settings
+### Step 2: View Tasks in Google Calendar (Android)
 
-### Customization Options:
+Your tasks will automatically appear in Google Calendar!
 
-- **Sync Frequency**: Instant, Every 15 min, Hourly, Daily
-- **Categories**: Choose which task categories to sync
-- **Calendar Selection**: Pick specific calendars to sync with
-- **Notification Preferences**: Manage how you receive reminders
-- **Conflict Resolution**: Choose priority when edits conflict
+1. Open the **Google Calendar** app
+2. Tap the **☰ menu** (three lines) in the top left
+3. Scroll down to find **"Studentopia – [Child's Name]"**
+4. Make sure it's checked ✓
+5. Your tasks will now appear as events!
 
-## 🔔 Reminders & Notifications
+### Step 3: View on Other Devices
 
-StudyPal tasks synced to calendars include:
+Your Studentopia calendar syncs with your Google account, so you can view it anywhere:
 
-- Due date and time
-- Task description
-- Category tags
-- Custom reminders (15 min, 1 hour, 1 day before)
-- Location (if added)
+- **Computer**: Go to [calendar.google.com](https://calendar.google.com) → your Studentopia calendar appears in the left sidebar
+- **Other Phones/Tablets**: Sign in with the same Google account → Studentopia calendar syncs automatically
+- **Outlook**: Add your Google Calendar to Outlook to see Studentopia tasks there too
 
-## 🔐 Privacy & Permissions
+**Tip**: Changes sync across all devices within a few seconds!
 
-### Required Permissions:
+### Step 4: View in Outlook or Other Calendar Apps (Android)
 
-**iOS (Apple Calendar)**:
-- Calendar Access: Read and write events
-- Reminder Access: Create and manage reminders
+If you use Outlook, Samsung Calendar, or another calendar app:
 
-**Android (Google Calendar)**:
-- Calendar Access: Read and write events
-- Internet Access: Sync with Google servers
+1. Make sure your **Google account is added** to that calendar app
+2. Open the calendar app
+3. Go to **Settings** or **Calendar List**
+4. Find and enable **"Studentopia – [Child's Name]"**
 
-### Data Privacy:
+All calendars connected to your Google account will show Studentopia tasks!
 
-- Only task data you choose to sync is shared
-- Sync data is encrypted in transit
-- You can disconnect at any time
-- Deleting tasks removes them from synced calendars
+---
+
+## 👨‍👩‍👧‍👦 Managing Multiple Children
+
+Perfect for parents managing multiple students:
+
+1. Create a separate calendar for each child:
+   - "Studentopia – Emma"
+   - "Studentopia – Jordan"
+   - "Studentopia – Alex"
+
+2. Each calendar has its own color in your calendar app
+
+3. Toggle calendars on/off to view specific children's tasks
+
+4. Each child can have their own Studentopia account and calendar
+
+---
+
+## ⚙️ Sync Settings & Controls
+
+In Studentopia, you can control each calendar connection:
+
+### Visibility Toggle
+- **Show calendar events**: Turn on to see tasks from this calendar in your Studentopia app
+- Useful if you want to hide a specific child's calendar temporarily
+
+### Auto-Sync Toggle
+- **Auto-sync tasks**: Turn on to automatically sync new/updated tasks to this calendar
+- Turn off to pause syncing without deleting the calendar
+
+### Delete Calendar
+- Tap the trash icon to remove a calendar connection
+- This will delete the calendar from your device and stop syncing
+
+---
+
+## 🔔 What Gets Synced
+
+Each Studentopia task synced to your calendar includes:
+
+- ✅ **Task Title** (e.g., "Math Homework - Chapter 5")
+- ✅ **Due Date & Time**
+- ✅ **Task Description** (notes you added)
+- ✅ **Category** (Homework, Project, Exam, etc.)
+- ✅ **Completion Status** (completed tasks are marked)
+- ✅ **Reminder Notifications** (if you set a reminder)
+
+**Automatic Updates**:
+- When you **add a task** in Studentopia → it appears in your calendar
+- When you **edit a task** in Studentopia → the calendar event updates
+- When you **complete a task** in Studentopia → the calendar event is marked complete
+- When you **delete a task** in Studentopia → the calendar event is removed
+
+---
 
 ## ❓ Troubleshooting
 
-### Tasks Not Syncing?
+### "I don't see my Studentopia calendar in Apple Calendar (iOS)"
 
-1. Check internet connection
-2. Verify calendar permissions are granted
-3. Ensure sync is enabled in Settings
-4. Try manual refresh (pull down in Tasks screen)
-5. Re-authenticate calendar connection
+1. Open **Calendar** app
+2. Tap **Calendars** at the bottom
+3. Check if **"Studentopia – [Name]"** is unchecked
+4. Tap it to enable ✓
+5. Tap **Done**
 
-### Duplicate Events?
+If it's still not there:
+- Go to iPhone **Settings** → **Calendar** → **Accounts**
+- Make sure **iCloud** is enabled
+- Tap **iCloud** → toggle **Calendars** ON
 
-1. Disable duplicate sync settings
-2. Remove old imported .ics files
-3. Use only one sync method at a time
-4. Contact support if issues persist
+### "I don't see my Studentopia calendar in Google Calendar (Android)"
 
-### Sync Conflicts?
+1. Open **Google Calendar** app
+2. Tap **☰ menu** (top left)
+3. Scroll down to find **"Studentopia – [Name]"**
+4. Check the box next to it ✓
 
-When tasks are edited in both apps:
-- StudyPal uses "Last Modified Wins" strategy
-- Most recent change takes priority
-- You'll be notified of conflicts
-- Can manually resolve in Settings
+If it's not listed:
+- Make sure you granted calendar permissions to Studentopia
+- Go to Android **Settings** → **Apps** → **Studentopia** → **Permissions** → **Calendar** → **Allow**
+- Restart the Studentopia app
 
-## 📞 Support
+### "My tasks aren't showing up in my calendar"
 
-Need help with calendar integration?
+1. **Check if sync is enabled**:
+   - Open Studentopia → Settings → Calendar Integration → Manage Calendars
+   - Make sure **Auto-sync tasks** toggle is ON
 
-- In-app: Settings → Help & Support
-- Email: support@studypal.app
-- Documentation: docs.studypal.app/calendar-sync
+2. **Verify permissions**:
+   - iOS: Settings → Studentopia → Calendars → Enable
+   - Android: Settings → Apps → Studentopia → Permissions → Calendar → Allow
 
-## 🚀 Coming Soon
+3. **Check calendar visibility**:
+   - Make sure the Studentopia calendar is checked/visible in your calendar app
 
-Planned calendar integration features:
+4. **Wait a few seconds**:
+   - Sync can take 5-10 seconds to propagate
 
-- ✨ Direct Google Calendar API integration
-- ✨ Microsoft Outlook Calendar sync
-- ✨ Shared calendar for study groups
-- ✨ Smart scheduling suggestions
-- ✨ Calendar widget for home screen
-- ✨ Recurring task patterns
+### "I'm seeing duplicate events"
+
+This can happen if you:
+- Created multiple Studentopia calendars with the same name
+- Manually imported a .ics file AND have auto-sync enabled
+
+**To fix**:
+1. Go to Studentopia → Settings → Calendar Integration
+2. Delete extra calendar connections (keep only one per child)
+3. In your calendar app, delete any duplicate calendars
+4. Restart Studentopia
+
+### "I deleted a calendar but it's still showing events"
+
+Some calendar apps cache data:
+- **iOS**: Open Calendar app → Tap **Calendars** → swipe down to refresh
+- **Android**: Open Google Calendar → Settings → Refresh
+- **Computer**: Reload calendar.google.com or restart Calendar app
+
+---
+
+## 🔐 Privacy & Permissions
+
+### What Permissions Does Studentopia Need?
+
+**iOS**:
+- **Calendar Access**: Allows Studentopia to create the calendar and sync tasks
+- **Notifications** (optional): For task reminders
+
+**Android**:
+- **Calendar Access**: Allows Studentopia to create the calendar and sync tasks
+- **Notifications** (optional): For task reminders
+
+### Is My Data Private?
+
+- ✅ Only **your tasks** are synced to **your device calendar**
+- ✅ Studentopia **does not share** your calendar data with third parties
+- ✅ Calendar data stays on **your device** and your cloud account (iCloud/Google)
+- ✅ You can **delete** calendar connections anytime
+- ✅ Deleting a calendar in Studentopia **removes it from your device**
+
+### Can I Disconnect Anytime?
+
+Yes! To stop syncing:
+1. Open Studentopia → Settings → Calendar Integration
+2. Tap the trash icon next to the calendar
+3. Confirm deletion
+4. The calendar and all synced events will be removed from your device
+
+---
+
+## 💡 Tips for Best Experience
+
+1. **One Calendar Per Child**: Create separate calendars like "Studentopia – Emma" and "Studentopia – Jordan" for easy organization
+
+2. **Use Colors**: Most calendar apps let you assign colors to calendars. Assign different colors to each child's calendar!
+
+3. **Share with Family**: If multiple parents need to see tasks:
+   - **iOS**: Share iCloud calendar → Calendar app → Info icon → Add Person
+   - **Android**: Share Google Calendar → calendar.google.com → Settings → Share with specific people
+
+4. **Check Regularly**: Open your calendar app occasionally to ensure sync is working
+
+5. **Keep Studentopia Updated**: Make sure you're using the latest version for best sync performance
+
+---
+
+## 📞 Need More Help?
+
+- **In-app Help**: Tap Settings → Help & Support
+- **Check README**: Full documentation in the Studentopia folder
+- **Contact Support**: If sync issues persist, contact your Studentopia provider
