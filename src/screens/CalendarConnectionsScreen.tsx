@@ -46,7 +46,6 @@ const CalendarConnectionsScreen = ({ navigation }: any) => {
 
   const [loading, setLoading] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
-  const [showProviderModal, setShowProviderModal] = useState(false);
   const [selectedProvider, setSelectedProvider] = useState<"device" | "google" | "apple">("device");
   const [childName, setChildName] = useState(user?.username || "");
   const [alertState, setAlertState] = useState<AlertState>({
@@ -214,7 +213,7 @@ const CalendarConnectionsScreen = ({ navigation }: any) => {
             </View>
           </View>
           <Pressable
-            onPress={() => setShowProviderModal(true)}
+            onPress={() => setShowAddModal(true)}
             style={{
               width: 48,
               height: 48,
