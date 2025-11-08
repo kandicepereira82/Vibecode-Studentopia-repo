@@ -1,4 +1,5 @@
 import { Language } from "../types";
+import { extendedTranslations, mergeTranslations } from "./translations-extended";
 
 export const translations: Record<Language, Record<string, string>> = {
   en: {
@@ -1379,9 +1380,12 @@ export const languageNames: Record<Language, string> = {
   id: "Bahasa Indonesia",
 };
 
+// Merge base translations with extended translations
+const mergedTranslations = mergeTranslations(translations);
+
 export const useTranslation = (language: Language) => {
   const t = (key: string): string => {
-    return translations[language]?.[key] || translations.en[key] || key;
+    return mergedTranslations[language]?.[key] || mergedTranslations.en[key] || key;
   };
 
   return { t };
