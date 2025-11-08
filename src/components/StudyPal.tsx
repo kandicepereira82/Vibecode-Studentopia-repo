@@ -376,6 +376,7 @@ const StudyPal: React.FC<StudyPalProps> = React.memo(({
       elephant: require("../../assets/image-1762363444.png"),
       redpanda: require("../../assets/image-1762363418.png"),
       pig: require("../../assets/image-1762363420.png"),
+      shark: require("../../assets/studypal - shark-1762573986744.png"),
     };
     return imageMap[animal] || imageMap.cat;
   };
@@ -407,6 +408,7 @@ const StudyPal: React.FC<StudyPalProps> = React.memo(({
       chipmunk: "🐿️",
       elephant: "🐘",
       goldfish: "🐠",
+      shark: "🦈",
     };
     return emojiMap[animal] || "🐱";
   };
@@ -518,6 +520,7 @@ const StudyPal: React.FC<StudyPalProps> = React.memo(({
       chipmunk: "#D2B48C", // Tan
       elephant: "#B0C4DE", // Light steel blue
       goldfish: "#FFA500", // Orange
+      shark: "#4682B4",    // Steel blue
     };
     return colorMap[animal] || "#FFE5B4";
   };
@@ -920,6 +923,19 @@ const StudyPal: React.FC<StudyPalProps> = React.memo(({
       },
       // Fish
       goldfish: {
+        hairTop: -0.12,
+        hairSize: 0.42,
+        glassesTop: 0.32,
+        glassesSize: 0.47,
+        headphonesTop: 0.08,
+        headphonesSize: 0.57,
+        outfitBottom: 0.08,
+        outfitSize: 0.42,
+        accessoryBottom: 0.13,
+        accessoryRight: -0.08,
+        accessorySize: 0.37,
+      },
+      shark: {
         hairTop: -0.12,
         hairSize: 0.42,
         glassesTop: 0.32,

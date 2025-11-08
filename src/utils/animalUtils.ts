@@ -30,6 +30,7 @@ export const getAnimalDisplayName = (animal: StudyPalAnimal): string => {
     chipmunk: "Chipmunk",
     elephant: "Elephant",
     goldfish: "Goldfish",
+    shark: "Shark",
   };
   return nameMap[animal] || animal;
 };
@@ -64,6 +65,7 @@ export const getAnimalImage = (animal: StudyPalAnimal) => {
     elephant: require("../../assets/image-1762363444.png"),
     redpanda: require("../../assets/image-1762363418.png"),
     pig: require("../../assets/image-1762363420.png"),
+    shark: require("../../assets/studypal - shark-1762573986744.png"),
   };
   return imageMap[animal] || imageMap.cat;
 };
@@ -76,5 +78,5 @@ export const ALL_ANIMALS: StudyPalAnimal[] = [
   "dog", "chick", "bear", "hedgehog", "tiger",
   "turtle", "bunny", "giraffe", "pig", "alpaca",
   "lion", "frog", "koala", "sloth", "monkey",
-  "hamster", "reindeer", "chipmunk", "elephant", "goldfish"
+  "hamster", "reindeer", "chipmunk", "elephant", "goldfish", "shark"
 ];

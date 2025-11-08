@@ -43,7 +43,8 @@ export type StudyPalAnimal =
   | "reindeer"
   | "chipmunk"
   | "elephant"
-  | "goldfish";
+  | "goldfish"
+  | "shark";
 export type StudyPalMood = "happy" | "focused" | "celebrating" | "relaxed" | "neutral";
 export type TimerMode = "study" | "break";
 export type AIChatMode = "chat" | "grammar";
