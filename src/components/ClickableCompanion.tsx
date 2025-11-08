@@ -43,7 +43,7 @@ const ClickableCompanion: React.FC<ClickableCompanionProps> = ({
     // Then navigate to Settings within that stack
     navigation.navigate("Profile", {
       screen: "Settings",
-    } as any);
+    });
   };
 
   if (disabled) {
