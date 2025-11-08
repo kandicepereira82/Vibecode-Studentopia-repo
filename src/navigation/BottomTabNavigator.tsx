@@ -1,6 +1,7 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
+import { NavigatorScreenParams } from "@react-navigation/native";
 import HomeScreen from "../screens/HomeScreen";
 import TasksScreen from "../screens/TasksScreen";
 import CalendarScreen from "../screens/CalendarScreen";
@@ -9,7 +10,7 @@ import AIHelperScreen from "../screens/AIHelperScreen";
 import StudyTipsScreen from "../screens/StudyTipsScreen";
 import GroupsScreen from "../screens/GroupsScreen";
 import FriendsScreen from "../screens/FriendsScreen";
-import ProfileStack from "./ProfileStack";
+import ProfileStack, { ProfileStackParamList } from "./ProfileStack";
 import MindfulnessScreen from "../screens/MindfulnessScreen";
 import useUserStore from "../state/userStore";
 import { useTranslation } from "../utils/translations";
@@ -25,7 +26,7 @@ export type RootTabParamList = {
   Groups: undefined;
   Friends: undefined;
   Mindfulness: undefined;
-  Profile: undefined;
+  Profile: NavigatorScreenParams<ProfileStackParamList> | undefined;
 };
 
 const Tab = createBottomTabNavigator<RootTabParamList>();

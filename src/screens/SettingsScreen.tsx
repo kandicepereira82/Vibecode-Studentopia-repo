@@ -44,10 +44,6 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
   const { t } = useTranslation(user?.language || "en");
   const toast = useGlobalToast();
 
-  // Debug logging
-  console.log("[SettingsScreen] Rendered with navigation:", !!navigation);
-  console.log("[SettingsScreen] Navigation can navigate:", navigation?.navigate ? "YES" : "NO");
-
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [notificationSoundEnabled, setNotificationSoundEnabled] = useState(user?.notificationSound ?? true);
   const [notificationVibrationEnabled, setNotificationVibrationEnabled] = useState(user?.notificationVibration ?? true);
