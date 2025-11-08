@@ -993,6 +993,31 @@ const MindfulnessScreen = () => {
                   </Text>
                 </View>
 
+                {/* Parent Support Guide */}
+                <View style={{
+                  backgroundColor: theme.primary + "15",
+                  borderRadius: 16,
+                  padding: 16,
+                  borderWidth: 1,
+                  borderColor: theme.primary + "40",
+                }}>
+                  <View className="flex-row items-start gap-3 mb-2">
+                    <Text style={{ fontSize: 16, fontFamily: "Poppins_700Bold", color: theme.textPrimary }}>
+                      👋 Ask a Parent for Help
+                    </Text>
+                  </View>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      fontFamily: "Poppins_400Regular",
+                      color: theme.textPrimary,
+                      lineHeight: 18,
+                    }}
+                  >
+                    These acupressure points work best with a little help! Ask a parent, guardian, or trusted adult to help you locate and gently press each point. They can guide your fingers to the right spot and help you remember to breathe deeply. Learning together makes it even more helpful for reducing stress and anxiety.
+                  </Text>
+                </View>
+
                 {/* How to Apply Section */}
                 <View style={{
                   backgroundColor: theme.cardBackground,
@@ -1218,31 +1243,6 @@ const MindfulnessScreen = () => {
                       Rub palms together until warm. Place hands gently over the heart. Take three long, slow breaths and imagine your energy (Qi) flowing smoothly through your body.
                     </Text>
                   </View>
-                </View>
-
-                {/* Parent Support Guide */}
-                <View style={{
-                  backgroundColor: theme.primary + "15",
-                  borderRadius: 16,
-                  padding: 16,
-                  borderWidth: 1,
-                  borderColor: theme.primary + "40",
-                }}>
-                  <View className="flex-row items-start gap-3 mb-2">
-                    <Text style={{ fontSize: 16, fontFamily: "Poppins_700Bold", color: theme.textPrimary }}>
-                      👋 Ask a Parent for Help
-                    </Text>
-                  </View>
-                  <Text
-                    style={{
-                      fontSize: 12,
-                      fontFamily: "Poppins_400Regular",
-                      color: theme.textPrimary,
-                      lineHeight: 18,
-                    }}
-                  >
-                    These acupressure points work best with a little help! Ask a parent, guardian, or trusted adult to help you locate and gently press each point. They can guide your fingers to the right spot and help you remember to breathe deeply. Learning together makes it even more helpful for reducing stress and anxiety.
-                  </Text>
                 </View>
               </View>
             </Animated.View>
