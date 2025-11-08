@@ -253,37 +253,42 @@ const StudyRoomScreen = () => {
             <View style={{
               backgroundColor: "white",
               borderRadius: 32,
-              padding: 32,
+              paddingHorizontal: 40,
+              paddingVertical: 36,
               alignItems: "center",
               shadowColor: "#000",
               shadowOffset: { width: 0, height: 4 },
               shadowOpacity: 0.1,
               shadowRadius: 12,
               elevation: 5,
-              minWidth: 280,
+              minWidth: 300,
+              maxWidth: 360,
+              width: "100%",
             }}>
-              <Text style={{ fontSize: 16, fontFamily: "Poppins_600SemiBold", color: theme.textSecondary, marginBottom: 8 }}>
+              <Text style={{ fontSize: 16, fontFamily: "Poppins_600SemiBold", color: theme.textSecondary, marginBottom: 12, letterSpacing: 0.5 }}>
                 {currentRoom.timerMode === "study" ? "Focus Time" : "Break Time"}
               </Text>
-              <Text style={{ fontSize: 72, fontFamily: "Poppins_700Bold", color: theme.primary, letterSpacing: -2 }}>
+              <Text style={{ fontSize: 72, fontFamily: "Poppins_700Bold", color: theme.primary, letterSpacing: -2, marginBottom: 4 }}>
                 {String(currentRoom.timerMinutes).padStart(2, "0")}:{String(currentRoom.timerSeconds).padStart(2, "0")}
               </Text>
 
               {/* Host Controls */}
               {userIsHost && (
-                <View style={{ marginTop: 24, gap: 12, width: "100%" }}>
-                  <View style={{ flexDirection: "row", gap: 12 }}>
+                <View style={{ marginTop: 28, gap: 14, width: "100%" }}>
+                  <View style={{ flexDirection: "row", gap: 14 }}>
                     <Pressable
                       onPress={currentRoom.timerRunning ? handlePauseTimer : handleStartTimer}
                       style={{
                         flex: 1,
-                        paddingVertical: 14,
+                        paddingVertical: 16,
+                        paddingHorizontal: 20,
                         borderRadius: 16,
                         backgroundColor: theme.primary,
                         alignItems: "center",
+                        justifyContent: "center",
                       }}
                     >
-                      <Text style={{ fontSize: 16, fontFamily: "Poppins_600SemiBold", color: "white" }}>
+                      <Text style={{ fontSize: 16, fontFamily: "Poppins_600SemiBold", color: "white", letterSpacing: 0.3 }}>
                         {currentRoom.timerRunning ? "Pause" : "Start"}
                       </Text>
                     </Pressable>
@@ -291,13 +296,15 @@ const StudyRoomScreen = () => {
                       onPress={handleStopTimer}
                       style={{
                         flex: 1,
-                        paddingVertical: 14,
+                        paddingVertical: 16,
+                        paddingHorizontal: 20,
                         borderRadius: 16,
                         backgroundColor: "#F3F4F6",
                         alignItems: "center",
+                        justifyContent: "center",
                       }}
                     >
-                      <Text style={{ fontSize: 16, fontFamily: "Poppins_600SemiBold", color: theme.textSecondary }}>
+                      <Text style={{ fontSize: 16, fontFamily: "Poppins_600SemiBold", color: theme.textSecondary, letterSpacing: 0.3 }}>
                         Stop
                       </Text>
                     </Pressable>
@@ -306,13 +313,15 @@ const StudyRoomScreen = () => {
                     onPress={handleSwitchMode}
                     disabled={currentRoom.timerRunning}
                     style={{
-                      paddingVertical: 14,
+                      paddingVertical: 16,
+                      paddingHorizontal: 20,
                       borderRadius: 16,
                       backgroundColor: currentRoom.timerRunning ? "#E5E7EB" : theme.secondary,
                       alignItems: "center",
+                      justifyContent: "center",
                     }}
                   >
-                    <Text style={{ fontSize: 16, fontFamily: "Poppins_600SemiBold", color: currentRoom.timerRunning ? "#9CA3AF" : "white" }}>
+                    <Text style={{ fontSize: 16, fontFamily: "Poppins_600SemiBold", color: currentRoom.timerRunning ? "#9CA3AF" : "white", letterSpacing: 0.3 }}>
                       Switch to {currentRoom.timerMode === "study" ? "Break" : "Focus"}
                     </Text>
                   </Pressable>
@@ -320,7 +329,7 @@ const StudyRoomScreen = () => {
               )}
 
               {!userIsHost && (
-                <Text style={{ fontSize: 13, fontFamily: "Poppins_400Regular", color: theme.textSecondary, marginTop: 16, textAlign: "center" }}>
+                <Text style={{ fontSize: 14, fontFamily: "Poppins_400Regular", color: theme.textSecondary, marginTop: 20, textAlign: "center", paddingHorizontal: 8, lineHeight: 20 }}>
                   {currentRoom.timerRunning ? "Session in progress..." : "Waiting for host to start"}
                 </Text>
               )}
