@@ -61,16 +61,6 @@ export const musicLibrary: MusicTrack[] = [
     pixabayUrl: "",
     localFile: require("../../assets/bach-talking-to-chopin-in-the-forest.mp3"),
   },
-  {
-    id: "8d-anxiety-relief",
-    title: "8D Music for Anxiety Relief",
-    artist: "8D Audio",
-    duration: 240,
-    mood: "calming",
-    genre: "ambient",
-    pixabayUrl: "",
-    localFile: require("../../assets/8d-music-for-anxiety-432440-1762573881751.mpeg"),
-  },
 ];
 
 class MusicService {
@@ -181,8 +171,11 @@ class MusicService {
       let canRetry = true;
 
       if (error.message) {
-        if (error.message.includes("-11850") || error.message.includes("AVFoundation")) {
-          errorMessage = "Invalid audio file format or corrupted file";
+        if (error.message.includes("-11850") ||
+            error.message.includes("-1182") ||
+            error.message.includes("AVFoundation") ||
+            error.message.includes("format is not supported")) {
+          errorMessage = "Unsupported audio format. Please use MP3, M4A, WAV, or AAC files.";
           canRetry = false;
         } else if (error.message.includes("network") || error.message.includes("timeout")) {
           errorMessage = "Network error - please check your connection";
