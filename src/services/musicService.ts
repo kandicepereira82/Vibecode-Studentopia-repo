@@ -61,6 +61,16 @@ export const musicLibrary: MusicTrack[] = [
     pixabayUrl: "",
     localFile: require("../../assets/bach-talking-to-chopin-in-the-forest.mp3"),
   },
+  {
+    id: "8d-anxiety-relief",
+    title: "8D Music for Anxiety Relief",
+    artist: "8D Audio",
+    duration: 240,
+    mood: "calming",
+    genre: "ambient",
+    pixabayUrl: "",
+    localFile: require("../../assets/8d-music-for-anxiety-432440-1762573881751.mpeg"),
+  },
 ];
 
 class MusicService {
