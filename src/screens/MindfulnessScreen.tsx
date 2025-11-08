@@ -1021,6 +1021,233 @@ const MindfulnessScreen = () => {
                   </Text>
                 </View>
 
+                {/* How to Apply Section */}
+                <View style={{
+                  backgroundColor: theme.cardBackground,
+                  borderRadius: 16,
+                  padding: 20,
+                  gap: 16,
+                }}>
+                  <Text style={{ fontSize: 18, fontFamily: "Poppins_700Bold", color: theme.textPrimary }}>
+                    How to Apply
+                  </Text>
+
+                  <Text style={{ fontSize: 14, fontFamily: "Poppins_400Regular", color: theme.textPrimary, lineHeight: 22 }}>
+                    Use gentle but firm pressure, either as a steady hold or by pressing softly, then a little more firmly. You can also use light tapping over each point.
+                  </Text>
+
+                  <Text style={{ fontSize: 14, fontFamily: "Poppins_400Regular", color: theme.textPrimary, lineHeight: 22 }}>
+                    Take slow, deep breaths while applying pressure — this helps your body and mind stay calm and balanced. You might feel a bit of tenderness at some points — that&apos;s normal.
+                  </Text>
+
+                  <Text style={{ fontSize: 14, fontFamily: "Poppins_400Regular", color: theme.textPrimary, lineHeight: 22 }}>
+                    Always stay relaxed and gentle. Pressing too hard can block your energy (Qi) instead of helping it flow smoothly.
+                  </Text>
+                </View>
+
+                {/* Detailed Acupressure Points */}
+                <View style={{
+                  backgroundColor: theme.cardBackground,
+                  borderRadius: 16,
+                  padding: 20,
+                  gap: 20,
+                }}>
+                  {/* Point 1: Third Eye */}
+                  <View style={{ gap: 8 }}>
+                    <Text style={{ fontSize: 16, fontFamily: "Poppins_700Bold", color: theme.textPrimary }}>
+                      1. Third Eye – Yintang (EX-HN3)
+                    </Text>
+                    <Text style={{ fontSize: 14, fontFamily: "Poppins_600SemiBold", color: theme.primary }}>
+                      Location:
+                    </Text>
+                    <Text style={{ fontSize: 14, fontFamily: "Poppins_400Regular", color: theme.textPrimary, lineHeight: 22 }}>
+                      Between the inner eyebrows, just above the bridge of the nose.
+                    </Text>
+                    <Text style={{ fontSize: 14, fontFamily: "Poppins_600SemiBold", color: theme.secondary }}>
+                      Benefits:
+                    </Text>
+                    <Text style={{ fontSize: 14, fontFamily: "Poppins_400Regular", color: theme.textPrimary, lineHeight: 22 }}>
+                      Calms overthinking, eases anxiety, relieves tension headaches and restlessness.
+                    </Text>
+                    <Text style={{ fontSize: 14, fontFamily: "Poppins_600SemiBold", color: theme.primary }}>
+                      How to Find:
+                    </Text>
+                    <Text style={{ fontSize: 14, fontFamily: "Poppins_400Regular", color: theme.textPrimary, lineHeight: 22 }}>
+                      Use your fingertips to feel the centre point between your eyebrows — you may notice a small dip.
+                    </Text>
+                  </View>
+
+                  {/* Divider */}
+                  <View style={{ height: 1, backgroundColor: theme.textSecondary + "20" }} />
+
+                  {/* Point 2: Inner Gate */}
+                  <View style={{ gap: 8 }}>
+                    <Text style={{ fontSize: 16, fontFamily: "Poppins_700Bold", color: theme.textPrimary }}>
+                      2. Inner Gate – Neiguan (PC6)
+                    </Text>
+                    <Text style={{ fontSize: 14, fontFamily: "Poppins_600SemiBold", color: theme.primary }}>
+                      Location:
+                    </Text>
+                    <Text style={{ fontSize: 14, fontFamily: "Poppins_400Regular", color: theme.textPrimary, lineHeight: 22 }}>
+                      Inside the forearm, about two finger-widths above the wrist crease, between two tendons.
+                    </Text>
+                    <Text style={{ fontSize: 14, fontFamily: "Poppins_600SemiBold", color: theme.secondary }}>
+                      Benefits:
+                    </Text>
+                    <Text style={{ fontSize: 14, fontFamily: "Poppins_400Regular", color: theme.textPrimary, lineHeight: 22 }}>
+                      Calms anxiety, balances emotions, and eases tightness in the chest or stomach.
+                    </Text>
+                    <Text style={{ fontSize: 14, fontFamily: "Poppins_600SemiBold", color: theme.primary }}>
+                      How to Find:
+                    </Text>
+                    <Text style={{ fontSize: 14, fontFamily: "Poppins_400Regular", color: theme.textPrimary, lineHeight: 22 }}>
+                      1. Hold palm facing up.{"\n"}
+                      2. Place index, middle, and ring fingers across wrist crease.{"\n"}
+                      3. The soft spot between the two tendons above your fingers is PC6.
+                    </Text>
+                  </View>
+
+                  {/* Divider */}
+                  <View style={{ height: 1, backgroundColor: theme.textSecondary + "20" }} />
+
+                  {/* Point 3: Hundred Convergences */}
+                  <View style={{ gap: 8 }}>
+                    <Text style={{ fontSize: 16, fontFamily: "Poppins_700Bold", color: theme.textPrimary }}>
+                      3. Hundred Convergences – Baihui (GV20)
+                    </Text>
+                    <Text style={{ fontSize: 14, fontFamily: "Poppins_600SemiBold", color: theme.primary }}>
+                      Location:
+                    </Text>
+                    <Text style={{ fontSize: 14, fontFamily: "Poppins_400Regular", color: theme.textPrimary, lineHeight: 22 }}>
+                      Very top of the head, along the midline.
+                    </Text>
+                    <Text style={{ fontSize: 14, fontFamily: "Poppins_600SemiBold", color: theme.secondary }}>
+                      Benefits:
+                    </Text>
+                    <Text style={{ fontSize: 14, fontFamily: "Poppins_400Regular", color: theme.textPrimary, lineHeight: 22 }}>
+                      Calms and centres the mind, lifts energy and focus.
+                    </Text>
+                    <Text style={{ fontSize: 14, fontFamily: "Poppins_600SemiBold", color: theme.primary }}>
+                      How to Find:
+                    </Text>
+                    <Text style={{ fontSize: 14, fontFamily: "Poppins_400Regular", color: theme.textPrimary, lineHeight: 22 }}>
+                      Draw a line from the top of one ear to the other; the midpoint at the top of your head is GV20.
+                    </Text>
+                  </View>
+
+                  {/* Divider */}
+                  <View style={{ height: 1, backgroundColor: theme.textSecondary + "20" }} />
+
+                  {/* Point 4: Sea of Tranquility */}
+                  <View style={{ gap: 8 }}>
+                    <Text style={{ fontSize: 16, fontFamily: "Poppins_700Bold", color: theme.textPrimary }}>
+                      4. Sea of Tranquility – Dan Zhong (CV17)
+                    </Text>
+                    <Text style={{ fontSize: 14, fontFamily: "Poppins_600SemiBold", color: theme.primary }}>
+                      Location:
+                    </Text>
+                    <Text style={{ fontSize: 14, fontFamily: "Poppins_400Regular", color: theme.textPrimary, lineHeight: 22 }}>
+                      Centre of the chest, level with the nipples (fourth rib space).
+                    </Text>
+                    <Text style={{ fontSize: 14, fontFamily: "Poppins_600SemiBold", color: theme.secondary }}>
+                      Benefits:
+                    </Text>
+                    <Text style={{ fontSize: 14, fontFamily: "Poppins_400Regular", color: theme.textPrimary, lineHeight: 22 }}>
+                      Opens the chest, relaxes breathing, calms emotions, and creates peacefulness.
+                    </Text>
+                    <Text style={{ fontSize: 14, fontFamily: "Poppins_600SemiBold", color: theme.primary }}>
+                      How to Find:
+                    </Text>
+                    <Text style={{ fontSize: 14, fontFamily: "Poppins_400Regular", color: theme.textPrimary, lineHeight: 22 }}>
+                      Locate the centre of the breastbone (sternum) — the small dip or flat spot is CV17.
+                    </Text>
+                  </View>
+
+                  {/* Divider */}
+                  <View style={{ height: 1, backgroundColor: theme.textSecondary + "20" }} />
+
+                  {/* Point 5: Water Trough */}
+                  <View style={{ gap: 8 }}>
+                    <Text style={{ fontSize: 16, fontFamily: "Poppins_700Bold", color: theme.textPrimary }}>
+                      5. Water Trough – Renzhong (GV26)
+                    </Text>
+                    <Text style={{ fontSize: 14, fontFamily: "Poppins_600SemiBold", color: theme.primary }}>
+                      Location:
+                    </Text>
+                    <Text style={{ fontSize: 14, fontFamily: "Poppins_400Regular", color: theme.textPrimary, lineHeight: 22 }}>
+                      On the line between the nose and upper lip.
+                    </Text>
+                    <Text style={{ fontSize: 14, fontFamily: "Poppins_600SemiBold", color: theme.secondary }}>
+                      Benefits:
+                    </Text>
+                    <Text style={{ fontSize: 14, fontFamily: "Poppins_400Regular", color: theme.textPrimary, lineHeight: 22 }}>
+                      Clears mental fog, improves alertness and grounding.
+                    </Text>
+                    <Text style={{ fontSize: 14, fontFamily: "Poppins_600SemiBold", color: theme.primary }}>
+                      How to Find:
+                    </Text>
+                    <Text style={{ fontSize: 14, fontFamily: "Poppins_400Regular", color: theme.textPrimary, lineHeight: 22 }}>
+                      Feel the small dip in the centre between nose and upper lip.
+                    </Text>
+                  </View>
+                </View>
+
+                {/* Optional Combination Practice */}
+                <View style={{
+                  backgroundColor: theme.primary + "10",
+                  borderRadius: 16,
+                  padding: 20,
+                  gap: 16,
+                  borderWidth: 1,
+                  borderColor: theme.primary + "30",
+                }}>
+                  <Text style={{ fontSize: 18, fontFamily: "Poppins_700Bold", color: theme.textPrimary }}>
+                    Optional Combination Practice
+                  </Text>
+
+                  <View style={{ gap: 12 }}>
+                    <Text style={{ fontSize: 15, fontFamily: "Poppins_600SemiBold", color: theme.primary }}>
+                      Calming & Focus
+                    </Text>
+                    <Text style={{ fontSize: 14, fontFamily: "Poppins_400Regular", color: theme.textPrimary, lineHeight: 22 }}>
+                      GV20 – Steady the mind and improve focus.{"\n"}
+                      Yintang – Quiet emotions and thoughts.{"\n"}
+                      PC6 – Restore emotional balance.
+                    </Text>
+                  </View>
+
+                  <View style={{ gap: 12 }}>
+                    <Text style={{ fontSize: 15, fontFamily: "Poppins_600SemiBold", color: theme.secondary }}>
+                      Grounding & Energy
+                    </Text>
+                    <Text style={{ fontSize: 14, fontFamily: "Poppins_400Regular", color: theme.textPrimary, lineHeight: 22 }}>
+                      GV26 – Energise and centre yourself.{"\n"}
+                      CV17 – Deepen breathing and calm the chest.
+                    </Text>
+                  </View>
+
+                  <View style={{ gap: 12 }}>
+                    <Text style={{ fontSize: 15, fontFamily: "Poppins_600SemiBold", color: theme.primary }}>
+                      Full 5-Point Flow:
+                    </Text>
+                    <Text style={{ fontSize: 14, fontFamily: "Poppins_400Regular", color: theme.textPrimary, lineHeight: 22 }}>
+                      GV20 → Yintang → GV26 → CV17 → PC6
+                    </Text>
+                    <Text style={{ fontSize: 13, fontFamily: "Poppins_400Regular", color: theme.textSecondary, lineHeight: 20 }}>
+                      Spend about 1–2 minutes on each point with slow, deep breathing.
+                    </Text>
+                  </View>
+
+                  <View style={{ gap: 12, marginTop: 8 }}>
+                    <Text style={{ fontSize: 15, fontFamily: "Poppins_600SemiBold", color: theme.secondary }}>
+                      Closing Practice:
+                    </Text>
+                    <Text style={{ fontSize: 14, fontFamily: "Poppins_400Regular", color: theme.textPrimary, lineHeight: 22 }}>
+                      Rub palms together until warm. Place hands gently over the heart. Take three long, slow breaths and imagine your energy (Qi) flowing smoothly through your body.
+                    </Text>
+                  </View>
+                </View>
+
                 {/* Parent Support Guide */}
                 <View style={{
                   backgroundColor: theme.primary + "15",
