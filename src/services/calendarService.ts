@@ -68,6 +68,12 @@ export const getOrCreateStudentopiaCalendar = async (childName: string): Promise
       return null;
     }
 
+    console.log("Creating calendar with source:", {
+      name: defaultCalendarSource.name,
+      type: defaultCalendarSource.type,
+      isLocalAccount: defaultCalendarSource.isLocalAccount,
+    });
+
     const newCalendarId = await Calendar.createCalendarAsync({
       title: calendarTitle,
       color: "#4CAF50", // Studentopia green
@@ -75,9 +81,11 @@ export const getOrCreateStudentopiaCalendar = async (childName: string): Promise
       sourceId: defaultCalendarSource.id,
       source: defaultCalendarSource,
       name: calendarTitle,
-      ownerAccount: "personal",
+      ownerAccount: defaultCalendarSource.name || "personal",
       accessLevel: Calendar.CalendarAccessLevel.OWNER,
     });
+
+    console.log("Successfully created calendar:", calendarTitle, "with ID:", newCalendarId);
 
     return newCalendarId;
   } catch (error) {
@@ -120,14 +128,48 @@ export const deleteStudentopiaCalendar = async (calendarId: string): Promise<boo
 
 /**
  * Get default calendar source (iOS)
+ * Prioritizes iCloud and synced calendars over local-only calendars
  */
 const getDefaultCalendarSource = async () => {
   try {
     const sources = await Calendar.getSourcesAsync();
-    const defaultSource = sources.find(
-      (source) => source.type === Calendar.SourceType.CALDAV || source.type === Calendar.SourceType.LOCAL
+
+    // Priority 1: iCloud calendar source (best for Apple ecosystem sync)
+    const iCloudSource = sources.find(
+      (source) =>
+        source.type === Calendar.SourceType.CALDAV &&
+        (source.name?.toLowerCase().includes("icloud") ||
+         source.name === "Default")
     );
-    return defaultSource || sources[0];
+
+    if (iCloudSource) {
+      console.log("Found iCloud calendar source:", iCloudSource.name);
+      return iCloudSource;
+    }
+
+    // Priority 2: Any CalDAV source (Gmail, Outlook, etc.)
+    const calDavSource = sources.find(
+      (source) => source.type === Calendar.SourceType.CALDAV
+    );
+
+    if (calDavSource) {
+      console.log("Found CalDAV calendar source:", calDavSource.name);
+      return calDavSource;
+    }
+
+    // Priority 3: Any non-local source
+    const cloudSource = sources.find(
+      (source) => !source.isLocalAccount
+    );
+
+    if (cloudSource) {
+      console.log("Found cloud calendar source:", cloudSource.name);
+      return cloudSource;
+    }
+
+    // Last resort: use first available source (even if local)
+    console.warn("No synced calendar found, using first available source");
+    return sources[0] || null;
   } catch (error) {
     console.error("Error getting default calendar source:", error);
     return null;
@@ -186,12 +228,22 @@ export const addTaskToCalendar = async (
   try {
     const calendarId = await getOrCreateStudentopiaCalendar(childName);
     if (!calendarId) {
+      console.error("Failed to get calendar for task creation");
       return null;
     }
 
     // Create event at the due date time
     const startDate = new Date(dueDate);
     const endDate = new Date(dueDate.getTime() + 60 * 60 * 1000); // 1 hour duration
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+    console.log("Creating calendar event:", {
+      title: taskTitle,
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString(),
+      timezone,
+      calendarId,
+    });
 
     const eventId = await Calendar.createEventAsync(calendarId, {
       title: `📚 ${taskTitle}`,
@@ -199,9 +251,10 @@ export const addTaskToCalendar = async (
       endDate,
       notes: taskDescription,
       alarms: [{ relativeOffset: -reminderMinutes }],
-      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      timeZone: timezone,
     });
 
+    console.log("Successfully created event with ID:", eventId);
     return eventId;
   } catch (error) {
     console.error("Error adding task to calendar:", error);
