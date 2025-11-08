@@ -1,9 +1,9 @@
 import React from "react";
 import { View } from "react-native";
-import Toast, { Toast as ToastType } from "./Toast";
+import ToastComponent, { Toast } from "./Toast";
 
 interface ToastContainerProps {
-  toasts: ToastType[];
+  toasts: Toast[];
   onDismiss: (id: string) => void;
 }
 
@@ -20,7 +20,7 @@ const ToastContainer: React.FC<ToastContainerProps> = ({ toasts, onDismiss }) =>
       }}
     >
       {toasts.map((toast) => (
-        <Toast
+        <ToastComponent
           key={toast.id}
           {...toast}
           onDismiss={onDismiss}

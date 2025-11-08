@@ -75,10 +75,10 @@ interface TranslateResponse {
 
 interface GoogleTranslateAPIResponse {
   data: {
-    translations: Array<{
+    translations: {
       translatedText: string;
       detectedSourceLanguage?: string;
-    }>;
+    }[];
   };
 }
 

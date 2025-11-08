@@ -7,7 +7,6 @@ import Animated, {
   withSequence,
   withTiming,
   withRepeat,
-  Easing,
 } from "react-native-reanimated";
 import { Ionicons } from "@expo/vector-icons";
 import StudyPal from "./StudyPal";
@@ -51,6 +50,7 @@ const CelebrationModal: React.FC<CelebrationModalProps> = ({
       scale.value = 0;
       confettiScale.value = 0;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible]);
 
   const animatedStyle = useAnimatedStyle(() => ({

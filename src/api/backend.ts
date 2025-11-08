@@ -16,7 +16,6 @@ import { Friend, Group, StudyRoom, User } from "../types";
 
 // API Configuration
 const API_URL = process.env.EXPO_PUBLIC_API_URL || "http://localhost:3000/api";
-const WS_URL = process.env.EXPO_PUBLIC_WS_URL || "ws://localhost:3000";
 
 // Auth token management
 let authToken: string | null = null;
@@ -514,7 +513,7 @@ export const healthCheck = async (): Promise<{
 }> => {
   try {
     return await apiRequest<{ status: string; timestamp: string }>("/health");
-  } catch (error) {
+  } catch {
     return { status: "offline", timestamp: new Date().toISOString() };
   }
 };

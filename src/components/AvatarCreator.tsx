@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, ScrollView, Pressable, Modal, TextInput } from "react-native";
+import { View, Text, ScrollView, Pressable, Modal } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { AvatarCustomization, StudyPalAnimal, ThemeColor } from "../types";
@@ -14,61 +14,6 @@ interface AvatarCreatorProps {
   currentTheme: ThemeColor;
   onSave: (avatar: AvatarCustomization) => void;
 }
-
-const HAIR_STYLES = [
-  { id: "none", name: "None", emoji: "🚫" },
-  { id: "short", name: "Short", emoji: "✂️" },
-  { id: "long", name: "Long", emoji: "💇" },
-  { id: "curly", name: "Curly", emoji: "🌀" },
-  { id: "spiky", name: "Spiky", emoji: "⚡" },
-  { id: "ponytail", name: "Ponytail", emoji: "🎀" },
-  { id: "bun", name: "Bun", emoji: "🍔" },
-];
-
-const HAIR_COLORS = [
-  { id: "black", name: "Black", color: "#1F2937" },
-  { id: "brown", name: "Brown", color: "#92400E" },
-  { id: "blonde", name: "Blonde", color: "#FCD34D" },
-  { id: "red", name: "Red", color: "#DC2626" },
-  { id: "blue", name: "Blue", color: "#3B82F6" },
-  { id: "pink", name: "Pink", color: "#EC4899" },
-  { id: "purple", name: "Purple", color: "#9333EA" },
-  { id: "green", name: "Green", color: "#10B981" },
-];
-
-const FUR_COLORS = [
-  { id: "natural", name: "Natural", color: "#D97706" },
-  { id: "light", name: "Light", color: "#FDE68A" },
-  { id: "dark", name: "Dark", color: "#78350F" },
-  { id: "grey", name: "Grey", color: "#6B7280" },
-  { id: "white", name: "White", color: "#F3F4F6" },
-  { id: "cream", name: "Cream", color: "#FEF3C7" },
-  { id: "golden", name: "Golden", color: "#F59E0B" },
-  { id: "chocolate", name: "Chocolate", color: "#7C2D12" },
-  // Primary Colors
-  { id: "red", name: "Red", color: "#EF4444" },
-  { id: "pink", name: "Pink", color: "#EC4899" },
-  { id: "blue", name: "Blue", color: "#3B82F6" },
-  { id: "yellow", name: "Yellow", color: "#FBBF24" },
-  { id: "green", name: "Green", color: "#10B981" },
-  { id: "orange", name: "Orange", color: "#F97316" },
-  { id: "purple", name: "Purple", color: "#A855F7" },
-  { id: "cyan", name: "Cyan", color: "#06B6D4" },
-];
-
-const OUTFITS = [
-  { id: "none", name: "None", emoji: "🚫" },
-  { id: "study_hoodie", name: "Study Hoodie", emoji: "🧥" },
-  { id: "cozy_sweater", name: "Cosy Sweater", emoji: "🧶" },
-  { id: "academic_robe", name: "Academic Robe", emoji: "🎓" },
-  { id: "sporty_tracksuit", name: "Sporty Tracksuit", emoji: "🏃" },
-  { id: "exam_power", name: "Exam Power Outfit", emoji: "💼" },
-  { id: "sleepy_pyjamas", name: "Sleepy Pyjamas", emoji: "🌙" },
-  { id: "raincoat", name: "Raincoat", emoji: "☔" },
-  { id: "focus_tee", name: "Focus Mode Tee", emoji: "👕" },
-  { id: "adventure", name: "Adventure Outfit", emoji: "🎒" },
-  { id: "meditation_robe", name: "Mindful Meditation Robe", emoji: "🧘" },
-];
 
 const BACKGROUND_COLORS = [
   { id: "red", name: "Red", color: "#FF4444" },

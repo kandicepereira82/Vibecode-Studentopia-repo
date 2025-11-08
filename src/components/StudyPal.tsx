@@ -340,6 +340,7 @@ const StudyPal: React.FC<StudyPalProps> = React.memo(({
           break;
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [animal, animationsEnabled, mood]);
 
   const animatedStyle = useAnimatedStyle(() => ({
@@ -352,47 +353,6 @@ const StudyPal: React.FC<StudyPalProps> = React.memo(({
 
   const getAnimalImage = (animal: StudyPalAnimal) => {
     return ANIMAL_IMAGE_CACHE[animal] || ANIMAL_IMAGE_CACHE.cat;
-  };
-
-  const getAnimalEmoji = (animal: StudyPalAnimal): string => {
-    const emojiMap: Record<StudyPalAnimal, string> = {
-      cat: "🐱",
-      redpanda: "🦊",
-      owl: "🦉",
-      penguin: "🐧",
-      horse: "🐴",
-      dog: "🐶",
-      duck: "🦆",
-      bear: "🐻",
-      hedgehog: "🦔",
-      tiger: "🐯",
-      turtle: "🐢",
-      bunny: "🐰",
-      giraffe: "🦒",
-      pig: "🐷",
-      alpaca: "🦙",
-      lion: "🦁",
-      frog: "🐸",
-      koala: "🐨",
-      sloth: "🦥",
-      monkey: "🐵",
-      hamster: "🐹",
-      reindeer: "🦌",
-      chipmunk: "🐿️",
-      elephant: "🐘",
-      goldfish: "🐠",
-      shark: "🦈",
-      wolf: "🐺",
-      zebra: "🦓",
-      snake: "🐍",
-      rooster: "🐓",
-      otter: "🦦",
-      lovebird: "🦜",
-      lizard: "🦎",
-      dinosaur: "🦖",
-      arcticfox: "🦊",
-    };
-    return emojiMap[animal] || "🐱";
   };
 
   const getMoodMessage = (): string => {

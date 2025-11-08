@@ -11,14 +11,12 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
 import useUserStore from "../state/userStore";
 import { useTranslation } from "../utils/translations";
 import { getTheme } from "../utils/themes";
 import { getOpenAITextResponse } from "../api/chat-service";
 import { AIChatMessage, AIChatMode } from "../types";
 import { cn } from "../utils/cn";
-import StudyPal from "../components/StudyPal";
 import ClickableCompanion from "../components/ClickableCompanion";
 import MessageText from "../components/MessageText";
 import { useGlobalToast } from "../context/ToastContext";

@@ -13,7 +13,7 @@ interface ToastProps extends Toast {
   onDismiss: (id: string) => void;
 }
 
-const Toast: React.FC<ToastProps> = ({
+const ToastComponent: React.FC<ToastProps> = ({
   id,
   message,
   type,
@@ -123,4 +123,4 @@ const Toast: React.FC<ToastProps> = ({
   );
 };
 
-export default Toast;
+export default ToastComponent;

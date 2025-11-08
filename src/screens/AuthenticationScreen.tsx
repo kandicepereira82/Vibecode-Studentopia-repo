@@ -8,7 +8,6 @@ import useUserStore from "../state/userStore";
 import useStatsStore from "../state/statsStore";
 import useOnboardingStore from "../state/onboardingStore";
 import { authService } from "../utils/authService";
-import { cn } from "../utils/cn";
 import { useGlobalToast } from "../context/ToastContext";
 import { parseError, logError } from "../utils/errorUtils";
 

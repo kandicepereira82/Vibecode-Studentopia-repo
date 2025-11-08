@@ -1,6 +1,5 @@
 import React from "react";
-import { Text, Pressable, Linking, Alert } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { Text, Linking, Alert } from "react-native";
 
 interface MessageTextProps {
   content: string;
@@ -25,7 +24,7 @@ const MessageText: React.FC<MessageTextProps> = ({ content, color, isUserMessage
       } else {
         Alert.alert("Error", "Cannot open this link");
       }
-    } catch (error) {
+    } catch {
       Alert.alert("Error", "Failed to open link");
     }
   };
