@@ -12,6 +12,18 @@
     },
     "android": {
       "edgeToEdgeEnabled": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "a157de07-bb55-4373-9d8b-46bb55178b37"
+      }
+    },
+    "owner": "kandicepereira",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/a157de07-bb55-4373-9d8b-46bb55178b37"
     }
   }
 }
