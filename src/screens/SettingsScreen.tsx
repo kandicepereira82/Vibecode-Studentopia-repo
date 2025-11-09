@@ -901,31 +901,40 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
               </View>
             )}
 
-            {/* Export Data Button */}
-            <Pressable
-              onPress={handleExportData}
-              disabled={isExporting}
-              className="rounded-2xl p-4 mb-3 flex-row items-center justify-center"
-              style={{ backgroundColor: isExporting ? theme.textSecondary + "30" : theme.primary }}
-            >
-              <Ionicons name={isExporting ? "hourglass-outline" : "download-outline"} size={20} color="white" />
-              <Text className="text-white font-semibold ml-2">
-                {isExporting ? "Exporting..." : "Export Data"}
-              </Text>
-            </Pressable>
+            {/* Export and Import Buttons Row */}
+            <View className="flex-row justify-between mb-6">
+              {/* Export Data Button */}
+              <Pressable
+                onPress={handleExportData}
+                disabled={isExporting}
+                className="rounded-2xl p-3 flex-row items-center justify-center"
+                style={{
+                  backgroundColor: isExporting ? theme.textSecondary + "30" : theme.primary,
+                  flex: 0.48
+                }}
+              >
+                <Ionicons name={isExporting ? "hourglass-outline" : "download-outline"} size={18} color="white" />
+                <Text className="text-white font-semibold ml-2 text-sm">
+                  {isExporting ? "Exporting..." : "Export"}
+                </Text>
+              </Pressable>
 
-            {/* Import Data Button */}
-            <Pressable
-              onPress={handleImportData}
-              disabled={isImporting}
-              className="rounded-2xl p-4 flex-row items-center justify-center"
-              style={{ backgroundColor: isImporting ? theme.textSecondary + "30" : theme.secondary }}
-            >
-              <Ionicons name={isImporting ? "hourglass-outline" : "cloud-upload-outline"} size={20} color="white" />
-              <Text className="text-white font-semibold ml-2">
-                {isImporting ? "Importing..." : "Import Data"}
-              </Text>
-            </Pressable>
+              {/* Import Data Button */}
+              <Pressable
+                onPress={handleImportData}
+                disabled={isImporting}
+                className="rounded-2xl p-3 flex-row items-center justify-center"
+                style={{
+                  backgroundColor: isImporting ? theme.textSecondary + "30" : theme.secondary,
+                  flex: 0.48
+                }}
+              >
+                <Ionicons name={isImporting ? "hourglass-outline" : "cloud-upload-outline"} size={18} color="white" />
+                <Text className="text-white font-semibold ml-2 text-sm">
+                  {isImporting ? "Importing..." : "Import"}
+                </Text>
+              </Pressable>
+            </View>
 
             {/* Instructions (collapsible) */}
             {showBackupInstructions && (
