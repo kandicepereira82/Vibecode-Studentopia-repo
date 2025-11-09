@@ -241,7 +241,7 @@ export const showImmediateNotification = async (
       content: {
         title,
         body,
-        data,
+        data: data || {}, // iOS requires non-nil data field, use empty object if undefined
         sound: "default",
       },
       trigger: null, // Show immediately
