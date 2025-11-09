@@ -2,6 +2,21 @@
 
 Studentopia is a comprehensive mobile productivity app designed for students to stay organized, complete tasks, maintain focus, and promote wellness. Built with React Native and Expo, it features a colorful, playful, and highly customizable interface with **35 adorable animal companions**, **8 dynamic themes**, and **dark mode support**.
 
+## 🔥 **NEW: Firebase Backend Integration**
+
+**Real multi-user collaboration is now enabled!**
+
+✅ **Firebase Authentication** - Secure user accounts with email/password
+✅ **Firestore Database** - Real-time group creation and joining with share codes
+✅ **Realtime Database** - Live study sessions with synchronized timers and chat
+✅ **Cross-Device Sync** - All data syncs across devices instantly
+
+**👉 [Complete Setup Guide](./FIREBASE_SETUP.md)** - Follow the step-by-step guide to enable multi-user features in 10-15 minutes.
+
+**Perfect for testing with 5-10 friends before public launch!** Firebase free tier supports up to 50 users with no cost.
+
+---
+
 ## ✨ Latest Updates
 
 - ✅ **ANIMAL COMPANION IMAGES UPDATE** - Completely refreshed all 35 companion animal images with high-quality optimized versions! (1) **New Image Assets**: Replaced 31 out of 35 animal images with new studypal-branded high-resolution PNG files, maintained 4 original images (monkey, alpaca, bear, dog) until new versions available, all new images optimized for mobile display with average file size 2-4MB for sharp rendering, (2) **Image Cleanup**: Removed all old image-176*.png files to prevent duplication and reduce app bundle size, deleted duplicate snake image, cleaned assets folder from 60+ files to 40 optimized images, (3) **Centralized Cache Integration**: All new images integrated into existing ANIMAL_IMAGE_CACHE system for instant preloading and performance, seamless compatibility with image preloading service, maintains fast loading times across all screens, (4) **Quality Improvements**: Higher resolution images provide better visual quality on all device sizes, consistent naming convention (studypal-[animal]-[timestamp].png) for easy maintenance, proper file optimization ensures smooth animations and transitions, (5) **Backward Compatibility**: All existing animations, transitions, and previews work perfectly with new images, no code changes required in StudyPal component or onboarding screens, maintains same aspect ratios and display properties. Beautiful refreshed companion animals throughout Studentopia!
