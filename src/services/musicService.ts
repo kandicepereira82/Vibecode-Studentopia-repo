@@ -19,14 +19,79 @@ export interface AudioError {
 }
 
 // Curated list of calming classical music and meditation tracks
-// Using local assets for music files
-// Note: MPEG files currently have encoding compatibility issues with iOS AVFoundation (error -11828/-1182)
-// These tracks need to be converted to MP3 format for iOS compatibility
-// Temporarily using empty library until files are converted
+// Using local MP3 assets for music files (iOS compatible)
+// Note: New MPEG files have encoding issues with iOS and are temporarily disabled
 export const musicLibrary: MusicTrack[] = [
-  // All MPEG tracks temporarily disabled due to iOS encoding compatibility
-  // These files need to be converted to MP3 format
-  // You can use tools like FFmpeg to convert: ffmpeg -i input.mpeg -acodec libmp3lame -ab 192k output.mp3
+  {
+    id: "release-negative-energy",
+    title: "432-528 Hz - Release Negative Energy",
+    artist: "Meditation Music",
+    duration: 300,
+    mood: "calming",
+    genre: "ambient",
+    pixabayUrl: "",
+    localFile: require("../../assets/432-528-hz-release-negative-energy-.mp3"),
+  },
+  {
+    id: "meditation-432hz",
+    title: "432 Hz Meditation",
+    artist: "Healing Frequencies",
+    duration: 270,
+    mood: "peaceful",
+    genre: "ambient",
+    pixabayUrl: "",
+    localFile: require("../../assets/432-hz-meditation-short.mp3"),
+  },
+  {
+    id: "bach-chopin-forest",
+    title: "Bach Talking to Chopin in the Forest",
+    artist: "Classical Fusion",
+    duration: 330,
+    mood: "peaceful",
+    genre: "classical",
+    pixabayUrl: "",
+    localFile: require("../../assets/bach-talking-to-chopin-in-the-forest.mp3"),
+  },
+  {
+    id: "chopin-nocturne-rain",
+    title: "Chopin Nocturne Op. 9 No. 2 (Slowed + Rain)",
+    artist: "Chopin",
+    duration: 470,
+    mood: "calming",
+    genre: "classical",
+    pixabayUrl: "",
+    localFile: require("../../assets/chopin-nocturne-op-9-no-2-slowed-rainmp3.mp3"),
+  },
+  {
+    id: "ocean-waves",
+    title: "Ocean Waves",
+    artist: "Nature Sounds",
+    duration: 180,
+    mood: "peaceful",
+    genre: "ambient",
+    pixabayUrl: "",
+    localFile: require("../../assets/ocean-waves-376898.mp3"),
+  },
+  {
+    id: "wind-chime",
+    title: "Wind Chime",
+    artist: "Nature Sounds",
+    duration: 120,
+    mood: "calming",
+    genre: "ambient",
+    pixabayUrl: "",
+    localFile: require("../../assets/wind-chime-small-64660.mp3"),
+  },
+  {
+    id: "gong",
+    title: "Meditation Gong",
+    artist: "Zen Sounds",
+    duration: 90,
+    mood: "peaceful",
+    genre: "ambient",
+    pixabayUrl: "",
+    localFile: require("../../assets/gong-79191.mp3"),
+  },
 ];
 
 class MusicService {
