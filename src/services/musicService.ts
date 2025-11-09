@@ -33,36 +33,6 @@ export const musicLibrary: MusicTrack[] = [
     pixabayUrl: "",
     localFile: require("../../assets/Calm Soul Meditation - 247330  UniverseBella.-1762652286390.mpeg"),
   },
-  {
-    id: "ocean-waves",
-    title: "Ocean Waves",
-    artist: "Nature Sounds",
-    duration: 180,
-    mood: "peaceful",
-    genre: "ambient",
-    pixabayUrl: "",
-    localFile: require("../../assets/ocean-waves-376898.mp3"),
-  },
-  {
-    id: "wind-chime",
-    title: "Wind Chime",
-    artist: "Nature Sounds",
-    duration: 120,
-    mood: "calming",
-    genre: "ambient",
-    pixabayUrl: "",
-    localFile: require("../../assets/wind-chime-small-64660.mp3"),
-  },
-  {
-    id: "gong",
-    title: "Meditation Gong",
-    artist: "Zen Sounds",
-    duration: 90,
-    mood: "peaceful",
-    genre: "ambient",
-    pixabayUrl: "",
-    localFile: require("../../assets/gong-79191.mp3"),
-  },
 ];
 
 class MusicService {
