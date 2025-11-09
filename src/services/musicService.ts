@@ -20,28 +20,38 @@ export interface AudioError {
 
 // Curated list of calming classical music
 // Using local assets for music files
-// Note: Some MP3 files may have encoding issues with iOS AVFoundation
-// Using simpler audio files for better compatibility
+// Note: MPEG files have encoding issues with iOS AVFoundation (error -11828)
+// Using MP3 files with simpler encoding for better compatibility
 export const musicLibrary: MusicTrack[] = [
   {
-    id: "calm-soul-meditation",
-    title: "Calm Soul Meditation",
-    artist: "UniverseBella",
-    duration: 240,
+    id: "ocean-waves",
+    title: "Ocean Waves",
+    artist: "Nature Sounds",
+    duration: 180,
     mood: "peaceful",
     genre: "ambient",
     pixabayUrl: "",
-    localFile: require("../../assets/Calm Soul Meditation - 247330  UniverseBella.-1762652286390.mpeg"),
+    localFile: require("../../assets/ocean-waves-376898.mp3"),
   },
   {
-    id: "energetic-classical-music",
-    title: "Classical Music - Energetic & Optimistic",
-    artist: "Pixabay",
-    duration: 180,
-    mood: "uplifting",
-    genre: "classical",
-    pixabayUrl: "https://pixabay.com/music/modern-classical-classical-music-energetic-optimistic-388218/",
-    localFile: require("../../assets/energetic classical music spark optimisum-1762618508659.mpeg"),
+    id: "wind-chime",
+    title: "Wind Chime",
+    artist: "Nature Sounds",
+    duration: 120,
+    mood: "calming",
+    genre: "ambient",
+    pixabayUrl: "",
+    localFile: require("../../assets/wind-chime-small-64660.mp3"),
+  },
+  {
+    id: "gong",
+    title: "Meditation Gong",
+    artist: "Zen Sounds",
+    duration: 90,
+    mood: "peaceful",
+    genre: "ambient",
+    pixabayUrl: "",
+    localFile: require("../../assets/gong-79191.mp3"),
   },
 ];
 
