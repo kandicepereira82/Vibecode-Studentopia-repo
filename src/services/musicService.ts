@@ -26,12 +26,12 @@ export const musicLibrary: MusicTrack[] = [
   {
     id: "calm-soul-meditation",
     title: "Calm Soul Meditation",
-    artist: "Meditation Music",
+    artist: "UniverseBella",
     duration: 240,
     mood: "peaceful",
     genre: "ambient",
     pixabayUrl: "",
-    localFile: require("../../assets/calm-soul-meditation-247330-1762651961496.mpeg"),
+    localFile: require("../../assets/Calm Soul Meditation - 247330  UniverseBella.-1762652286390.mpeg"),
   },
   {
     id: "ocean-waves",
