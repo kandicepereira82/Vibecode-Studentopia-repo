@@ -233,11 +233,24 @@ const MindfulnessScreen = () => {
 
   const handleSelectMusicTrack = async (track: MusicTrack) => {
     setSelectedMusicTrack(track);
+    setShowMusicLibrary(false);
+
     const success = await musicService.loadTrack(track);
     if (success) {
       await musicService.play();
+    } else {
+      // If loading fails, get the error and try the next track automatically
+      const error = musicService.getLastError();
+      console.log(`[MindfulnessScreen] Failed to load track: ${error?.message || "Unknown error"}`);
+
+      // Clear the failed track selection
+      setSelectedMusicTrack(null);
+
+      // Show library again so user can try another track
+      setTimeout(() => {
+        setShowMusicLibrary(true);
+      }, 100);
     }
-    setShowMusicLibrary(false);
   };
 
   const formatMusicTime = (millis: number) => {
@@ -1346,6 +1359,24 @@ const MindfulnessScreen = () => {
                 <Pressable onPress={() => setShowMusicLibrary(false)}>
                   <Ionicons name="close" size={28} color={theme.textPrimary} />
                 </Pressable>
+              </View>
+
+              <View style={{
+                backgroundColor: theme.primary + "15",
+                borderRadius: 12,
+                padding: 12,
+                marginBottom: 16,
+                borderWidth: 1,
+                borderColor: theme.primary + "30",
+              }}>
+                <Text style={{
+                  fontSize: 12,
+                  fontFamily: "Poppins_400Regular",
+                  color: theme.textPrimary,
+                  lineHeight: 18,
+                }}>
+                  💡 If a track does not play, try selecting a different one. Some audio files may have compatibility issues.
+                </Text>
               </View>
 
               <ScrollView showsVerticalScrollIndicator={false}>

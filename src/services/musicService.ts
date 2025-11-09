@@ -135,7 +135,7 @@ class MusicService {
 
       console.log(`[MusicService] Loading track "${track.title}" from ${sourceType}`);
 
-      // Load new track with error handling
+      // Load new track with error handling and better audio settings
       const { sound } = await Audio.Sound.createAsync(
         audioSource,
         {
@@ -143,6 +143,9 @@ class MusicService {
           volume: this.volume,
           isLooping: this.isLooping,
           progressUpdateIntervalMillis: 500,
+          // Add rate and pitch correction to help with compatibility
+          rate: 1.0,
+          shouldCorrectPitch: true,
         },
         this.onPlaybackStatusUpdate
       );
@@ -168,14 +171,15 @@ class MusicService {
 
       // Provide more specific error messages
       let errorMessage = "Failed to load audio track";
-      let canRetry = true;
+      let canRetry = false; // Don't auto-retry format errors
 
       if (error.message) {
-        if (error.message.includes("-11850") ||
+        if (error.message.includes("-11828") ||
+            error.message.includes("-11850") ||
             error.message.includes("-1182") ||
             error.message.includes("AVFoundation") ||
             error.message.includes("format is not supported")) {
-          errorMessage = "Unsupported audio format. Please use MP3, M4A, WAV, or AAC files.";
+          errorMessage = `Unable to play "${track.title}". This audio file may have encoding issues. Please try another track.`;
           canRetry = false;
         } else if (error.message.includes("network") || error.message.includes("timeout")) {
           errorMessage = "Network error - please check your connection";
