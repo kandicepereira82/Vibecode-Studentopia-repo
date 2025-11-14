@@ -1,3 +1,5 @@
 node_modules/expo-network-addons/**
 **/expo-network-addons/**
+**/expo-network-addons-gradle-plugin/**
+node_modules/**/expo-network-addons/**
 
