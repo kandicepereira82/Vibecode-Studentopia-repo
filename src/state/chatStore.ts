@@ -4,6 +4,8 @@ import useStudyRoomStore from "./studyRoomStore";
 
 interface ChatStore {
   messages: ChatMessage[];
+  // SECURITY FIX: Rate limiting tracking
+  messageTimestamps: Map<string, number[]>; // userId -> array of timestamps
 
   // Message Actions
   sendMessage: (
@@ -32,6 +34,7 @@ const sanitizeContent = (content: string): string => {
 
 const useChatStore = create<ChatStore>((set, get) => ({
   messages: [],
+  messageTimestamps: new Map(),
 
   sendMessage: (studyRoomId, userId, username, content) => {
     // SECURITY: Validate user is in the room
@@ -52,6 +55,22 @@ const useChatStore = create<ChatStore>((set, get) => ({
       console.error("Message too long: Maximum 1000 characters");
       return false;
     }
+
+    // SECURITY FIX: Rate limiting - max 10 messages per minute per user
+    const now = Date.now();
+    const state = get();
+    const userMessages = state.messageTimestamps.get(userId) || [];
+    const recentMessages = userMessages.filter(t => now - t < 60000); // Last 60 seconds
+    
+    if (recentMessages.length >= 10) {
+      console.error("Rate limit exceeded: Too many messages. Please wait a moment.");
+      return false;
+    }
+    
+    // Add current timestamp
+    recentMessages.push(now);
+    state.messageTimestamps.set(userId, recentMessages);
+    set({ messageTimestamps: new Map(state.messageTimestamps) });
 
     // SECURITY: Sanitize content to prevent XSS
     const sanitizedContent = sanitizeContent(trimmedContent);

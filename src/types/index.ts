@@ -121,6 +121,7 @@ export interface AvatarCustomization {
 }
 
 export interface Group {
+  shareCodeHash?: string; // SECURITY FIX: Hashed share code for secure storage
   id: string;
   name: string;
   description: string;

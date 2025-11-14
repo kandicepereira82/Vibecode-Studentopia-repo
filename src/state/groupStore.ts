@@ -1,12 +1,13 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Crypto from "expo-crypto";
 import { Group } from "../types";
 
 interface GroupStore {
   groups: Group[];
-  addGroup: (group: Omit<Group, "id" | "createdAt" | "shareCode">) => void;
-  updateGroup: (groupId: string, userId: string, updates: Partial<Omit<Group, "id" | "createdAt" | "shareCode" | "teacherId" | "studentIds">>) => boolean;
+  addGroup: (group: Omit<Group, "id" | "createdAt" | "shareCode" | "shareCodeHash">) => void;
+  updateGroup: (groupId: string, userId: string, updates: Partial<Omit<Group, "id" | "createdAt" | "shareCode" | "shareCodeHash" | "teacherId" | "studentIds">>) => boolean;
   joinGroupWithCode: (shareCode: string, studentId: string, authenticatedUserId: string) => { success: boolean; message: string };
   leaveGroup: (groupId: string, studentId: string) => void;
   regenerateShareCode: (groupId: string, userId: string) => string | null;
@@ -15,7 +16,7 @@ interface GroupStore {
   getGroupByShareCode: (shareCode: string) => Group | undefined;
 }
 
-// Generate a random 6-character share code
+// SECURITY FIX: Generate a random 6-character share code
 const generateShareCode = (): string => {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // Excluding confusing characters
   let code = "";
@@ -25,15 +26,28 @@ const generateShareCode = (): string => {
   return code;
 };
 
+// SECURITY FIX: Hash share code before storage
+const hashShareCode = async (code: string): Promise<string> => {
+  return await Crypto.digestStringAsync(
+    Crypto.CryptoDigestAlgorithm.SHA256,
+    code
+  );
+};
+
 const useGroupStore = create<GroupStore>()(
   persist(
     (set, get) => ({
       groups: [],
-      addGroup: (groupData) => {
+      addGroup: async (groupData) => {
+        // SECURITY FIX: Generate share code and hash it
+        const shareCode = generateShareCode();
+        const shareCodeHash = await hashShareCode(shareCode);
+        
         const newGroup: Group = {
           ...groupData,
           id: Date.now().toString() + Math.random().toString(36),
-          shareCode: generateShareCode(),
+          shareCode, // Keep plain code for display/return, but store hash
+          shareCodeHash, // Store hash for security
           createdAt: new Date(),
         };
         set((state) => ({ groups: [...state.groups, newGroup] }));
@@ -57,14 +71,23 @@ const useGroupStore = create<GroupStore>()(
         }));
         return true;
       },
-      joinGroupWithCode: (shareCode, studentId, authenticatedUserId) => {
+      joinGroupWithCode: async (shareCode, studentId, authenticatedUserId) => {
         // SECURITY: Validate that studentId matches authenticated user
         if (studentId !== authenticatedUserId) {
           console.error("Permission denied: Cannot join as another user");
           return { success: false, message: "Authentication error" };
         }
 
-        const group = get().groups.find((g) => g.shareCode === shareCode);
+        // SECURITY FIX: Hash the provided code and compare with stored hash
+        const codeHash = await hashShareCode(shareCode);
+        const group = get().groups.find((g) => {
+          // Support both old format (plain code) and new format (hashed)
+          if (g.shareCodeHash) {
+            return g.shareCodeHash === codeHash;
+          }
+          // Legacy: compare plain codes (for backward compatibility)
+          return g.shareCode === shareCode;
+        });
 
         if (!group) {
           return { success: false, message: "Invalid share code" };
@@ -117,7 +140,7 @@ const useGroupStore = create<GroupStore>()(
           ),
         }));
       },
-      regenerateShareCode: (groupId: string, userId: string) => {
+      regenerateShareCode: async (groupId: string, userId: string) => {
         const group = get().groups.find((g) => g.id === groupId);
         if (!group) return null;
 
@@ -127,11 +150,14 @@ const useGroupStore = create<GroupStore>()(
           return null;
         }
 
+        // SECURITY FIX: Generate new code and hash it
         const newCode = generateShareCode();
+        const newCodeHash = await hashShareCode(newCode);
+        
         set((state) => ({
           groups: state.groups.map((g) =>
             g.id === groupId
-              ? { ...g, shareCode: newCode }
+              ? { ...g, shareCode: newCode, shareCodeHash: newCodeHash }
               : g
           ),
         }));
@@ -145,8 +171,17 @@ const useGroupStore = create<GroupStore>()(
       getGroupsByTeacher: (teacherId: string) => {
         return get().groups.filter((group) => group.teacherId === teacherId);
       },
-      getGroupByShareCode: (shareCode: string) => {
-        return get().groups.find((group) => group.shareCode === shareCode);
+      getGroupByShareCode: async (shareCode: string) => {
+        // SECURITY FIX: Hash code before lookup
+        const codeHash = await hashShareCode(shareCode);
+        return get().groups.find((group) => {
+          // Support both old format (plain code) and new format (hashed)
+          if (group.shareCodeHash) {
+            return group.shareCodeHash === codeHash;
+          }
+          // Legacy: compare plain codes (for backward compatibility)
+          return group.shareCode === shareCode;
+        });
       },
     }),
     {

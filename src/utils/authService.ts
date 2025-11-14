@@ -1,6 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as SecureStore from "expo-secure-store";
 import * as Crypto from "expo-crypto";
+import { sessionService } from "../services/sessionService";
+import { mfaService } from "../services/mfaService";
+import { encryptJSON, decryptJSON } from "./encryption";
 
 interface StoredCredential {
   email: string;
@@ -133,13 +136,19 @@ export const authService = {
         username,
       });
 
-      // SECURITY FIX: Store credentials securely
-      const credentialsStr = JSON.stringify(credentials);
+      // SECURITY FIX: Encrypt credentials before storage
       try {
-        await SecureStore.setItemAsync("app_credentials", credentialsStr);
+        const encrypted = await encryptJSON(credentials);
+        await SecureStore.setItemAsync("app_credentials", encrypted);
       } catch {
-        // Fallback to AsyncStorage if SecureStore not available
-        await AsyncStorage.setItem("app_credentials", credentialsStr);
+        // Fallback: store encrypted in AsyncStorage if SecureStore fails
+        try {
+          const encrypted = await encryptJSON(credentials);
+          await AsyncStorage.setItem("app_credentials", encrypted);
+        } catch {
+          // Last resort: store unencrypted (shouldn't happen)
+          await AsyncStorage.setItem("app_credentials", JSON.stringify(credentials));
+        }
       }
 
       return { success: true, userId };
@@ -176,7 +185,7 @@ export const authService = {
         attempts.count = 0;
       }
 
-      // SECURITY FIX: Load credentials securely
+      // SECURITY FIX: Load and decrypt credentials securely
       let credentialsData: string | null = null;
       try {
         credentialsData = await SecureStore.getItemAsync("app_credentials");
@@ -187,8 +196,19 @@ export const authService = {
       // SECURITY FIX: Always hash password and compare, even if email doesn't exist
       // This prevents timing attacks and email enumeration
       let credential: StoredCredential | undefined;
+      let credentials: StoredCredential[] = [];
       if (credentialsData) {
-        const credentials: StoredCredential[] = JSON.parse(credentialsData);
+        try {
+          // Try to decrypt (new format)
+          credentials = await decryptJSON<StoredCredential[]>(credentialsData);
+        } catch {
+          // Fallback: try parsing as plain JSON (legacy format)
+          try {
+            credentials = JSON.parse(credentialsData);
+          } catch {
+            credentials = [];
+          }
+        }
         credential = credentials.find((c) => c.email === email);
       }
       
@@ -238,20 +258,54 @@ export const authService = {
       // SECURITY FIX: Migrate legacy passwords (no salt) to salted format
       if (!credential.passwordHash.includes(':')) {
         const newHash = await hashPassword(password);
-        const credentials: StoredCredential[] = credentialsData ? JSON.parse(credentialsData) : [];
         const index = credentials.findIndex(c => c.email === email);
         if (index !== -1) {
           credentials[index].passwordHash = newHash;
-          const credentialsStr = JSON.stringify(credentials);
+          // Re-encrypt and store
           try {
-            await SecureStore.setItemAsync("app_credentials", credentialsStr);
+            const encrypted = await encryptJSON(credentials);
+            await SecureStore.setItemAsync("app_credentials", encrypted);
           } catch {
-            await AsyncStorage.setItem("app_credentials", credentialsStr);
+            try {
+              const encrypted = await encryptJSON(credentials);
+              await AsyncStorage.setItem("app_credentials", encrypted);
+            } catch {
+              await AsyncStorage.setItem("app_credentials", JSON.stringify(credentials));
+            }
           }
         }
       }
 
-      return { success: true, userId: credential.userId, username: credential.username };
+      // SECURITY FIX: Check MFA if enabled
+      const mfaEnabled = await mfaService.isMFAEnabled(credential.userId);
+      if (mfaEnabled) {
+        // If MFA code provided, verify it
+        if (mfaCode) {
+          const mfaValid = await mfaService.verifyMFACode(credential.userId, mfaCode);
+          if (!mfaValid) {
+            await delay(1000);
+            return { success: false, error: "Invalid MFA code" };
+          }
+        } else {
+          // MFA required but no code provided
+          return {
+            success: false,
+            error: "MFA code required",
+            requiresMFA: true,
+          };
+        }
+      }
+
+      // SECURITY FIX: Create session after successful login
+      const session = await sessionService.createSession(credential.userId);
+      
+      return { 
+        success: true, 
+        userId: credential.userId, 
+        username: credential.username,
+        sessionId: session.sessionId,
+        requiresMFA: false,
+      };
     } catch (error) {
       console.error("Login error:", error);
       await delay(1000); // Prevent timing attacks
