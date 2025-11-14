@@ -39,17 +39,20 @@ const HomeScreen = () => {
   const stats = useStatsStore((s) => s.stats);
   const addStudyMinutes = useStatsStore((s) => s.addStudyMinutes);
   
+  // OPTIMIZATION: Get tasks count to trigger recalculation when tasks change
+  const tasksCount = useTaskStore((s) => s.tasks.length);
+  
   // Memoize today's tasks to prevent unnecessary recalculations
   const todayTasks = useMemo(() => {
     if (!user?.id) return [];
     return getTodayTasks(user.id);
-  }, [user?.id, getTodayTasks]);
+  }, [user?.id, getTodayTasks, tasksCount]);
   
   // Memoize week tasks
   const weekTasks = useMemo(() => {
     if (!user?.id) return [];
     return getWeekTasks(user.id);
-  }, [user?.id, getWeekTasks]);
+  }, [user?.id, getWeekTasks, tasksCount]);
 
   // Timer store
   const timerMinutes = useTimerStore((s) => s.minutes);

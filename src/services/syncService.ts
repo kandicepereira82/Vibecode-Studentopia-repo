@@ -17,6 +17,8 @@ class SyncService {
   private isSyncing = false;
   private syncListeners: Set<(syncing: boolean) => void> = new Set();
   private connectivityUnsubscribe: (() => void) | null = null;
+  // OPTIMIZATION: Promise-based lock to prevent race conditions
+  private syncPromise: Promise<void> | null = null;
 
   /**
    * Initialize sync service and listen for connectivity
@@ -67,12 +69,32 @@ class SyncService {
 
   /**
    * Process all queued actions
+   * OPTIMIZATION: Uses promise-based lock to prevent concurrent execution
    */
   async processSyncQueue(): Promise<void> {
-    if (this.isSyncing || this.syncQueue.length === 0) {
+    // If already processing, return the existing promise
+    if (this.syncPromise) {
+      return this.syncPromise;
+    }
+
+    if (this.syncQueue.length === 0) {
       return;
     }
 
+    // Create and store the promise
+    this.syncPromise = this._processSyncQueueInternal();
+
+    try {
+      await this.syncPromise;
+    } finally {
+      this.syncPromise = null;
+    }
+  }
+
+  /**
+   * Internal method that does the actual processing
+   */
+  private async _processSyncQueueInternal(): Promise<void> {
     this.isSyncing = true;
     this.notifySyncListeners(true);
 

@@ -201,7 +201,8 @@ const MindfulnessScreen = () => {
       clearInterval(interval);
       musicService.unload();
     };
-  }, []);
+    // OPTIMIZATION: Include musicVolume and isMusicLooping - they're set in effect but should be in deps
+  }, [musicVolume, isMusicLooping]);
 
   // Update music service volume and looping when changed
   useEffect(() => {

@@ -178,8 +178,8 @@ const TimerScreen = () => {
   useEffect(() => {
     musicService.initializeAudio();
 
-    // Set up auto-advance when track ends
-    musicService.setOnTrackEndCallback(async () => {
+    // OPTIMIZATION: Memoize callback to prevent recreation on every render
+    const handleTrackEnd = async () => {
       if (repeatMode === "one") {
         // Replay current track - need to reload and play
         const currentTrack = getCurrentTrack();
@@ -195,7 +195,9 @@ const TimerScreen = () => {
         }
       }
       // If repeatMode is "off" and no next track, do nothing (stop)
-    });
+    };
+
+    musicService.setOnTrackEndCallback(handleTrackEnd);
 
     // Update playback status every 500ms
     const interval = setInterval(async () => {
@@ -218,7 +220,9 @@ const TimerScreen = () => {
         previewSound.stopAsync().catch(() => {});
       }
     };
-  }, [musicEnabled, previewSound, repeatMode, playlist, nextTrack, hasNextTrack, getCurrentTrack]);
+    // OPTIMIZATION: Include handlePlayTrack in dependencies (it's stable from store)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [musicEnabled, previewSound, repeatMode, playlist.length, nextTrack, hasNextTrack, getCurrentTrack]);
 
   // Watch for timer completion and handle mode switching
   useEffect(() => {

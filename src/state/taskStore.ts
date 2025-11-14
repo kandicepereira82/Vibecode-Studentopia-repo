@@ -18,7 +18,15 @@ interface TaskStore {
   getTodayTasks: (userId: string) => Task[];
   getWeekTasks: (userId: string) => Task[];
   getCompletedTasksCount: (startDate: Date, endDate: Date, userId: string) => number;
+  // OPTIMIZATION: Cleanup method for setTimeout tracking
+  cleanup: () => void;
 }
+
+// OPTIMIZATION: Cache for task queries and setTimeout tracking
+let tasksByDateCache: Map<string, Task[]> = new Map();
+let tasksByDateCacheKey: string | null = null;
+let lastTasksLength: number = 0;
+const syncTimeouts: Set<NodeJS.Timeout> = new Set();
 
 const useTaskStore = create<TaskStore>()(
   persist(
@@ -31,10 +39,18 @@ const useTaskStore = create<TaskStore>()(
           createdAt: new Date(),
           status: "pending",
         };
-        set((state) => ({ tasks: [...state.tasks, newTask] }));
+        set((state) => {
+          // OPTIMIZATION: Invalidate cache when tasks change
+          tasksByDateCache.clear();
+          tasksByDateCacheKey = null;
+          lastTasksLength = state.tasks.length + 1;
+          return { tasks: [...state.tasks, newTask] };
+        });
 
+        // OPTIMIZATION: Track setTimeout for cleanup
         // Automatically sync to calendar if enabled
-        setTimeout(async () => {
+        const timeoutId = setTimeout(async () => {
+          syncTimeouts.delete(timeoutId);
           try {
             const user = useUserStore.getState().user;
             if (!user) return;
@@ -74,6 +90,7 @@ const useTaskStore = create<TaskStore>()(
             console.error("Error syncing task to calendar:", error);
           }
         }, 0);
+        syncTimeouts.add(timeoutId);
       },
       updateTask: (id, userId, updates) => {
         const task = get().tasks.find((t) => t.id === id);
@@ -88,15 +105,22 @@ const useTaskStore = create<TaskStore>()(
         // SECURITY: Prevent changing userId or groupId through updates
         const { userId: _, groupId: __, ...safeUpdates } = updates;
 
-        set((state) => ({
-          tasks: state.tasks.map((task) =>
-            task.id === id ? { ...task, ...safeUpdates } : task,
-          ),
-        }));
+        set((state) => {
+          // OPTIMIZATION: Invalidate cache when tasks change
+          tasksByDateCache.clear();
+          tasksByDateCacheKey = null;
+          return {
+            tasks: state.tasks.map((task) =>
+              task.id === id ? { ...task, ...safeUpdates } : task,
+            ),
+          };
+        });
 
+        // OPTIMIZATION: Track setTimeout for cleanup
         // Automatically sync to calendar if enabled and task details changed
         if (safeUpdates.title || safeUpdates.description || safeUpdates.dueDate) {
-          setTimeout(async () => {
+          const timeoutId = setTimeout(async () => {
+            syncTimeouts.delete(timeoutId);
             try {
               const user = useUserStore.getState().user;
               if (!user) return;
@@ -138,6 +162,7 @@ const useTaskStore = create<TaskStore>()(
               console.error("Error syncing updated task to calendar:", error);
             }
           }, 0);
+          syncTimeouts.add(timeoutId);
         }
 
         return true;
@@ -152,20 +177,28 @@ const useTaskStore = create<TaskStore>()(
           return false;
         }
 
+        // OPTIMIZATION: Track setTimeout for cleanup
         // Delete calendar event if exists
         if (task.calendarEventId) {
-          setTimeout(async () => {
+          const timeoutId = setTimeout(async () => {
+            syncTimeouts.delete(timeoutId);
             try {
               await deleteCalendarEvent(task.calendarEventId!);
             } catch (error) {
               console.error("Error deleting calendar event:", error);
             }
           }, 0);
+          syncTimeouts.add(timeoutId);
         }
 
-        set((state) => ({
-          tasks: state.tasks.filter((task) => task.id !== id),
-        }));
+        set((state) => {
+          // OPTIMIZATION: Invalidate cache when tasks change
+          tasksByDateCache.clear();
+          tasksByDateCacheKey = null;
+          return {
+            tasks: state.tasks.filter((task) => task.id !== id),
+          };
+        });
         return true;
       },
       toggleTaskStatus: (id) => {
@@ -175,17 +208,22 @@ const useTaskStore = create<TaskStore>()(
         const wasCompleted = task.status === "completed";
         const willBeCompleted = !wasCompleted;
 
-        set((state) => ({
-          tasks: state.tasks.map((t) =>
-            t.id === id
-              ? {
-                  ...t,
-                  status: t.status === "pending" ? "completed" : "pending",
-                  completedAt: t.status === "pending" ? new Date() : undefined,
-                }
-              : t,
-          ),
-        }));
+        set((state) => {
+          // OPTIMIZATION: Invalidate cache when tasks change
+          tasksByDateCache.clear();
+          tasksByDateCacheKey = null;
+          return {
+            tasks: state.tasks.map((t) =>
+              t.id === id
+                ? {
+                    ...t,
+                    status: t.status === "pending" ? "completed" : "pending",
+                    completedAt: t.status === "pending" ? new Date() : undefined,
+                  }
+                : t,
+            ),
+          };
+        });
 
         // Add to activity feed when task is completed
         if (willBeCompleted) {
@@ -204,17 +242,35 @@ const useTaskStore = create<TaskStore>()(
       },
       getTasksByDate: (date: Date, userId: string) => {
         const tasks = get().tasks;
-        return tasks.filter((task) => {
+        
+        // OPTIMIZATION: Check if cache is still valid
+        const cacheKey = `${userId}-${date.toISOString().split('T')[0]}`;
+        if (tasksByDateCacheKey === cacheKey && 
+            tasksByDateCache.has(cacheKey) && 
+            tasks.length === lastTasksLength) {
+          return tasksByDateCache.get(cacheKey)!;
+        }
+        
+        // Pre-compute date boundaries for efficient comparison
+        const startOfDay = new Date(date);
+        startOfDay.setHours(0, 0, 0, 0);
+        const endOfDay = new Date(date);
+        endOfDay.setHours(23, 59, 59, 999);
+        
+        const result = tasks.filter((task) => {
           // SECURITY: Filter by userId (required)
           if (task.userId !== userId) return false;
 
           const taskDate = new Date(task.dueDate);
-          return (
-            taskDate.getDate() === date.getDate() &&
-            taskDate.getMonth() === date.getMonth() &&
-            taskDate.getFullYear() === date.getFullYear()
-          );
+          return taskDate >= startOfDay && taskDate <= endOfDay;
         });
+        
+        // Cache result
+        tasksByDateCache.set(cacheKey, result);
+        tasksByDateCacheKey = cacheKey;
+        lastTasksLength = tasks.length;
+        
+        return result;
       },
       getTasksByCategory: (category: TaskCategory, userId: string) => {
         return get().tasks.filter((task) => {
@@ -252,6 +308,14 @@ const useTaskStore = create<TaskStore>()(
           const completedDate = new Date(task.completedAt);
           return completedDate >= startDate && completedDate <= endDate;
         }).length;
+      },
+      
+      // OPTIMIZATION: Cleanup method for setTimeout tracking
+      cleanup: () => {
+        syncTimeouts.forEach(timeout => clearTimeout(timeout));
+        syncTimeouts.clear();
+        tasksByDateCache.clear();
+        tasksByDateCacheKey = null;
       },
     }),
     {

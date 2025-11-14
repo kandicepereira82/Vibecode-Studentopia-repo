@@ -74,8 +74,9 @@ class RealtimeSyncService {
     this.isConnecting = true;
 
     try {
-      const token = await getAuthToken();
-      const url = `${WS_URL}?userId=${userId}&token=${token}`;
+      // OPTIMIZATION: Don't put token in URL (security/privacy concern)
+      // Send token in initial message after connection instead
+      const url = `${WS_URL}?userId=${userId}`;
 
       this.ws = new WebSocket(url);
 
@@ -89,7 +90,7 @@ class RealtimeSyncService {
         }
       }, 10000);
 
-      this.ws.onopen = () => {
+      this.ws.onopen = async () => {
         console.log("WebSocket connected");
         if (this.connectionTimeout) {
           clearTimeout(this.connectionTimeout);
@@ -98,6 +99,21 @@ class RealtimeSyncService {
         this.isConnecting = false;
         this.reconnectAttempts = 0;
         this.reconnectDelay = 1000;
+        
+        // OPTIMIZATION: Send authentication token in initial message instead of URL
+        try {
+          const token = await getAuthToken();
+          if (token && this.ws?.readyState === WebSocket.OPEN) {
+            this.ws.send(JSON.stringify({
+              type: "auth",
+              token,
+              userId,
+            }));
+          }
+        } catch (error) {
+          console.error("Failed to send auth token:", error);
+        }
+        
         this.startHeartbeat();
 
         // Notify listeners

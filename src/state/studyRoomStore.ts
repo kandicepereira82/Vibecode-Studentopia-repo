@@ -4,6 +4,7 @@ import { presenceService } from "../services/presenceService";
 
 interface StudyRoomStore {
   rooms: StudyRoom[];
+  roomsById: Map<string, StudyRoom>; // OPTIMIZATION: Map index for O(1) lookups
   currentRoomId: string | null;
 
   // Room Management
@@ -47,8 +48,12 @@ interface StudyRoomStore {
   getCurrentRoom: () => StudyRoom | undefined;
 }
 
+// OPTIMIZATION: Map index for O(1) lookups (not persisted, rebuilt on init)
+let roomsByIdIndex: Map<string, StudyRoom> = new Map();
+
 const useStudyRoomStore = create<StudyRoomStore>((set, get) => ({
   rooms: [],
+  roomsById: roomsByIdIndex, // OPTIMIZATION: Map index for O(1) lookups
   currentRoomId: null,
 
   createRoom: (hostUserId, hostUsername, roomName, isPrivate, invitedFriendIds = []) => {
@@ -77,7 +82,14 @@ const useStudyRoomStore = create<StudyRoomStore>((set, get) => ({
       maxParticipants: 10,
     };
 
-    set((state) => ({ rooms: [...state.rooms, newRoom] }));
+    set((state) => {
+      // OPTIMIZATION: Update Map index
+      roomsByIdIndex.set(newRoom.id, newRoom);
+      return {
+        rooms: [...state.rooms, newRoom],
+        roomsById: roomsByIdIndex,
+      };
+    });
 
     // Update presence
     presenceService.joinStudyRoom(hostUserId, newRoom.id);
@@ -86,7 +98,8 @@ const useStudyRoomStore = create<StudyRoomStore>((set, get) => ({
   },
 
   joinRoom: (roomId, userId, username, animal) => {
-    const room = get().rooms.find((r) => r.id === roomId);
+    // OPTIMIZATION: O(1) lookup instead of O(n) find
+    const room = roomsByIdIndex.get(roomId);
     if (!room) return false;
 
     // Check if room is full
@@ -112,8 +125,8 @@ const useStudyRoomStore = create<StudyRoomStore>((set, get) => ({
       isHost: false,
     };
 
-    set((state) => ({
-      rooms: state.rooms.map((r) =>
+    set((state) => {
+      const updatedRooms = state.rooms.map((r) =>
         r.id === roomId
           ? {
               ...r,
@@ -121,8 +134,17 @@ const useStudyRoomStore = create<StudyRoomStore>((set, get) => ({
               participants: [...r.participants, newParticipant],
             }
           : r
-      ),
-    }));
+      );
+      // OPTIMIZATION: Update Map index
+      const updatedRoom = updatedRooms.find(r => r.id === roomId);
+      if (updatedRoom) {
+        roomsByIdIndex.set(roomId, updatedRoom);
+      }
+      return {
+        rooms: updatedRooms,
+        roomsById: roomsByIdIndex,
+      };
+    });
 
     // Update presence
     presenceService.joinStudyRoom(userId, roomId);
@@ -131,14 +153,20 @@ const useStudyRoomStore = create<StudyRoomStore>((set, get) => ({
   },
 
   leaveRoom: (roomId, userId) => {
-    const room = get().rooms.find((r) => r.id === roomId);
+    // OPTIMIZATION: O(1) lookup instead of O(n) find
+    const room = roomsByIdIndex.get(roomId);
     if (!room) return;
 
     // If host leaves, delete the room
     if (room.hostUserId === userId) {
-      set((state) => ({
-        rooms: state.rooms.filter((r) => r.id !== roomId),
-      }));
+      set((state) => {
+        // OPTIMIZATION: Update Map index
+        roomsByIdIndex.delete(roomId);
+        return {
+          rooms: state.rooms.filter((r) => r.id !== roomId),
+          roomsById: roomsByIdIndex,
+        };
+      });
 
       // Update presence for all participants
       room.participantIds.forEach((pId) => {
@@ -149,8 +177,8 @@ const useStudyRoomStore = create<StudyRoomStore>((set, get) => ({
     }
 
     // Remove participant
-    set((state) => ({
-      rooms: state.rooms.map((r) =>
+    set((state) => {
+      const updatedRooms = state.rooms.map((r) =>
         r.id === roomId
           ? {
               ...r,
@@ -158,8 +186,17 @@ const useStudyRoomStore = create<StudyRoomStore>((set, get) => ({
               participants: r.participants.filter((p) => p.userId !== userId),
             }
           : r
-      ),
-    }));
+      );
+      // OPTIMIZATION: Update Map index
+      const updatedRoom = updatedRooms.find(r => r.id === roomId);
+      if (updatedRoom) {
+        roomsByIdIndex.set(roomId, updatedRoom);
+      }
+      return {
+        rooms: updatedRooms,
+        roomsById: roomsByIdIndex,
+      };
+    });
 
     // Update presence
     presenceService.leaveStudyRoom(userId);
@@ -171,12 +208,19 @@ const useStudyRoomStore = create<StudyRoomStore>((set, get) => ({
   },
 
   deleteRoom: (roomId, userId) => {
-    const room = get().rooms.find((r) => r.id === roomId);
+    // OPTIMIZATION: O(1) lookup instead of O(n) find
+    const room = roomsByIdIndex.get(roomId);
     if (!room || room.hostUserId !== userId) return false;
 
-    set((state) => ({
-      rooms: state.rooms.filter((r) => r.id !== roomId),
-    }));
+    set((state) => {
+      // OPTIMIZATION: Update Map index
+      const newRoomsById = new Map(state.roomsById);
+      newRoomsById.delete(roomId);
+      return {
+        rooms: state.rooms.filter((r) => r.id !== roomId),
+        roomsById: newRoomsById,
+      };
+    });
 
     // Update presence for all participants
     room.participantIds.forEach((pId) => {
@@ -187,41 +231,62 @@ const useStudyRoomStore = create<StudyRoomStore>((set, get) => ({
   },
 
   startTimer: (roomId, userId) => {
-    const room = get().rooms.find((r) => r.id === roomId);
+    // OPTIMIZATION: O(1) lookup instead of O(n) find
+    const room = roomsByIdIndex.get(roomId);
     if (!room || room.hostUserId !== userId) return false;
 
-    set((state) => ({
-      rooms: state.rooms.map((r) =>
+    set((state) => {
+      const updatedRooms = state.rooms.map((r) =>
         r.id === roomId
           ? { ...r, timerRunning: true, timerStartedAt: new Date() }
           : r
-      ),
-    }));
+      );
+      // OPTIMIZATION: Update Map index
+      const updatedRoom = updatedRooms.find(r => r.id === roomId);
+      if (updatedRoom) {
+        roomsByIdIndex.set(roomId, updatedRoom);
+      }
+      return {
+        rooms: updatedRooms,
+        roomsById: roomsByIdIndex,
+      };
+    });
 
     return true;
   },
 
   pauseTimer: (roomId, userId) => {
-    const room = get().rooms.find((r) => r.id === roomId);
+    // OPTIMIZATION: O(1) lookup instead of O(n) find
+    const room = roomsByIdIndex.get(roomId);
     if (!room || room.hostUserId !== userId) return false;
 
-    set((state) => ({
-      rooms: state.rooms.map((r) =>
+    set((state) => {
+      const updatedRooms = state.rooms.map((r) =>
         r.id === roomId ? { ...r, timerRunning: false } : r
-      ),
-    }));
+      );
+      // OPTIMIZATION: Update Map index
+      const updatedRoom = updatedRooms.find(r => r.id === roomId);
+      if (updatedRoom) {
+        roomsByIdIndex.set(roomId, updatedRoom);
+      }
+      return {
+        rooms: updatedRooms,
+        roomsById: roomsByIdIndex,
+      };
+    });
 
     return true;
   },
 
   stopTimer: (roomId, userId) => {
-    const room = get().rooms.find((r) => r.id === roomId);
+    // OPTIMIZATION: O(1) lookup instead of O(n) find
+    const room = roomsByIdIndex.get(roomId);
     if (!room || room.hostUserId !== userId) return false;
 
     const duration = room.timerMode === "study" ? 25 : 5;
 
-    set((state) => ({
-      rooms: state.rooms.map((r) =>
+    set((state) => {
+      const updatedRooms = state.rooms.map((r) =>
         r.id === roomId
           ? {
               ...r,
@@ -231,20 +296,30 @@ const useStudyRoomStore = create<StudyRoomStore>((set, get) => ({
               timerStartedAt: undefined,
             }
           : r
-      ),
-    }));
+      );
+      // OPTIMIZATION: Update Map index
+      const updatedRoom = updatedRooms.find(r => r.id === roomId);
+      if (updatedRoom) {
+        roomsByIdIndex.set(roomId, updatedRoom);
+      }
+      return {
+        rooms: updatedRooms,
+        roomsById: roomsByIdIndex,
+      };
+    });
 
     return true;
   },
 
   switchMode: (roomId, userId, mode) => {
-    const room = get().rooms.find((r) => r.id === roomId);
+    // OPTIMIZATION: O(1) lookup instead of O(n) find
+    const room = roomsByIdIndex.get(roomId);
     if (!room || room.hostUserId !== userId) return false;
 
     const duration = mode === "study" ? 25 : 5;
 
-    set((state) => ({
-      rooms: state.rooms.map((r) =>
+    set((state) => {
+      const updatedRooms = state.rooms.map((r) =>
         r.id === roomId
           ? {
               ...r,
@@ -254,66 +329,106 @@ const useStudyRoomStore = create<StudyRoomStore>((set, get) => ({
               timerRunning: false,
             }
           : r
-      ),
-    }));
+      );
+      // OPTIMIZATION: Update Map index
+      const updatedRoom = updatedRooms.find(r => r.id === roomId);
+      if (updatedRoom) {
+        roomsByIdIndex.set(roomId, updatedRoom);
+      }
+      return {
+        rooms: updatedRooms,
+        roomsById: roomsByIdIndex,
+      };
+    });
 
     return true;
   },
 
   setTimerDuration: (roomId, userId, minutes, seconds) => {
-    const room = get().rooms.find((r) => r.id === roomId);
+    // OPTIMIZATION: O(1) lookup instead of O(n) find
+    const room = roomsByIdIndex.get(roomId);
     if (!room || room.hostUserId !== userId) return false;
 
-    set((state) => ({
-      rooms: state.rooms.map((r) =>
+    set((state) => {
+      const updatedRooms = state.rooms.map((r) =>
         r.id === roomId
           ? { ...r, timerMinutes: minutes, timerSeconds: seconds }
           : r
-      ),
-    }));
+      );
+      // OPTIMIZATION: Update Map index
+      const updatedRoom = updatedRooms.find(r => r.id === roomId);
+      if (updatedRoom) {
+        roomsByIdIndex.set(roomId, updatedRoom);
+      }
+      return {
+        rooms: updatedRooms,
+        roomsById: roomsByIdIndex,
+      };
+    });
 
     return true;
   },
 
   inviteFriend: (roomId, userId, friendUserId) => {
-    const room = get().rooms.find((r) => r.id === roomId);
+    // OPTIMIZATION: O(1) lookup instead of O(n) find
+    const room = roomsByIdIndex.get(roomId);
     if (!room || room.hostUserId !== userId) return false;
     if (room.invitedFriendIds.includes(friendUserId)) return false;
 
-    set((state) => ({
-      rooms: state.rooms.map((r) =>
+    set((state) => {
+      const updatedRooms = state.rooms.map((r) =>
         r.id === roomId
           ? {
               ...r,
               invitedFriendIds: [...r.invitedFriendIds, friendUserId],
             }
           : r
-      ),
-    }));
+      );
+      // OPTIMIZATION: Update Map index
+      const updatedRoom = updatedRooms.find(r => r.id === roomId);
+      if (updatedRoom) {
+        roomsByIdIndex.set(roomId, updatedRoom);
+      }
+      return {
+        rooms: updatedRooms,
+        roomsById: roomsByIdIndex,
+      };
+    });
 
     return true;
   },
 
   removeInvite: (roomId, userId, friendUserId) => {
-    const room = get().rooms.find((r) => r.id === roomId);
+    // OPTIMIZATION: O(1) lookup instead of O(n) find
+    const room = roomsByIdIndex.get(roomId);
     if (!room || room.hostUserId !== userId) return false;
 
-    set((state) => ({
-      rooms: state.rooms.map((r) =>
+    set((state) => {
+      const updatedRooms = state.rooms.map((r) =>
         r.id === roomId
           ? {
               ...r,
               invitedFriendIds: r.invitedFriendIds.filter((id) => id !== friendUserId),
             }
           : r
-      ),
-    }));
+      );
+      // OPTIMIZATION: Update Map index
+      const updatedRoom = updatedRooms.find(r => r.id === roomId);
+      if (updatedRoom) {
+        roomsByIdIndex.set(roomId, updatedRoom);
+      }
+      return {
+        rooms: updatedRooms,
+        roomsById: roomsByIdIndex,
+      };
+    });
 
     return true;
   },
 
   getRoom: (roomId) => {
-    return get().rooms.find((r) => r.id === roomId);
+    // OPTIMIZATION: O(1) lookup instead of O(n) find
+    return roomsByIdIndex.get(roomId);
   },
 
   getUserRooms: (userId) => {
@@ -329,12 +444,14 @@ const useStudyRoomStore = create<StudyRoomStore>((set, get) => ({
   },
 
   isUserInRoom: (roomId, userId) => {
-    const room = get().rooms.find((r) => r.id === roomId);
+    // OPTIMIZATION: O(1) lookup instead of O(n) find
+    const room = roomsByIdIndex.get(roomId);
     return room ? room.participantIds.includes(userId) : false;
   },
 
   isHost: (roomId, userId) => {
-    const room = get().rooms.find((r) => r.id === roomId);
+    // OPTIMIZATION: O(1) lookup instead of O(n) find
+    const room = roomsByIdIndex.get(roomId);
     return room ? room.hostUserId === userId : false;
   },
 
@@ -343,10 +460,20 @@ const useStudyRoomStore = create<StudyRoomStore>((set, get) => ({
   },
 
   getCurrentRoom: () => {
-    const { currentRoomId, rooms } = get();
+    // OPTIMIZATION: O(1) lookup instead of O(n) find
+    const { currentRoomId } = get();
     if (!currentRoomId) return undefined;
-    return rooms.find((r) => r.id === currentRoomId);
+    return roomsByIdIndex.get(currentRoomId);
   },
 }));
+
+// OPTIMIZATION: Rebuild index when rooms array changes
+useStudyRoomStore.subscribe(
+  (state) => state.rooms,
+  (rooms) => {
+    roomsByIdIndex.clear();
+    rooms.forEach(room => roomsByIdIndex.set(room.id, room));
+  }
+);
 
 export default useStudyRoomStore;

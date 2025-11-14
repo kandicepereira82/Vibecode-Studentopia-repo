@@ -28,20 +28,47 @@ export interface GroupAnalytics {
 
 /**
  * Calculate comprehensive analytics for a group
+ * OPTIMIZATION: Single-pass algorithm (O(n) instead of O(n²))
  */
 export function calculateGroupAnalytics(
   group: Group,
   tasks: Task[],
   allUsers?: User[]
 ): GroupAnalytics {
-  // Get all tasks assigned to this group
-  const groupTasks = tasks.filter((task) => task.groupId === group.id);
-  const totalTasksAssigned = groupTasks.length;
+  // OPTIMIZATION: Use Map for O(1) user lookups
+  const userMap = new Map<string, User>();
+  if (allUsers) {
+    allUsers.forEach(user => userMap.set(user.id, user));
+  }
 
-  // Calculate per-student progress
+  // OPTIMIZATION: Single pass through tasks - group by userId
+  const taskMap = new Map<string, Task[]>();
+  const completedTaskMap = new Map<string, Task[]>();
+  
+  tasks.forEach(task => {
+    if (task.groupId === group.id) {
+      // Group all tasks by userId
+      if (!taskMap.has(task.userId)) {
+        taskMap.set(task.userId, []);
+      }
+      taskMap.get(task.userId)!.push(task);
+      
+      // Group completed tasks separately
+      if (task.status === "completed" && task.completedAt) {
+        if (!completedTaskMap.has(task.userId)) {
+          completedTaskMap.set(task.userId, []);
+        }
+        completedTaskMap.get(task.userId)!.push(task);
+      }
+    }
+  });
+
+  const totalTasksAssigned = Array.from(taskMap.values()).reduce((sum, tasks) => sum + tasks.length, 0);
+
+  // OPTIMIZATION: Calculate per-student progress in single pass
   const studentProgress: StudentProgress[] = group.studentIds.map((studentId) => {
-    const studentTasks = groupTasks.filter((task) => task.userId === studentId);
-    const completedTasks = studentTasks.filter((task) => task.status === "completed");
+    const studentTasks = taskMap.get(studentId) || [];
+    const completedTasks = completedTaskMap.get(studentId) || [];
 
     const tasksCompleted = completedTasks.length;
     const totalTasks = studentTasks.length;
@@ -50,15 +77,22 @@ export function calculateGroupAnalytics(
     // Calculate streak (consecutive days with completed tasks)
     const streak = calculateStreak(completedTasks);
 
-    // Find last active date
-    const lastActive = completedTasks.length > 0
-      ? completedTasks.sort((a, b) =>
-          new Date(b.completedAt!).getTime() - new Date(a.completedAt!).getTime()
-        )[0].completedAt
-      : undefined;
+    // OPTIMIZATION: Find last active date without sorting (single pass)
+    let lastActive: Date | undefined;
+    let lastActiveTime = 0;
+    completedTasks.forEach(task => {
+      if (task.completedAt) {
+        const time = new Date(task.completedAt).getTime();
+        if (time > lastActiveTime) {
+          lastActiveTime = time;
+          lastActive = task.completedAt;
+        }
+      }
+    });
 
-    // Try to find username from allUsers
-    const username = allUsers?.find((u) => u.id === studentId)?.username || `Student ${studentId.slice(0, 6)}`;
+    // OPTIMIZATION: O(1) user lookup instead of O(n) find
+    const user = userMap.get(studentId);
+    const username = user?.username || `Student ${studentId.slice(0, 6)}`;
 
     return {
       userId: studentId,
@@ -115,43 +149,58 @@ export function calculateGroupAnalytics(
 
 /**
  * Calculate streak of consecutive days with completed tasks
+ * OPTIMIZATION: Use Set for unique dates, then sort only unique dates (not all tasks)
  */
 function calculateStreak(completedTasks: Task[]): number {
   if (completedTasks.length === 0) return 0;
 
-  // Sort tasks by completion date (most recent first)
-  const sorted = [...completedTasks].sort(
-    (a, b) => new Date(b.completedAt!).getTime() - new Date(a.completedAt!).getTime()
-  );
+  // OPTIMIZATION: Collect unique dates in single pass, then sort only dates
+  const dateSet = new Set<string>();
+  let mostRecentTime = 0;
+  
+  completedTasks.forEach(task => {
+    if (task.completedAt) {
+      const date = new Date(task.completedAt);
+      date.setHours(0, 0, 0, 0);
+      const dateStr = date.toISOString();
+      dateSet.add(dateStr);
+      
+      const time = date.getTime();
+      if (time > mostRecentTime) {
+        mostRecentTime = time;
+      }
+    }
+  });
+
+  // Sort unique dates (much smaller array than tasks)
+  const sortedDates = Array.from(dateSet)
+    .map(d => new Date(d).getTime())
+    .sort((a, b) => b - a); // Most recent first
+
+  if (sortedDates.length === 0) return 0;
 
   let streak = 1;
-  let currentDate = new Date(sorted[0].completedAt!);
-  currentDate.setHours(0, 0, 0, 0);
+  let currentDate = sortedDates[0];
 
-  for (let i = 1; i < sorted.length; i++) {
-    const taskDate = new Date(sorted[i].completedAt!);
-    taskDate.setHours(0, 0, 0, 0);
-
+  for (let i = 1; i < sortedDates.length; i++) {
     const daysDiff = Math.floor(
-      (currentDate.getTime() - taskDate.getTime()) / (1000 * 60 * 60 * 24)
+      (currentDate - sortedDates[i]) / (1000 * 60 * 60 * 24)
     );
 
     if (daysDiff === 1) {
       streak++;
-      currentDate = taskDate;
+      currentDate = sortedDates[i];
     } else if (daysDiff > 1) {
       break; // Streak broken
     }
-    // If daysDiff === 0, same day, continue checking
+    // If daysDiff === 0, same day (shouldn't happen with Set, but safe)
   }
 
   // Check if streak is current (today or yesterday)
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const mostRecentDate = new Date(sorted[0].completedAt!);
-  mostRecentDate.setHours(0, 0, 0, 0);
   const daysSinceLastTask = Math.floor(
-    (today.getTime() - mostRecentDate.getTime()) / (1000 * 60 * 60 * 24)
+    (today.getTime() - sortedDates[0]) / (1000 * 60 * 60 * 24)
   );
 
   // If last task was more than 1 day ago, streak is broken
