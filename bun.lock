@@ -67,7 +67,6 @@
         "expo-manifests": "~1.0.8",
         "expo-media-library": "~18.2.0",
         "expo-network": "~8.0.7",
-        "expo-network-addons": "~0.7.2",
         "expo-notifications": "~0.32.12",
         "expo-secure-store": "~15.0.7",
         "expo-sensors": "~15.0.7",
@@ -1305,8 +1304,6 @@
     "expo-modules-core": ["expo-modules-core@3.0.25", "", { "dependencies": { "invariant": "^2.2.4" }, "peerDependencies": { "react": "*", "react-native": "*" } }, "sha512-0P8PT8UV6c5/+p8zeVM/FXvBgn/ErtGcMaasqUgbzzBUg94ktbkIrij9t9reGCrir03BYt/Bcpv+EQtYC8JOug=="],
 
     "expo-network": ["expo-network@8.0.7", "", { "peerDependencies": { "expo": "*", "react": "*" } }, "sha512-qmISU2tcSHmy1PD3Zd83XXxegcvGPlZSxACTSjE+bD9o3miQRT0HS5YP5MeH97PLiRduGpyUq38kMF5N//mqrQ=="],
-
-    "expo-network-addons": ["expo-network-addons@0.7.2", "", { "peerDependencies": { "expo": "*" } }, "sha512-gFJsTifI2BwrgJTK8DIwwTD6IReroZ/VcwXrJBqGByJyq/MT8HXAITsUnAZGvkZSrUho3x9xiWmeGBwdtaAlNA=="],
 
     "expo-notifications": ["expo-notifications@0.32.12", "", { "dependencies": { "@expo/image-utils": "^0.8.7", "@ide/backoff": "^1.0.0", "abort-controller": "^3.0.0", "assert": "^2.0.0", "badgin": "^1.1.5", "expo-application": "~7.0.7", "expo-constants": "~18.0.9" }, "peerDependencies": { "expo": "*", "react": "*", "react-native": "*" } }, "sha512-FVJ5W4rOpKvmrLJ1Sd5pxiVTV4a7ApgTlKro+E5X8M2TBbXmEVOjs09klzdalXTjlzmU/Gu8aRw9xr7Ea/gZdw=="],
 
