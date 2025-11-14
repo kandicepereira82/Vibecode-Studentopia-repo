@@ -27,6 +27,9 @@
     "updates": {
       "url": "https://u.expo.dev/a157de07-bb55-4373-9d8b-46bb55178b37"
     },
+    "autolinking": {
+      "exclude": ["react-native-vision-camera"]
+    },
     "plugins": [
       "expo-asset",
       [

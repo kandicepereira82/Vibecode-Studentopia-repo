@@ -2,4 +2,7 @@ node_modules/expo-network-addons/**
 **/expo-network-addons/**
 **/expo-network-addons-gradle-plugin/**
 node_modules/**/expo-network-addons/**
+node_modules/react-native-vision-camera/**
+**/react-native-vision-camera/**
+node_modules/**/react-native-vision-camera/**
 
