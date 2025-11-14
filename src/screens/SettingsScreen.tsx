@@ -35,6 +35,7 @@ import {
   previewImportData,
   ImportStrategy,
 } from "../services/importService";
+import { runAllSecurityTests } from "../utils/testSecurity";
 
 type SettingsScreenNavigationProp = NativeStackNavigationProp<ProfileStackParamList, "Settings">;
 
@@ -75,6 +76,7 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
   const [showImportOptions, setShowImportOptions] = useState(false);
   const [importFileData, setImportFileData] = useState<any>(null);
   const [showBackupInstructions, setShowBackupInstructions] = useState(false);
+  const [isRunningSecurityTests, setIsRunningSecurityTests] = useState(false);
 
   // Convert 24-hour format to 12-hour format
   const userHour24 = user?.dailyReminderTime?.hour || 9;
@@ -278,6 +280,25 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
         },
       ]
     );
+  };
+
+  // SECURITY TESTING: Run all security tests
+  const handleRunSecurityTests = async () => {
+    if (!user?.id || !user?.email) {
+      toast.show("Please login first to run security tests", "error");
+      return;
+    }
+
+    setIsRunningSecurityTests(true);
+    try {
+      await runAllSecurityTests(user.id, user.email);
+      toast.show("Security tests completed! Check console/logs for results.", "success");
+    } catch (error) {
+      console.error("Security tests error:", error);
+      toast.show("Error running security tests. Check console for details.", "error");
+    } finally {
+      setIsRunningSecurityTests(false);
+    }
   };
 
   const handleExportData = async () => {
