@@ -46,14 +46,31 @@ export const parseError = (error: any): ErrorInfo => {
     if (
       message.includes("timeout") ||
       message.includes("network") ||
-      message.includes("fetch")
+      message.includes("fetch") ||
+      message.includes("econnrefused") ||
+      message.includes("etimedout") ||
+      message.includes("enotfound") ||
+      message.includes("networkerror") ||
+      error.name === "TimeoutError" ||
+      error.name === "NetworkError" ||
+      error.name === "AbortError"
     ) {
+      // Check if it's specifically a timeout
+      if (message.includes("timeout") || error.name === "TimeoutError" || error.name === "AbortError") {
+        return {
+          code: "TIMEOUT_ERROR",
+          message: error.message,
+          userMessage: "⏱️ Request timeout - please check your connection and try again",
+          icon: "⏱️",
+          severity: "error",
+        };
+      }
+      
       return {
         code: "NETWORK_ERROR",
         message: error.message,
-        userMessage:
-          "⏱️ Connection Error: Check your internet and try again",
-        icon: "⏱️",
+        userMessage: "🌐 Connection Error: Check your internet connection and try again",
+        icon: "🌐",
         severity: "error",
       };
     }

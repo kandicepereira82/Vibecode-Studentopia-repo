@@ -36,10 +36,11 @@ export const clearAuthToken = async () => {
   await AsyncStorage.removeItem("auth_token");
 };
 
-// Generic API request helper
+// Generic API request helper with timeout and better error handling
 async function apiRequest<T>(
   endpoint: string,
-  options: RequestInit = {}
+  options: RequestInit = {},
+  timeout: number = 15000
 ): Promise<T> {
   const token = await getAuthToken();
 
@@ -49,11 +50,18 @@ async function apiRequest<T>(
     ...options.headers,
   };
 
+  // Create AbortController for timeout
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeout);
+
   try {
     const response = await fetch(`${API_URL}${endpoint}`, {
       ...options,
       headers,
+      signal: controller.signal,
     });
+
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       const error = await response.json().catch(() => ({}));
@@ -61,7 +69,33 @@ async function apiRequest<T>(
     }
 
     return await response.json();
-  } catch (error) {
+  } catch (error: any) {
+    clearTimeout(timeoutId);
+    
+    // Handle timeout errors
+    if (error.name === 'AbortError') {
+      const timeoutError = new Error("Request timeout - please check your connection");
+      timeoutError.name = 'TimeoutError';
+      console.error(`API Request timeout: ${endpoint}`);
+      throw timeoutError;
+    }
+    
+    // Handle network/connection errors
+    if (
+      error.message?.includes('network') ||
+      error.message?.includes('fetch') ||
+      error.message?.includes('Failed to fetch') ||
+      error.message?.includes('NetworkError') ||
+      error.message?.includes('ECONNREFUSED') ||
+      error.message?.includes('ETIMEDOUT') ||
+      error.message?.includes('ENOTFOUND')
+    ) {
+      const networkError = new Error("Network error - please check your internet connection");
+      networkError.name = 'NetworkError';
+      console.error(`API Network error: ${endpoint}`, error);
+      throw networkError;
+    }
+    
     console.error(`API Request failed: ${endpoint}`, error);
     throw error;
   }
