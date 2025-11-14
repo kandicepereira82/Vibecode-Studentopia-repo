@@ -17,6 +17,7 @@ import ClickableCompanion from "../components/ClickableCompanion";
 import { useGlobalToast } from "../context/ToastContext";
 import GroupAnalyticsScreen from "./GroupAnalyticsScreen";
 import StudyRoomScreen from "./StudyRoomScreen";
+import { containsInappropriateContent } from "../utils/contentModeration";
 
 interface AlertState {
   visible: boolean;
@@ -87,6 +88,18 @@ const GroupsScreen = () => {
   const handleCreateGroup = () => {
     if (!groupName.trim()) {
       toast.error("Please enter a group name");
+      return;
+    }
+
+    // CONTENT MODERATION: Check group name for inappropriate content
+    if (containsInappropriateContent(groupName)) {
+      toast.error("Group name contains inappropriate content. Please choose a different name.");
+      return;
+    }
+
+    // CONTENT MODERATION: Check group description for inappropriate content
+    if (groupDescription && containsInappropriateContent(groupDescription)) {
+      toast.error("Group description contains inappropriate content. Please revise.");
       return;
     }
 

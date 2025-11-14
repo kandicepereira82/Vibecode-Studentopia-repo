@@ -10,6 +10,7 @@ import useFriendStore from "../state/friendStore";
 import { getTheme } from "../utils/themes";
 import { useGlobalToast } from "../context/ToastContext";
 import StudyPal from "../components/StudyPal";
+import { containsInappropriateContent } from "../utils/contentModeration";
 
 const StudyRoomScreen = () => {
   const user = useUserStore((s) => s.user);
@@ -110,6 +111,12 @@ const StudyRoomScreen = () => {
   const handleCreateRoom = () => {
     if (!user || !roomName.trim()) {
       toast.error("Please enter a room name");
+      return;
+    }
+
+    // CONTENT MODERATION: Check room name for inappropriate content
+    if (containsInappropriateContent(roomName)) {
+      toast.error("Room name contains inappropriate content. Please choose a different name.");
       return;
     }
 
