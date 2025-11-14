@@ -61,11 +61,5 @@ config.cacheStores = ({ FileStore, HttpStore }) => {
 // to invalidate existing caches.
 config.cacheVersion = metroCacheVersion;
 
-// Block expo-network-addons from being resolved (it's incompatible with Kotlin 2.0+)
-config.resolver.blockList = [
-  ...(config.resolver.blockList || []),
-  /node_modules\/expo-network-addons\/.*/,
-];
-
 // Integrate NativeWind with the Metro configuration.
 module.exports = withNativeWind(config, { input: "./global.css" });
