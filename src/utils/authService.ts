@@ -160,7 +160,7 @@ export const authService = {
 
   // Login user with email and password
   // SECURITY FIX: Add rate limiting and fix email enumeration
-  async login(email: string, password: string): Promise<{ success: boolean; error?: string; userId?: string; username?: string }> {
+  async login(email: string, password: string, mfaCode?: string): Promise<{ success: boolean; error?: string; userId?: string; username?: string; requiresMFA?: boolean; sessionId?: string }> {
     try {
       // SECURITY FIX: Check rate limits
       const attemptsKey = `login_attempts_${email}`;
