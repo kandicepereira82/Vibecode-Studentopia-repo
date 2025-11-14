@@ -61,5 +61,11 @@ config.cacheStores = ({ FileStore, HttpStore }) => {
 // to invalidate existing caches.
 config.cacheVersion = metroCacheVersion;
 
+// Block expo-network-addons from being included in the build
+config.resolver.blockList = [
+  /.*\/expo-network-addons\/.*/,
+  /.*\/react-native-vision-camera\/.*/,
+];
+
 // Integrate NativeWind with the Metro configuration.
 module.exports = withNativeWind(config, { input: "./global.css" });

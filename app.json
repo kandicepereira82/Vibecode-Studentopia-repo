@@ -27,9 +27,6 @@
     "updates": {
       "url": "https://u.expo.dev/a157de07-bb55-4373-9d8b-46bb55178b37"
     },
-    "autolinking": {
-      "exclude": ["react-native-vision-camera"]
-    },
     "plugins": [
       "expo-asset",
       [
@@ -39,8 +36,7 @@
             "compileSdkVersion": 34,
             "targetSdkVersion": 34,
             "minSdkVersion": 24,
-            "buildToolsVersion": "34.0.0",
-            "kotlinVersion": "2.0.21"
+            "buildToolsVersion": "34.0.0"
           }
         }
       ],
