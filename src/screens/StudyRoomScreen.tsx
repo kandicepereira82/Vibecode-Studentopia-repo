@@ -512,33 +512,41 @@ const StudyRoomScreen = () => {
               {/* Message Input */}
               <View style={{ paddingHorizontal: 24, paddingVertical: 12, borderTopWidth: 1, borderTopColor: "#F3F4F6", backgroundColor: "white" }}>
                 <View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
-                  <TextInput
-                    value={messageText}
-                    onChangeText={setMessageText}
-                    placeholder="Type a message..."
-                    placeholderTextColor={theme.textSecondary}
-                    style={{
-                      flex: 1,
-                      backgroundColor: "#F3F4F6",
-                      borderRadius: 20,
-                      paddingHorizontal: 16,
-                      paddingVertical: 10,
-                      fontSize: 14,
-                      fontFamily: "Poppins_400Regular",
-                      color: theme.textPrimary,
-                    }}
-                    onSubmitEditing={handleSendMessage}
-                  />
-                  {messageError && (
-                    <Text style={{ 
-                      color: "#EF4444", 
-                      fontSize: 12, 
-                      marginTop: 4,
-                      fontFamily: "Poppins_400Regular"
-                    }}>
-                      {messageError}
-                    </Text>
-                  )}
+                  <View style={{ flex: 1 }}>
+                    <TextInput
+                      value={messageText}
+                      onChangeText={(text) => {
+                        setMessageText(text);
+                        // Clear error when user starts typing
+                        if (messageError) setMessageError("");
+                      }}
+                      placeholder="Type a message..."
+                      placeholderTextColor={theme.textSecondary}
+                      style={{
+                        flex: 1,
+                        backgroundColor: "#F3F4F6",
+                        borderRadius: 20,
+                        paddingHorizontal: 16,
+                        paddingVertical: 10,
+                        fontSize: 14,
+                        fontFamily: "Poppins_400Regular",
+                        color: theme.textPrimary,
+                        borderWidth: messageError ? 2 : 0,
+                        borderColor: messageError ? "#EF4444" : "transparent",
+                      }}
+                      onSubmitEditing={handleSendMessage}
+                    />
+                    {messageError && (
+                      <Text style={{ 
+                        color: "#EF4444", 
+                        fontSize: 12, 
+                        marginTop: 4,
+                        fontFamily: "Poppins_400Regular"
+                      }}>
+                        {messageError}
+                      </Text>
+                    )}
+                  </View>
                   <Pressable
                     onPress={handleSendMessage}
                     disabled={!messageText.trim()}
