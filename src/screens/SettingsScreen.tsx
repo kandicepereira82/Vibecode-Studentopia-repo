@@ -1015,6 +1015,55 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
             )}
           </View>
 
+          {/* Security Tests Section (Development Only) */}
+          {__DEV__ && (
+            <View className="mb-6">
+              <View className="flex-row items-center justify-between mb-3">
+                <Text className="text-lg font-bold" style={{ color: theme.textPrimary }}>
+                  🔒 Security Tests
+                </Text>
+              </View>
+
+              <Pressable
+                onPress={handleRunSecurityTests}
+                disabled={isRunningSecurityTests}
+                className="rounded-2xl p-4 mb-3"
+                style={{ 
+                  backgroundColor: theme.cardBackground,
+                  opacity: isRunningSecurityTests ? 0.6 : 1,
+                }}
+              >
+                <View className="flex-row items-center justify-between">
+                  <View className="flex-row items-center flex-1">
+                    <View
+                      className="w-10 h-10 rounded-full items-center justify-center mr-3"
+                      style={{ backgroundColor: "#10B98120" }}
+                    >
+                      <Ionicons name="shield-checkmark" size={20} color="#10B981" />
+                    </View>
+                    <View className="flex-1">
+                      <Text className="text-base font-semibold" style={{ color: theme.textPrimary }}>
+                        Run Security Tests
+                      </Text>
+                      <Text className="text-xs mt-0.5" style={{ color: theme.textSecondary }}>
+                        {isRunningSecurityTests ? "Running tests..." : "Test all security fixes"}
+                      </Text>
+                    </View>
+                  </View>
+                  {isRunningSecurityTests ? (
+                    <ActivityIndicator size="small" color={theme.primary} />
+                  ) : (
+                    <Ionicons name="chevron-forward" size={20} color={theme.textSecondary} />
+                  )}
+                </View>
+              </Pressable>
+
+              <Text style={{ fontSize: 12, color: theme.textSecondary, textAlign: "center", marginTop: -8, marginBottom: 8 }}>
+                Check console/logs for detailed test results
+              </Text>
+            </View>
+          )}
+
           {/* Bottom Spacing */}
           <View className="h-6" />
         </ScrollView>
