@@ -12,28 +12,78 @@
  */
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from "expo-secure-store";
 import { Friend, Group, StudyRoom, User } from "../types";
 
 // API Configuration
 const API_URL = process.env.EXPO_PUBLIC_API_URL || "http://localhost:3000/api";
 
+// SECURITY FIX: Token expiration and refresh mechanism
+interface TokenData {
+  token: string;
+  refreshToken?: string;
+  expiresAt: number;
+}
+
 // Auth token management
 let authToken: string | null = null;
 
-export const setAuthToken = async (token: string) => {
+// SECURITY FIX: Use SecureStore for sensitive token data
+export const setAuthToken = async (token: string, expiresInSeconds: number = 3600) => {
   authToken = token;
-  await AsyncStorage.setItem("auth_token", token);
+  const tokenData: TokenData = {
+    token,
+    expiresAt: Date.now() + (expiresInSeconds * 1000),
+  };
+  
+  try {
+    await SecureStore.setItemAsync("auth_token", JSON.stringify(tokenData));
+  } catch (error) {
+    console.error("Failed to store auth token securely:", error);
+    // Fallback to AsyncStorage if SecureStore fails (e.g., on web)
+    await AsyncStorage.setItem("auth_token", JSON.stringify(tokenData));
+  }
 };
 
 export const getAuthToken = async (): Promise<string | null> => {
   if (authToken) return authToken;
-  authToken = await AsyncStorage.getItem("auth_token");
-  return authToken;
+  
+  try {
+    // Try SecureStore first
+    let tokenDataStr: string | null = null;
+    try {
+      tokenDataStr = await SecureStore.getItemAsync("auth_token");
+    } catch {
+      // Fallback to AsyncStorage if SecureStore not available
+      tokenDataStr = await AsyncStorage.getItem("auth_token");
+    }
+    
+    if (!tokenDataStr) return null;
+    
+    const tokenData: TokenData = JSON.parse(tokenDataStr);
+    
+    // SECURITY FIX: Check token expiration
+    if (Date.now() >= tokenData.expiresAt) {
+      console.warn("Auth token expired");
+      await clearAuthToken();
+      return null;
+    }
+    
+    authToken = tokenData.token;
+    return authToken;
+  } catch (error) {
+    console.error("Failed to retrieve auth token:", error);
+    return null;
+  }
 };
 
 export const clearAuthToken = async () => {
   authToken = null;
-  await AsyncStorage.removeItem("auth_token");
+  try {
+    await SecureStore.deleteItemAsync("auth_token");
+  } catch {
+    await AsyncStorage.removeItem("auth_token");
+  }
 };
 
 // Generic API request helper with timeout and better error handling

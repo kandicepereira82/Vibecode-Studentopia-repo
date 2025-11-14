@@ -82,7 +82,20 @@ const AuthenticationScreen: React.FC<AuthenticationScreenProps> = ({ onComplete 
     else if (!validateEmail(email)) newErrors.email = "Invalid email format";
 
     if (!password.trim()) newErrors.password = "Password is required";
-    else if (password.length < 6) newErrors.password = "Password must be at least 6 characters";
+    else {
+      // SECURITY FIX: Strong password validation
+      if (password.length < 12) {
+        newErrors.password = "Password must be at least 12 characters";
+      } else if (!/[a-z]/.test(password)) {
+        newErrors.password = "Password must contain at least one lowercase letter";
+      } else if (!/[A-Z]/.test(password)) {
+        newErrors.password = "Password must contain at least one uppercase letter";
+      } else if (!/[0-9]/.test(password)) {
+        newErrors.password = "Password must contain at least one number";
+      } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+        newErrors.password = "Password must contain at least one special character";
+      }
+    }
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -144,7 +157,20 @@ const AuthenticationScreen: React.FC<AuthenticationScreenProps> = ({ onComplete 
     else if (!validateEmail(email)) newErrors.email = "Invalid email format";
 
     if (!password.trim()) newErrors.password = "Password is required";
-    else if (password.length < 6) newErrors.password = "Password must be at least 6 characters";
+    else {
+      // SECURITY FIX: Strong password validation
+      if (password.length < 12) {
+        newErrors.password = "Password must be at least 12 characters";
+      } else if (!/[a-z]/.test(password)) {
+        newErrors.password = "Password must contain at least one lowercase letter";
+      } else if (!/[A-Z]/.test(password)) {
+        newErrors.password = "Password must contain at least one uppercase letter";
+      } else if (!/[0-9]/.test(password)) {
+        newErrors.password = "Password must contain at least one number";
+      } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+        newErrors.password = "Password must contain at least one special character";
+      }
+    }
 
     if (password !== confirmPassword) newErrors.confirmPassword = "Passwords do not match";
 
