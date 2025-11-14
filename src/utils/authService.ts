@@ -4,6 +4,7 @@ import * as Crypto from "expo-crypto";
 import { sessionService } from "../services/sessionService";
 import { mfaService } from "../services/mfaService";
 import { encryptJSON, decryptJSON } from "./encryption";
+import { containsInappropriateContent } from "./contentModeration";
 
 interface StoredCredential {
   email: string;
@@ -91,6 +92,11 @@ const validatePasswordStrength = (password: string): { valid: boolean; error?: s
   const lowerPassword = password.toLowerCase();
   if (commonPasswords.some(common => lowerPassword.includes(common))) {
     return { valid: false, error: "Password is too common. Please choose a stronger password" };
+  }
+  
+  // CONTENT MODERATION: Check for offensive content in password (optional but recommended for educational apps)
+  if (containsInappropriateContent(password)) {
+    return { valid: false, error: "Password cannot contain inappropriate content" };
   }
   
   return { valid: true };
