@@ -141,16 +141,11 @@ const HomeScreen = () => {
   // OPTIMIZATION: Get upcoming tasks using store method instead of filtering entire array
   const upcomingTasks = useMemo(() => {
     if (!user?.id) return [];
-    return weekTasks.filter((task) => {
-      const taskDate = new Date(task.dueDate);
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      return taskDate >= today && task.status === "pending";
-    }).slice(0, 5);
+    return weekTasks
+      .filter((task) => task.status === "pending")
+      .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime())
+      .slice(0, 5);
   }, [weekTasks, user?.id]);
-    .filter((t) => t.status === "pending" && t.userId === user?.id)
-    .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime())
-    .slice(0, 5);
 
   // Extract first name from username
   const firstName = user.username.split(" ")[0];
