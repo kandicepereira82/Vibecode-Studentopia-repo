@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { View, Text, ScrollView, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
@@ -32,12 +32,24 @@ import {
 const HomeScreen = () => {
   const navigation = useNavigation();
   const user = useUserStore((s) => s.user);
-  const tasks = useTaskStore((s) => s.tasks);
+  // OPTIMIZATION: Don't subscribe to entire tasks array - use selectors instead
   const getTodayTasks = useTaskStore((s) => s.getTodayTasks);
   const getWeekTasks = useTaskStore((s) => s.getWeekTasks);
   const toggleTaskStatus = useTaskStore((s) => s.toggleTaskStatus);
   const stats = useStatsStore((s) => s.stats);
   const addStudyMinutes = useStatsStore((s) => s.addStudyMinutes);
+  
+  // Memoize today's tasks to prevent unnecessary recalculations
+  const todayTasks = useMemo(() => {
+    if (!user?.id) return [];
+    return getTodayTasks(user.id);
+  }, [user?.id, getTodayTasks]);
+  
+  // Memoize week tasks
+  const weekTasks = useMemo(() => {
+    if (!user?.id) return [];
+    return getWeekTasks(user.id);
+  }, [user?.id, getWeekTasks]);
 
   // Timer store
   const timerMinutes = useTimerStore((s) => s.minutes);
@@ -78,19 +90,19 @@ const HomeScreen = () => {
     }
   }, [timerMinutes, timerSeconds, isTimerRunning, timerMode, studyDuration, addStudyMinutes, setMode, setMinutes, setSeconds]);
 
-  const getTasksForDate = (date: Date) => {
-    return tasks.filter((task) => {
-      // Filter by user ID first
-      if (task.userId !== user?.id) return false;
+  // OPTIMIZATION: Memoize task filtering function
+  const getTasksForDate = useCallback((date: Date) => {
+    if (!user?.id) return [];
+    const getTasksByDate = useTaskStore.getState().getTasksByDate;
+    return getTasksByDate(date, user.id);
+  }, [user?.id]);
 
-      const taskDate = new Date(task.dueDate);
-      return isSameDay(taskDate, date);
-    });
-  };
-
-  // Week calendar data
-  const weekStart = startOfWeek(new Date(), { weekStartsOn: 0 });
-  const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
+  // OPTIMIZATION: Memoize week calendar data
+  const { weekStart, weekDays } = useMemo(() => {
+    const start = startOfWeek(new Date(), { weekStartsOn: 0 });
+    const days = Array.from({ length: 7 }, (_, i) => addDays(start, i));
+    return { weekStart: start, weekDays: days };
+  }, []); // Only recalculate once per day
 
   if (!user) {
     return (
@@ -107,15 +119,35 @@ const HomeScreen = () => {
     );
   }
 
-  const todayTasks = getTodayTasks(user?.id);
-  const weekTasks = getWeekTasks(user?.id);
-  const todayCompleted = todayTasks.filter((t) => t.status === "completed").length;
-  const weekCompleted = weekTasks.filter((t) => t.status === "completed").length;
+  // OPTIMIZATION: Use memoized tasks instead of recalculating
+  const todayCompleted = useMemo(() => 
+    todayTasks.filter((t) => t.status === "completed").length,
+    [todayTasks]
+  );
+  const weekCompleted = useMemo(() => 
+    weekTasks.filter((t) => t.status === "completed").length,
+    [weekTasks]
+  );
 
-  const todayProgress = todayTasks.length > 0 ? (todayCompleted / todayTasks.length) * 100 : 0;
-  const weekProgress = weekTasks.length > 0 ? (weekCompleted / weekTasks.length) * 100 : 0;
+  const todayProgress = useMemo(() => 
+    todayTasks.length > 0 ? (todayCompleted / todayTasks.length) * 100 : 0,
+    [todayTasks.length, todayCompleted]
+  );
+  const weekProgress = useMemo(() => 
+    weekTasks.length > 0 ? (weekCompleted / weekTasks.length) * 100 : 0,
+    [weekTasks.length, weekCompleted]
+  );
 
-  const upcomingTasks = tasks
+  // OPTIMIZATION: Get upcoming tasks using store method instead of filtering entire array
+  const upcomingTasks = useMemo(() => {
+    if (!user?.id) return [];
+    return weekTasks.filter((task) => {
+      const taskDate = new Date(task.dueDate);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      return taskDate >= today && task.status === "pending";
+    }).slice(0, 5);
+  }, [weekTasks, user?.id]);
     .filter((t) => t.status === "pending" && t.userId === user?.id)
     .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime())
     .slice(0, 5);
@@ -227,9 +259,8 @@ const HomeScreen = () => {
                   {user.studyPalConfig.name} says:
                 </Text>
                 {(() => {
-                  // Check if user has any tasks at all
-                  const userTasks = tasks.filter(t => t.userId === user?.id);
-                  const hasNoTasks = userTasks.length === 0;
+                  // OPTIMIZATION: Use memoized weekTasks instead of filtering entire array
+                  const hasNoTasks = weekTasks.length === 0 && todayTasks.length === 0;
 
                   // If no tasks exist, show encouraging message to add first task
                   if (hasNoTasks) {
