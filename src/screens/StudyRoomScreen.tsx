@@ -43,6 +43,7 @@ const StudyRoomScreen = () => {
   const [roomName, setRoomName] = useState("");
   const [isPrivate, setIsPrivate] = useState(false);
   const [messageText, setMessageText] = useState("");
+  const [messageError, setMessageError] = useState("");
   const [showChat, setShowChat] = useState(true);
   const [customMinutes, setCustomMinutes] = useState("25");
   const [customSeconds, setCustomSeconds] = useState("0");
@@ -180,8 +181,14 @@ const StudyRoomScreen = () => {
   const handleSendMessage = () => {
     if (!user || !currentRoom || !messageText.trim()) return;
 
-    sendMessage(currentRoom.id, user.id, user.username, messageText);
-    setMessageText("");
+    const success = sendMessage(currentRoom.id, user.id, user.username, messageText);
+    if (success) {
+      setMessageText("");
+      setMessageError("");
+    } else {
+      // Message was blocked (likely inappropriate content)
+      setMessageError("Your message contains inappropriate content. Please revise.");
+    }
   };
 
   const handleInviteFriend = (friendUserId: string, friendUsername: string) => {
@@ -522,6 +529,16 @@ const StudyRoomScreen = () => {
                     }}
                     onSubmitEditing={handleSendMessage}
                   />
+                  {messageError && (
+                    <Text style={{ 
+                      color: "#EF4444", 
+                      fontSize: 12, 
+                      marginTop: 4,
+                      fontFamily: "Poppins_400Regular"
+                    }}>
+                      {messageError}
+                    </Text>
+                  )}
                   <Pressable
                     onPress={handleSendMessage}
                     disabled={!messageText.trim()}

@@ -196,6 +196,34 @@ export function validateNameRealtime(name: string, type: "username" | "companion
 }
 
 /**
+ * Check if any text content contains inappropriate language
+ * Can be used for messages, comments, posts, task titles, etc.
+ */
+export function containsInappropriateContent(text: string): boolean {
+  if (!text || text.trim().length === 0) return false;
+  return containsBlockedWord(text);
+}
+
+/**
+ * Validate and filter inappropriate content from messages
+ * Returns validation result with error message if inappropriate
+ */
+export function filterInappropriateContent(text: string): ValidationResult {
+  if (!text || text.trim().length === 0) {
+    return { isValid: false, error: "Content cannot be empty" };
+  }
+  
+  if (containsBlockedWord(text)) {
+    return { 
+      isValid: false, 
+      error: "Your content contains inappropriate language. Please revise." 
+    };
+  }
+  
+  return { isValid: true };
+}
+
+/**
  * AI-based content moderation (optional, for context-sensitive detection)
  * This is a placeholder - in production you'd integrate with OpenAI Moderation API
  */

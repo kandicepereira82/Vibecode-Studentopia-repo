@@ -22,6 +22,7 @@ import MessageText from "../components/MessageText";
 import { useGlobalToast } from "../context/ToastContext";
 import { parseError, logError } from "../utils/errorUtils";
 import { generateVideoSuggestionsForPrompt } from "../utils/videoLibrary";
+import { containsInappropriateContent } from "../utils/contentModeration";
 
 const AIHelperScreen = () => {
   const user = useUserStore((s) => s.user);
@@ -33,10 +34,19 @@ const AIHelperScreen = () => {
   const [messages, setMessages] = useState<AIChatMessage[]>([]);
   const [inputText, setInputText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [inputError, setInputError] = useState("");
   const scrollViewRef = useRef<ScrollView>(null);
 
   const handleSend = async () => {
     if (!inputText.trim() || isLoading) return;
+
+    // CONTENT MODERATION: Check for inappropriate content
+    if (containsInappropriateContent(inputText)) {
+      setInputError("Your message contains inappropriate content. Please revise.");
+      return;
+    }
+
+    setInputError(""); // Clear any previous errors
 
     const userMessage: AIChatMessage = {
       id: Date.now().toString(),
@@ -319,15 +329,37 @@ Be professional, supportive, and focus on helping teachers succeed in their educ
             <View className="flex-1 rounded-2xl px-4 py-2" style={{ backgroundColor: theme.cardBackground }}>
               <TextInput
                 value={inputText}
-                onChangeText={setInputText}
+                onChangeText={(text) => {
+                  setInputText(text);
+                  // Real-time validation
+                  if (text.trim().length > 0 && containsInappropriateContent(text)) {
+                    setInputError("Your message contains inappropriate content");
+                  } else {
+                    setInputError("");
+                  }
+                }}
                 placeholder={t("askQuestion")}
                 placeholderTextColor={theme.textSecondary}
                 multiline
                 maxLength={1000}
                 className="text-base max-h-32"
-                style={{ color: theme.textPrimary }}
+                style={{ 
+                  color: theme.textPrimary,
+                  borderWidth: inputError ? 2 : 0,
+                  borderColor: inputError ? "#EF4444" : "transparent",
+                }}
                 editable={!isLoading}
               />
+              {inputError && (
+                <Text style={{ 
+                  color: "#EF4444", 
+                  fontSize: 12, 
+                  marginTop: 4,
+                  fontFamily: "Poppins_400Regular"
+                }}>
+                  {inputError}
+                </Text>
+              )}
             </View>
             <Pressable
               onPress={handleSend}

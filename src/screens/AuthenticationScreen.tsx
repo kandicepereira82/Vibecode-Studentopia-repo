@@ -10,6 +10,7 @@ import useOnboardingStore from "../state/onboardingStore";
 import { authService } from "../utils/authService";
 import { useGlobalToast } from "../context/ToastContext";
 import { parseError, logError } from "../utils/errorUtils";
+import { validateName, validateNameRealtime } from "../utils/contentModeration";
 
 interface AuthenticationScreenProps {
   onComplete: () => void;
@@ -152,7 +153,16 @@ const AuthenticationScreen: React.FC<AuthenticationScreenProps> = ({ onComplete 
     Keyboard.dismiss();
     const newErrors: { [key: string]: string } = {};
 
-    if (!username.trim()) newErrors.username = "Name is required";
+    // CONTENT MODERATION: Validate username
+    if (!username.trim()) {
+      newErrors.username = "Name is required";
+    } else {
+      const usernameResult = validateName(username, "username");
+      if (!usernameResult.isValid) {
+        newErrors.username = usernameResult.error || "Invalid username";
+      }
+    }
+
     if (!email.trim()) newErrors.email = "Email is required";
     else if (!validateEmail(email)) newErrors.email = "Invalid email format";
 
@@ -475,7 +485,14 @@ const AuthenticationScreen: React.FC<AuthenticationScreenProps> = ({ onComplete 
                   value={username}
                   onChangeText={(text) => {
                     setUsername(text);
-                    setErrors({ ...errors, username: "" });
+                    // Real-time validation
+                    const error = validateNameRealtime(text, "username");
+                    if (error) {
+                      setErrors({ ...errors, username: error });
+                    } else {
+                      const { username: _, ...rest } = errors;
+                      setErrors(rest);
+                    }
                   }}
                   placeholder="Enter your name"
                   editable={!loading}

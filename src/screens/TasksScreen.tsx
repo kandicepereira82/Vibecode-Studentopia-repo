@@ -25,6 +25,7 @@ import ClickableCompanion from "../components/ClickableCompanion";
 import { scheduleTaskReminderAtTime, cancelNotification } from "../services/notificationService";
 import { useGlobalToast } from "../context/ToastContext";
 import { useCurrentUser, useUserTheme, useUserLanguage, useAllTasks } from "../hooks/useStoreSelectors";
+import { containsInappropriateContent } from "../utils/contentModeration";
 
 const TasksScreen = () => {
   const user = useCurrentUser();
@@ -53,6 +54,8 @@ const TasksScreen = () => {
   const [showReminderTimePicker, setShowReminderTimePicker] = useState(false);
   const [filterCategory, setFilterCategory] = useState<TaskCategory | "all">("all");
   const [taskNotificationIds, setTaskNotificationIds] = useState<Record<string, string>>({});
+  const [titleError, setTitleError] = useState("");
+  const [descriptionError, setDescriptionError] = useState("");
 
   const { t } = useTranslation(language || "en");
   const theme = getTheme(themeColor);
@@ -80,6 +83,20 @@ const TasksScreen = () => {
   const handleSave = async () => {
     if (!title.trim()) {
       toast.error("Please enter a task title");
+      return;
+    }
+
+    // CONTENT MODERATION: Check for inappropriate content in title
+    if (containsInappropriateContent(title)) {
+      toast.error("Task title contains inappropriate content. Please revise.");
+      setTitleError("Title contains inappropriate content");
+      return;
+    }
+
+    // CONTENT MODERATION: Check for inappropriate content in description
+    if (description && containsInappropriateContent(description)) {
+      toast.error("Task description contains inappropriate content. Please revise.");
+      setDescriptionError("Description contains inappropriate content");
       return;
     }
 
@@ -510,11 +527,28 @@ const TasksScreen = () => {
                 </Text>
                 <TextInput
                   value={title}
-                  onChangeText={setTitle}
+                  onChangeText={(text) => {
+                    setTitle(text);
+                    // Real-time validation
+                    if (text.trim().length > 0 && containsInappropriateContent(text)) {
+                      setTitleError("Title contains inappropriate content");
+                    } else {
+                      setTitleError("");
+                    }
+                  }}
                   placeholder={t("taskTitle")}
                   placeholderTextColor="#9CA3AF"
                   className="bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-xl px-4 py-3 text-base"
+                  style={{
+                    borderWidth: titleError ? 2 : 0,
+                    borderColor: titleError ? "#EF4444" : "transparent",
+                  }}
                 />
+                {titleError && (
+                  <Text style={{ color: "#EF4444", fontSize: 12, marginTop: 4 }}>
+                    {titleError}
+                  </Text>
+                )}
               </View>
 
               {/* Description */}
@@ -524,14 +558,31 @@ const TasksScreen = () => {
                 </Text>
                 <TextInput
                   value={description}
-                  onChangeText={setDescription}
+                  onChangeText={(text) => {
+                    setDescription(text);
+                    // Real-time validation
+                    if (text.trim().length > 0 && containsInappropriateContent(text)) {
+                      setDescriptionError("Description contains inappropriate content");
+                    } else {
+                      setDescriptionError("");
+                    }
+                  }}
                   placeholder={t("taskDescription")}
                   placeholderTextColor="#9CA3AF"
                   multiline
                   numberOfLines={4}
                   textAlignVertical="top"
                   className="bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-xl px-4 py-3 text-base min-h-[100px]"
+                  style={{
+                    borderWidth: descriptionError ? 2 : 0,
+                    borderColor: descriptionError ? "#EF4444" : "transparent",
+                  }}
                 />
+                {descriptionError && (
+                  <Text style={{ color: "#EF4444", fontSize: 12, marginTop: 4 }}>
+                    {descriptionError}
+                  </Text>
+                )}
               </View>
 
               {/* Category */}

@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { ChatMessage } from "../types";
 import useStudyRoomStore from "./studyRoomStore";
+import { containsInappropriateContent } from "../utils/contentModeration";
 
 interface ChatStore {
   messages: ChatMessage[];
@@ -54,6 +55,12 @@ const useChatStore = create<ChatStore>((set, get) => ({
     if (trimmedContent.length > 1000) {
       console.error("Message too long: Maximum 1000 characters");
       return false;
+    }
+
+    // CONTENT MODERATION: Check for inappropriate content
+    if (containsInappropriateContent(trimmedContent)) {
+      console.error("Message contains inappropriate content");
+      return false; // Block the message
     }
 
     // SECURITY FIX: Rate limiting - max 10 messages per minute per user
