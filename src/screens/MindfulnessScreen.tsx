@@ -204,15 +204,6 @@ const MindfulnessScreen = () => {
     // OPTIMIZATION: Include musicVolume and isMusicLooping - they're set in effect but should be in deps
   }, [musicVolume, isMusicLooping]);
 
-  // Update music service volume and looping when changed
-  useEffect(() => {
-    musicService.setVolume(musicVolume);
-  }, [musicVolume]);
-
-  useEffect(() => {
-    musicService.setLooping(isMusicLooping);
-  }, [isMusicLooping]);
-
   // Music control handlers
   const handlePlayPauseMusic = async () => {
     if (!selectedMusicTrack) {
