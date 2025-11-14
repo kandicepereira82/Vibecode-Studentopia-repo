@@ -7,7 +7,15 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import useUserStore from "../state/userStore";
 import useStatsStore from "../state/statsStore";
 import useOnboardingStore from "../state/onboardingStore";
+// Use Supabase auth if configured, otherwise fall back to local auth
 import { authService } from "../utils/authService";
+import { authServiceSupabase } from "../utils/authServiceSupabase";
+
+// Check if Supabase is configured
+const USE_SUPABASE_AUTH = !!(process.env.EXPO_PUBLIC_SUPABASE_URL && process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY);
+
+// Use Supabase auth if configured, otherwise use local auth
+const activeAuthService = USE_SUPABASE_AUTH ? authServiceSupabase : authService;
 import { useGlobalToast } from "../context/ToastContext";
 import { parseError, logError } from "../utils/errorUtils";
 import { validateName, validateNameRealtime } from "../utils/contentModeration";
@@ -105,7 +113,7 @@ const AuthenticationScreen: React.FC<AuthenticationScreenProps> = ({ onComplete 
 
     setLoading(true);
     try {
-      const result = await authService.login(email, password);
+      const result = await activeAuthService.login(email, password);
 
       if (result.success && result.userId) {
         // Save credentials for autofill
@@ -191,7 +199,7 @@ const AuthenticationScreen: React.FC<AuthenticationScreenProps> = ({ onComplete 
 
     setLoading(true);
     try {
-      const result = await authService.register(email, password, username);
+      const result = await activeAuthService.register(email, password, username);
 
       if (result.success && result.userId) {
         // Save credentials for autofill
@@ -248,7 +256,7 @@ const AuthenticationScreen: React.FC<AuthenticationScreenProps> = ({ onComplete 
 
     setLoading(true);
     try {
-      const result = await authService.requestPasswordReset(resetEmail);
+      const result = await activeAuthService.requestPasswordReset(resetEmail);
 
       if (result.success) {
         setResetEmailSent(true);
