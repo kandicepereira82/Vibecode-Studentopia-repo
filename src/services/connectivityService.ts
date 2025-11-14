@@ -36,9 +36,13 @@ class ConnectivityService {
     });
 
     // Get initial state
-    NetInfo.fetch().then((state) => {
-      this.handleConnectivityChange(state);
-    });
+    NetInfo.fetch()
+      .then((state) => {
+        this.handleConnectivityChange(state);
+      })
+      .catch((error) => {
+        console.error("Error fetching initial connectivity state:", error);
+      });
   }
 
   /**

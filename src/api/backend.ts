@@ -44,10 +44,11 @@ async function apiRequest<T>(
 ): Promise<T> {
   const token = await getAuthToken();
 
+  // Ensure critical headers aren't overridden by user-provided headers
   const headers: HeadersInit = {
-    "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
     ...options.headers,
+    "Content-Type": "application/json", // Always set
+    ...(token ? { Authorization: `Bearer ${token}` } : {}), // Always set if token exists
   };
 
   // Create AbortController for timeout
@@ -64,11 +65,29 @@ async function apiRequest<T>(
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      const error = await response.json().catch(() => ({}));
+      let error: any = {};
+      try {
+        const text = await response.text();
+        error = text ? JSON.parse(text) : {};
+      } catch {
+        error = { message: `HTTP ${response.status}: ${response.statusText}` };
+      }
       throw new Error(error.message || `API Error: ${response.status}`);
     }
 
-    return await response.json();
+    // Read response as text first, then parse as JSON
+    // This allows us to provide better error messages if JSON parsing fails
+    try {
+      const text = await response.text();
+      if (!text) {
+        throw new Error("Empty response body");
+      }
+      return JSON.parse(text) as T;
+    } catch (jsonError: any) {
+      // If JSON parsing fails, provide the text in error message for debugging
+      const errorMessage = jsonError.message || "Invalid JSON response";
+      throw new Error(`${errorMessage}. Response: ${jsonError.message?.includes("Empty") ? "empty" : "non-JSON"}`);
+    }
   } catch (error: any) {
     clearTimeout(timeoutId);
     

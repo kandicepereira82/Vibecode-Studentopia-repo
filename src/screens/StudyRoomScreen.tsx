@@ -98,9 +98,11 @@ const StudyRoomScreen = () => {
   // Auto-scroll chat to bottom
   useEffect(() => {
     if (showChat && roomMessages.length > 0) {
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         scrollViewRef.current?.scrollToEnd({ animated: true });
       }, 100);
+      
+      return () => clearTimeout(timeoutId);
     }
   }, [roomMessages.length, showChat]);
 

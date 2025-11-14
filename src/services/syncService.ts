@@ -16,18 +16,30 @@ class SyncService {
   private syncQueue: QueuedAction[] = [];
   private isSyncing = false;
   private syncListeners: Set<(syncing: boolean) => void> = new Set();
+  private connectivityUnsubscribe: (() => void) | null = null;
 
   /**
    * Initialize sync service and listen for connectivity
    */
   initialize(): void {
-    connectivityService.subscribe((state) => {
+    this.connectivityUnsubscribe = connectivityService.subscribe((state) => {
       if (state.isConnected && state.isInternetReachable && !this.isSyncing) {
         this.processSyncQueue();
       }
     });
     // Load queued actions on startup
     this.loadSyncQueue();
+  }
+
+  /**
+   * Cleanup resources
+   */
+  cleanup(): void {
+    if (this.connectivityUnsubscribe) {
+      this.connectivityUnsubscribe();
+      this.connectivityUnsubscribe = null;
+    }
+    this.syncListeners.clear();
   }
 
   /**

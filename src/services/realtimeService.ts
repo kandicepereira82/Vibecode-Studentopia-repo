@@ -16,6 +16,7 @@ const WS_URL = process.env.EXPO_PUBLIC_WS_URL || "ws://localhost:3000";
 
 // Event types
 export type RealtimeEvent =
+  | "connected"
   | "friend_request"
   | "friend_accepted"
   | "friend_online"
@@ -49,6 +50,8 @@ class RealtimeSyncService {
   private maxReconnectAttempts = 5;
   private reconnectDelay = 1000; // Start with 1 second
   private heartbeatInterval: NodeJS.Timeout | null = null;
+  private reconnectTimeoutId: NodeJS.Timeout | null = null;
+  private connectionTimeout: NodeJS.Timeout | null = null;
   private listeners: Map<RealtimeEvent, Set<EventCallback>> = new Map();
   private isConnecting = false;
   private userId: string | null = null;
@@ -76,15 +79,29 @@ class RealtimeSyncService {
 
       this.ws = new WebSocket(url);
 
+      // Set connection timeout (10 seconds)
+      this.connectionTimeout = setTimeout(() => {
+        if (this.ws?.readyState === WebSocket.CONNECTING) {
+          console.warn("WebSocket connection timeout");
+          this.ws.close();
+          this.isConnecting = false;
+          this.attemptReconnect();
+        }
+      }, 10000);
+
       this.ws.onopen = () => {
         console.log("WebSocket connected");
+        if (this.connectionTimeout) {
+          clearTimeout(this.connectionTimeout);
+          this.connectionTimeout = null;
+        }
         this.isConnecting = false;
         this.reconnectAttempts = 0;
         this.reconnectDelay = 1000;
         this.startHeartbeat();
 
         // Notify listeners
-        this.emit("connected" as RealtimeEvent, { userId });
+        this.emit("connected", { userId });
       };
 
       this.ws.onmessage = (event) => {
@@ -99,11 +116,19 @@ class RealtimeSyncService {
 
       this.ws.onerror = (error) => {
         console.error("WebSocket error:", error);
+        if (this.connectionTimeout) {
+          clearTimeout(this.connectionTimeout);
+          this.connectionTimeout = null;
+        }
         this.isConnecting = false;
       };
 
       this.ws.onclose = () => {
         console.log("WebSocket disconnected");
+        if (this.connectionTimeout) {
+          clearTimeout(this.connectionTimeout);
+          this.connectionTimeout = null;
+        }
         this.isConnecting = false;
         this.stopHeartbeat();
         this.attemptReconnect();
@@ -120,6 +145,14 @@ class RealtimeSyncService {
    */
   disconnect(): void {
     this.stopHeartbeat();
+    if (this.reconnectTimeoutId) {
+      clearTimeout(this.reconnectTimeoutId);
+      this.reconnectTimeoutId = null;
+    }
+    if (this.connectionTimeout) {
+      clearTimeout(this.connectionTimeout);
+      this.connectionTimeout = null;
+    }
     if (this.ws) {
       this.ws.close();
       this.ws = null;
@@ -201,7 +234,8 @@ class RealtimeSyncService {
       `Attempting to reconnect in ${delay}ms (attempt ${this.reconnectAttempts}/${this.maxReconnectAttempts})`
     );
 
-    setTimeout(() => {
+    this.reconnectTimeoutId = setTimeout(() => {
+      this.reconnectTimeoutId = null;
       if (this.userId) {
         this.connect(this.userId);
       }
