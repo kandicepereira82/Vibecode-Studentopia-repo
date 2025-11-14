@@ -196,6 +196,18 @@ const GroupsScreen = () => {
       return;
     }
 
+    // CONTENT MODERATION: Check group name for inappropriate content
+    if (containsInappropriateContent(groupName)) {
+      toast.error("Group name contains inappropriate content. Please choose a different name.");
+      return;
+    }
+
+    // CONTENT MODERATION: Check group description for inappropriate content
+    if (groupDescription && containsInappropriateContent(groupDescription)) {
+      toast.error("Group description contains inappropriate content. Please revise.");
+      return;
+    }
+
     if (!editingGroupId || !user) return;
 
     const success = updateGroup(editingGroupId, user.id, {
