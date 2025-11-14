@@ -14,6 +14,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as SecureStore from "expo-secure-store";
 import { Friend, Group, StudyRoom, User } from "../types";
+import { getCurrentSession } from "./supabase";
 
 // API Configuration
 const API_URL = process.env.EXPO_PUBLIC_API_URL || "http://localhost:3000/api";
@@ -46,6 +47,18 @@ export const setAuthToken = async (token: string, expiresInSeconds: number = 360
 };
 
 export const getAuthToken = async (): Promise<string | null> => {
+  // Try Supabase session first (if using Supabase auth)
+  try {
+    const session = await getCurrentSession();
+    if (session?.access_token) {
+      authToken = session.access_token;
+      return authToken;
+    }
+  } catch {
+    // Supabase not configured or not available, fall back to local storage
+  }
+
+  // Fallback to local token storage
   if (authToken) return authToken;
   
   try {
