@@ -67,6 +67,18 @@ config.resolver.blockList = [
   /.*\/react-native-clipboard\/.*/,
 ];
 
+// Suppress Metro warnings for @anthropic-ai/sdk module resolution
+// The package uses exports that Metro can't resolve statically, but fallback works fine
+const originalWarn = console.warn;
+console.warn = (...args) => {
+  const message = args.join(' ');
+  // Suppress @anthropic-ai/sdk module resolution warnings
+  if (message.includes('@anthropic-ai/sdk') && message.includes('no match was resolved')) {
+    return; // Suppress this warning
+  }
+  originalWarn.apply(console, args);
+};
+
 
 // Integrate NativeWind with the Metro configuration.
 module.exports = withNativeWind(config, { input: "./global.css" });
