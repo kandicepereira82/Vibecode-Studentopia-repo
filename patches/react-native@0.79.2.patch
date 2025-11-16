@@ -225,7 +225,12 @@ index c3a7b692106d9233d508d7dabfc082f091b2d257..37d192543e1b2035cb714b03e1b808ac
  import LogBoxInspectorFooterButton from './LogBoxInspectorFooterButton';
  import * as LogBoxStyle from './LogBoxStyle';
  import * as React from 'react';
-+import * as Clipboard from 'expo-clipboard';
++let Clipboard: any = null;
++try {
++  Clipboard = require('expo-clipboard');
++} catch (e) {
++  // Clipboard not available (e.g., in Expo Go)
++}
  
  type Props = $ReadOnly<{
    onDismiss: () => void,
@@ -267,17 +272,17 @@ index c3a7b692106d9233d508d7dabfc082f091b2d257..37d192543e1b2035cb714b03e1b808ac
 +  }
 +
 +  const copyToClipboard = async () => {
-+    if (props.log) {
++    if (props.log && Clipboard) {
 +      await Clipboard.setStringAsync(getCopyText(props.log));
 +    }
 +  }
 +
 +  const copyAllToClipboard = async () => {
-+    if (props.logs) {
++    if (props.logs && Clipboard) {
 +      const copyText = props.logs.map(log => getCopyText(log)).join('\n');
 +      await Clipboard.setStringAsync(copyText);
 +    }
-   }
++  }
  
    return (
      <View style={styles.root}>
