@@ -57,16 +57,25 @@ const storageAdapter = {
  * Only created if credentials are available, otherwise null
  * Configured with secure storage for auth tokens
  */
-export const supabase = hasSupabaseCredentials 
-  ? createClient(supabaseUrl, supabaseAnonKey, {
+let supabaseInstance: ReturnType<typeof createClient> | null = null;
+
+try {
+  if (hasSupabaseCredentials && supabaseUrl && supabaseAnonKey) {
+    supabaseInstance = createClient(supabaseUrl, supabaseAnonKey, {
       auth: {
         storage: storageAdapter,
         autoRefreshToken: true,
         persistSession: true,
         detectSessionInUrl: false,
       },
-    })
-  : null;
+    });
+  }
+} catch (error) {
+  console.warn('Failed to initialize Supabase client:', error);
+  supabaseInstance = null;
+}
+
+export const supabase = supabaseInstance;
 
 /**
  * Get current session
