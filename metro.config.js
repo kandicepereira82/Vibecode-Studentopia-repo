@@ -67,5 +67,6 @@ config.resolver.blockList = [
   /.*\/react-native-clipboard\/.*/,
 ];
 
+
 // Integrate NativeWind with the Metro configuration.
 module.exports = withNativeWind(config, { input: "./global.css" });
