@@ -6,8 +6,10 @@ import { LogBox } from "react-native";
 LogBox.ignoreLogs([
   "Expo AV has been deprecated", 
   "Disconnected from Metro",
+  // Suppress @anthropic-ai/sdk module resolution warnings
   "Attempted to import the module",
-  "@anthropic-ai/sdk",
+  "no match was resolved for this request",
+  "Falling back to file-based resolution",
 ]);
 
 import { registerRootComponent } from "expo";
