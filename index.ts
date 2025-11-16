@@ -10,6 +10,9 @@ LogBox.ignoreLogs([
   "Attempted to import the module",
   "no match was resolved for this request",
   "Falling back to file-based resolution",
+  // Suppress require cycle warning (we use dynamic imports to prevent runtime issues)
+  "Require cycle",
+  "src/state/userStore.ts -> src/state/taskStore.ts",
 ]);
 
 import { registerRootComponent } from "expo";
