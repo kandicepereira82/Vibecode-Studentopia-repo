@@ -125,6 +125,20 @@ try {
 } catch (error: any) {
   console.error("[index] ❌ CRITICAL: Failed to register root component:", error);
   console.error("[index] Error details:", error?.message, error?.stack);
-  // Re-throw to see the error in Metro
-  throw error;
+  // CRITICAL FIX: Don't re-throw - this causes the Vibecode app to shut down
+  // Instead, log the error and attempt to register a fallback error component
+  // The error will still be visible in Metro logs, but won't crash the app
+  console.error("[index] ⚠️ App registration failed - check Metro logs for details");
+  // Try to register a minimal error component so the app doesn't completely crash
+  try {
+    const ErrorApp = () => {
+      console.error("[index] Error App rendered - original error:", error?.message);
+      return null; // Return null to show nothing (better than crashing)
+    };
+    registerRootComponent(ErrorApp);
+    console.log("[index] ⚠️ Fallback error component registered");
+  } catch (fallbackError: any) {
+    console.error("[index] ❌ Even fallback registration failed:", fallbackError);
+    // At this point, we've done everything we can - don't throw
+  }
 }

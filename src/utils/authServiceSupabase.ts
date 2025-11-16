@@ -13,11 +13,11 @@
  * - MFA support (TOTP)
  */
 
-import { supabase, getCurrentSession, getCurrentUser } from '../api/supabase';
+import { supabase, getCurrentSession, getCurrentUser, isSupabaseConfigured } from '../api/supabase';
 
 // Check if Supabase is available
 const isSupabaseAvailable = () => {
-  if (!supabase) {
+  if (!isSupabaseConfigured()) {
     throw new Error('Supabase is not configured. Please add EXPO_PUBLIC_SUPABASE_URL and EXPO_PUBLIC_SUPABASE_ANON_KEY to .env');
   }
   return true;
@@ -116,7 +116,7 @@ export const authServiceSupabase = {
       }
 
       // Register with Supabase (handles password hashing server-side)
-      if (!supabase) {
+      if (!isSupabaseConfigured()) {
         throw new Error('Supabase is not configured');
       }
       const { data, error } = await supabase.auth.signUp({
@@ -175,7 +175,7 @@ export const authServiceSupabase = {
   }> {
     try {
       // Login with Supabase
-      if (!supabase) {
+      if (!isSupabaseConfigured()) {
         throw new Error('Supabase is not configured');
       }
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -244,7 +244,7 @@ export const authServiceSupabase = {
    */
   async logout(): Promise<void> {
     try {
-      if (!supabase) {
+      if (!isSupabaseConfigured()) {
         throw new Error('Supabase is not configured');
       }
       await supabase.auth.signOut();
@@ -260,7 +260,7 @@ export const authServiceSupabase = {
    */
   async requestPasswordReset(email: string): Promise<{ success: boolean; error?: string }> {
     try {
-      if (!supabase) {
+      if (!isSupabaseConfigured()) {
         throw new Error('Supabase is not configured');
       }
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
@@ -299,7 +299,7 @@ export const authServiceSupabase = {
       // Supabase handles password reset via session
       // This would typically be called from a password reset page
       // For now, we'll use the updateUser method if user is authenticated
-      if (!supabase) {
+      if (!isSupabaseConfigured()) {
         throw new Error('Supabase is not configured');
       }
       const { error } = await supabase.auth.updateUser({
@@ -343,7 +343,7 @@ export const authServiceSupabase = {
    */
   async refreshToken(): Promise<{ success: boolean; token?: string }> {
     try {
-      if (!supabase) {
+      if (!isSupabaseConfigured()) {
         throw new Error('Supabase is not configured');
       }
       const { data, error } = await supabase.auth.refreshSession();

@@ -23,6 +23,7 @@ import { preloadCompanionImages } from "./src/services/imagePreloadService";
 import { ToastProvider } from "./src/context/ToastContext";
 import ToastContainer from "./src/components/ToastContainer";
 import { useToast } from "./src/hooks/useToast";
+import ErrorBoundary from "./src/components/ErrorBoundary";
 
 /*
 IMPORTANT NOTICE: DO NOT REMOVE
@@ -149,8 +150,10 @@ const AppContent = () => {
 
 export default function App() {
   return (
-    <ToastProvider>
-      <AppContent />
-    </ToastProvider>
+    <ErrorBoundary>
+      <ToastProvider>
+        <AppContent />
+      </ToastProvider>
+    </ErrorBoundary>
   );
 }
