@@ -225,7 +225,7 @@ index c3a7b692106d9233d508d7dabfc082f091b2d257..37d192543e1b2035cb714b03e1b808ac
  import LogBoxInspectorFooterButton from './LogBoxInspectorFooterButton';
  import * as LogBoxStyle from './LogBoxStyle';
  import * as React from 'react';
-+import Clipboard from '@react-native-clipboard/clipboard';
++import * as Clipboard from 'expo-clipboard';
  
  type Props = $ReadOnly<{
    onDismiss: () => void,
@@ -266,16 +266,16 @@ index c3a7b692106d9233d508d7dabfc082f091b2d257..37d192543e1b2035cb714b03e1b808ac
 +    return copyText;
 +  }
 +
-+  const copyToClipboard = () => {
++  const copyToClipboard = async () => {
 +    if (props.log) {
-+      Clipboard.setString(getCopyText(props.log));
++      await Clipboard.setStringAsync(getCopyText(props.log));
 +    }
 +  }
 +
-+  const copyAllToClipboard = () => {
++  const copyAllToClipboard = async () => {
 +    if (props.logs) {
 +      const copyText = props.logs.map(log => getCopyText(log)).join('\n');
-+      Clipboard.setString(copyText);
++      await Clipboard.setStringAsync(copyText);
 +    }
    }
  
