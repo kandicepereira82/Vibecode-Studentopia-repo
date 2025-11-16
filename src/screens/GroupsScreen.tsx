@@ -3,7 +3,7 @@ import { View, Text, ScrollView, Pressable, TextInput, Modal } from "react-nativ
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import Clipboard from "@react-native-clipboard/clipboard";
+import * as Clipboard from "expo-clipboard";
 import QRCode from "react-native-qrcode-svg";
 import useUserStore from "../state/userStore";
 import useGroupStore from "../state/groupStore";
@@ -232,8 +232,8 @@ const GroupsScreen = () => {
     }
   };
 
-  const handleCopyCode = (shareCode: string) => {
-    Clipboard.setString(shareCode);
+  const handleCopyCode = async (shareCode: string) => {
+    await Clipboard.setStringAsync(shareCode);
     toast.success(`Code "${shareCode}" copied to clipboard`);
   };
 
