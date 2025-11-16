@@ -61,5 +61,11 @@ config.cacheStores = ({ FileStore, HttpStore }) => {
 // to invalidate existing caches.
 config.cacheVersion = metroCacheVersion;
 
+// Block react-native-clipboard from being resolved (using expo-clipboard instead)
+config.resolver.blockList = [
+  /.*\/@react-native-clipboard\/clipboard\/.*/,
+  /.*\/react-native-clipboard\/.*/,
+];
+
 // Integrate NativeWind with the Metro configuration.
 module.exports = withNativeWind(config, { input: "./global.css" });
