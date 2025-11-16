@@ -18,6 +18,15 @@ LogBox.ignoreLogs([
   "Android Push notifications",
   "was removed from Expo Go",
   "Use a development build instead",
+  // Suppress expo-av deprecation warning
+  "[expo-av]: Expo AV has been deprecated",
+  "Use the `expo-audio` and `expo-video` packages",
+  // Suppress SafeAreaView deprecation (we're already using the correct import)
+  "SafeAreaView has been deprecated",
+  "use 'react-native-safe-area-context' instead",
+  // Suppress Supabase warnings (credentials are optional)
+  "Supabase credentials not found",
+  "supabaseUrl is required",
 ]);
 
 import { registerRootComponent } from "expo";

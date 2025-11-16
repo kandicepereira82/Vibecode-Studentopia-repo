@@ -59,8 +59,10 @@ const storageAdapter = {
  */
 let supabaseInstance: ReturnType<typeof createClient> | null = null;
 
-try {
-  if (hasSupabaseCredentials && supabaseUrl && supabaseAnonKey) {
+// Only create client if we have valid, non-empty credentials
+// Supabase SDK validates URL immediately, so we must check before calling createClient
+if (hasSupabaseCredentials && supabaseUrl && supabaseAnonKey && supabaseUrl.trim() !== '' && supabaseAnonKey.trim() !== '') {
+  try {
     supabaseInstance = createClient(supabaseUrl, supabaseAnonKey, {
       auth: {
         storage: storageAdapter,
@@ -69,10 +71,11 @@ try {
         detectSessionInUrl: false,
       },
     });
+  } catch (error) {
+    // Silently fail - Supabase is optional
+    console.warn('Failed to initialize Supabase client:', error);
+    supabaseInstance = null;
   }
-} catch (error) {
-  console.warn('Failed to initialize Supabase client:', error);
-  supabaseInstance = null;
 }
 
 export const supabase = supabaseInstance;

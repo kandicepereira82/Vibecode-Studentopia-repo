@@ -84,6 +84,18 @@ console.warn = (...args) => {
   if (message.includes('expo-notifications') && message.includes('removed from Expo Go')) {
     return; // Suppress this warning
   }
+  // Suppress expo-av deprecation warning
+  if (message.includes('[expo-av]: Expo AV has been deprecated')) {
+    return; // Suppress this warning
+  }
+  // Suppress SafeAreaView deprecation (we're using the correct import)
+  if (message.includes('SafeAreaView has been deprecated')) {
+    return; // Suppress this warning
+  }
+  // Suppress Supabase warnings (credentials are optional)
+  if (message.includes('Supabase credentials not found') || message.includes('supabaseUrl is required')) {
+    return; // Suppress this warning
+  }
   originalWarn.apply(console, args);
 };
 
