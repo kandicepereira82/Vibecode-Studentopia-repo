@@ -13,6 +13,11 @@ LogBox.ignoreLogs([
   // Suppress require cycle warning (we use dynamic imports to prevent runtime issues)
   "Require cycle",
   "src/state/userStore.ts -> src/state/taskStore.ts",
+  // Suppress expo-notifications warnings (expected in Expo Go)
+  "expo-notifications",
+  "Android Push notifications",
+  "was removed from Expo Go",
+  "Use a development build instead",
 ]);
 
 import { registerRootComponent } from "expo";

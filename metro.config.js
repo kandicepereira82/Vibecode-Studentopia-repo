@@ -80,6 +80,10 @@ console.warn = (...args) => {
   if (message.includes('Require cycle') && message.includes('userStore.ts -> src/state/taskStore.ts')) {
     return; // Suppress this warning
   }
+  // Suppress expo-notifications warnings (expected in Expo Go)
+  if (message.includes('expo-notifications') && message.includes('removed from Expo Go')) {
+    return; // Suppress this warning
+  }
   originalWarn.apply(console, args);
 };
 
