@@ -67,13 +67,17 @@ config.resolver.blockList = [
   /.*\/react-native-clipboard\/.*/,
 ];
 
-// Suppress Metro warnings for @anthropic-ai/sdk module resolution
-// The package uses exports that Metro can't resolve statically, but fallback works fine
+// Suppress Metro warnings for @anthropic-ai/sdk module resolution and require cycles
+// These warnings are harmless - we use dynamic imports to prevent runtime issues
 const originalWarn = console.warn;
 console.warn = (...args) => {
   const message = args.join(' ');
   // Suppress @anthropic-ai/sdk module resolution warnings
   if (message.includes('@anthropic-ai/sdk') && message.includes('no match was resolved')) {
+    return; // Suppress this warning
+  }
+  // Suppress require cycle warning (we use dynamic imports)
+  if (message.includes('Require cycle') && message.includes('userStore.ts -> src/state/taskStore.ts')) {
     return; // Suppress this warning
   }
   originalWarn.apply(console, args);
