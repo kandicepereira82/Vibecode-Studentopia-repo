@@ -30,44 +30,22 @@ const firebaseConfig = {
   appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID || "YOUR_APP_ID",
 };
 
-// Initialize Firebase with error handling to prevent crashes
-let app: any = null;
-let auth: any = null;
-let firestore: any = null;
-let realtimeDb: any = null;
-
-try {
-  if (getApps().length === 0) {
-    // Only initialize if config is valid (not placeholder values)
-    const hasValidConfig = firebaseConfig.apiKey && 
-                           firebaseConfig.apiKey !== "YOUR_API_KEY" &&
-                           firebaseConfig.projectId && 
-                           firebaseConfig.projectId !== "YOUR_PROJECT_ID";
-    
-    if (hasValidConfig) {
-      app = initializeApp(firebaseConfig);
-    } else {
-      console.log("[Firebase] Configuration not set - Firebase features will be disabled");
-    }
-  } else {
-    app = getApp();
-  }
-
-  // Initialize services only if app was successfully initialized
-  if (app) {
-    auth = getAuth(app);
-    firestore = getFirestore(app);
-    realtimeDb = getDatabase(app);
-  }
-} catch (error: any) {
-  // Firebase initialization failed - app should still work without Firebase
-  console.log("[Firebase] Initialization failed - app will continue without Firebase:", error?.message);
-  // Set all to null to indicate Firebase is not available
-  app = null;
-  auth = null;
-  firestore = null;
-  realtimeDb = null;
+// Initialize Firebase
+let app;
+if (getApps().length === 0) {
+  app = initializeApp(firebaseConfig);
+} else {
+  app = getApp();
 }
+
+// Initialize Auth (persistence handled automatically in React Native)
+const auth = getAuth(app);
+
+// Initialize Firestore (for Groups, Friends, User Profiles)
+const firestore = getFirestore(app);
+
+// Initialize Realtime Database (for Live Sessions - faster real-time sync)
+const realtimeDb = getDatabase(app);
 
 export { app, auth, firestore, realtimeDb };
 export default app;

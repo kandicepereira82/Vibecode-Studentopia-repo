@@ -6,14 +6,14 @@ import { Group } from "../types";
 
 interface GroupStore {
   groups: Group[];
-  addGroup: (group: Omit<Group, "id" | "createdAt" | "shareCode" | "shareCodeHash">) => void;
+  addGroup: (group: Omit<Group, "id" | "createdAt" | "shareCode" | "shareCodeHash">) => Promise<void>;
   updateGroup: (groupId: string, userId: string, updates: Partial<Omit<Group, "id" | "createdAt" | "shareCode" | "shareCodeHash" | "teacherId" | "studentIds">>) => boolean;
-  joinGroupWithCode: (shareCode: string, studentId: string, authenticatedUserId: string) => { success: boolean; message: string };
+  joinGroupWithCode: (shareCode: string, studentId: string, authenticatedUserId: string) => Promise<{ success: boolean; message: string }>;
   leaveGroup: (groupId: string, studentId: string) => void;
-  regenerateShareCode: (groupId: string, userId: string) => string | null;
+  regenerateShareCode: (groupId: string, userId: string) => Promise<string | null>;
   getGroupsByStudent: (studentId: string) => Group[];
   getGroupsByTeacher: (teacherId: string) => Group[];
-  getGroupByShareCode: (shareCode: string) => Group | undefined;
+  getGroupByShareCode: (shareCode: string) => Promise<Group | undefined>;
 }
 
 // SECURITY FIX: Generate a random 6-character share code

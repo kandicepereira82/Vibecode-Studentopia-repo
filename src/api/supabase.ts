@@ -170,116 +170,41 @@ const initializeSupabase = (): any => {
   }
 };
 
-// CRITICAL: Defer initialization to prevent crashes during module load
-// Initialize lazily on first access, not at module load time
-// This prevents any synchronous errors from crashing the app during startup
-let initializationAttempted = false;
+// Initialize immediately (but with lazy credential reading)
+try {
+  supabaseInstance = initializeSupabase();
+} catch (error: any) {
+  // Final safety net - if anything goes wrong, set to null
+  supabaseInstance = null;
+}
 
-const getSupabaseInstance = (): any => {
-  // Only initialize once, and only when actually needed
-  if (!initializationAttempted) {
-    initializationAttempted = true;
-    try {
-      supabaseInstance = initializeSupabase();
-    } catch (error: any) {
-      // Final safety net - if anything goes wrong, set to null
-      console.log("[Supabase] Initialization deferred - will initialize on first use");
-      supabaseInstance = null;
-    }
-  }
-  return supabaseInstance;
-};
-
-// Create a Proxy that lazily initializes Supabase on first property access
-// This allows the module to load without errors, even if Supabase config is invalid
-const createSupabaseProxy = (): any => {
-  return new Proxy({} as any, {
-    get: (_target, prop) => {
-      // Handle special property to check if Supabase is available
-      if (prop === '__isSupabaseAvailable') {
-        return () => getSupabaseInstance() !== null;
-      }
-      
-      const instance = getSupabaseInstance();
-      if (!instance) {
-        // Return no-op objects/functions if Supabase is not available
-        if (prop === 'auth') {
-          return {
-            getSession: () => Promise.resolve({ data: { session: null }, error: null }),
-            getUser: () => Promise.resolve({ data: { user: null }, error: null }),
-            signIn: () => Promise.resolve({ data: null, error: { message: 'Supabase not configured' } }),
-            signUp: () => Promise.resolve({ data: null, error: { message: 'Supabase not configured' } }),
-            signOut: () => Promise.resolve({ error: null }),
-          };
-        }
-        if (prop === 'from' || prop === 'rpc') {
-          return () => ({
-            select: () => ({ data: null, error: { message: 'Supabase not configured' } }),
-            insert: () => ({ data: null, error: { message: 'Supabase not configured' } }),
-            update: () => ({ data: null, error: { message: 'Supabase not configured' } }),
-            delete: () => ({ data: null, error: { message: 'Supabase not configured' } }),
-          });
-        }
-        return undefined;
-      }
-      return instance[prop];
-    },
-  });
-};
-
-// Export supabase as a lazy-initialized proxy
-// This allows code to use `supabase.auth` safely even if Supabase is not configured
-export const supabase = createSupabaseProxy();
-
-// Export helper function to check if Supabase is available
-// Use this instead of `if (!supabase)` since Proxy objects are always truthy
-export const isSupabaseConfigured = (): boolean => {
-  return getSupabaseInstance() !== null;
-};
+export const supabase = supabaseInstance;
 
 /**
  * Get current session
  */
 export const getCurrentSession = async () => {
-  const instance = getSupabaseInstance();
-  if (!instance) return null;
-  try {
-    const { data: { session } } = await instance.auth.getSession();
-    return session;
-  } catch (error: any) {
-    console.log("[Supabase] Error getting session:", error?.message);
-    return null;
-  }
+  if (!supabase) return null;
+  const { data: { session } } = await supabase.auth.getSession();
+  return session;
 };
 
 /**
  * Get current user
  */
 export const getCurrentUser = async () => {
-  const instance = getSupabaseInstance();
-  if (!instance) return null;
-  try {
-    const { data: { user } } = await instance.auth.getUser();
-    return user;
-  } catch (error: any) {
-    console.log("[Supabase] Error getting user:", error?.message);
-    return null;
-  }
+  if (!supabase) return null;
+  const { data: { user } } = await supabase.auth.getUser();
+  return user;
 };
 
 /**
  * Check if user is authenticated
  */
 export const isAuthenticated = async (): Promise<boolean> => {
-  const instance = getSupabaseInstance();
-  if (!instance) return false;
-  try {
-    const session = await getCurrentSession();
-    return !!session;
-  } catch (error: any) {
-    console.log("[Supabase] Error checking authentication:", error?.message);
-    return false;
-  }
+  if (!supabase) return false;
+  const session = await getCurrentSession();
+  return !!session;
 };
 
 export default supabase;

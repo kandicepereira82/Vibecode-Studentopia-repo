@@ -469,10 +469,10 @@ const useStudyRoomStore = create<StudyRoomStore>((set, get) => ({
 
 // OPTIMIZATION: Rebuild index when rooms array changes
 useStudyRoomStore.subscribe(
-  (state) => state.rooms,
-  (rooms) => {
+  (state) => {
+    const rooms = state.rooms;
     roomsByIdIndex.clear();
-    rooms.forEach(room => roomsByIdIndex.set(room.id, room));
+    rooms.forEach((room: any) => roomsByIdIndex.set(room.id, room));
   }
 );
 

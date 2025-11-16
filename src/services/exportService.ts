@@ -55,9 +55,13 @@ export const exportAllData = async (): Promise<string | null> => {
     const filename = `studentopia-backup-${timestamp}.json`;
 
     // Save to file system
-    const fileUri = `${FileSystem.documentDirectory}${filename}`;
+    const documentDir = (FileSystem as any).documentDirectory as string | null;
+    if (!documentDir) {
+      throw new Error("Document directory not available");
+    }
+    const fileUri = `${documentDir}${filename}`;
     await FileSystem.writeAsStringAsync(fileUri, jsonString, {
-      encoding: FileSystem.EncodingType.UTF8,
+      encoding: ((FileSystem as any).EncodingType?.UTF8 as any) || 'utf8' as any,
     });
 
     return fileUri;
@@ -112,7 +116,7 @@ export const deleteExportedFile = async (fileUri: string): Promise<void> => {
  */
 export const getLastExportTimestamp = async (): Promise<Date | null> => {
   try {
-    const dir = FileSystem.documentDirectory;
+    const dir = (FileSystem as any).documentDirectory as string | null;
     if (!dir) return null;
 
     const files = await FileSystem.readDirectoryAsync(dir);

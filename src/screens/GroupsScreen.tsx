@@ -130,7 +130,7 @@ const GroupsScreen = () => {
     toast.success("Group created successfully!");
   };
 
-  const handleJoinGroup = () => {
+  const handleJoinGroup = async () => {
     if (!joinCode.trim()) {
       toast.error("Please enter a group code");
       return;
@@ -139,7 +139,7 @@ const GroupsScreen = () => {
     if (!user) return;
 
     // Use the share code to join the group
-    const result = joinGroupWithCode(joinCode.toUpperCase(), user.id, user.id);
+    const result = await joinGroupWithCode(joinCode.toUpperCase(), user.id, user.id);
     if (result.success) {
       const group = groups.find((g) => g.shareCode === joinCode.toUpperCase());
       setJoinCode("");

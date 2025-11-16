@@ -230,7 +230,15 @@ export const THEMES: Record<ThemeColor, ThemeConfig> = {
 };
 
 export const getTheme = (themeColor?: ThemeColor, darkMode?: boolean): ThemeConfig => {
-  const theme = THEMES[themeColor || "nature"];
+  // CRITICAL FIX: Validate themeColor exists in THEMES to prevent undefined access
+  const validThemeColor = (themeColor && THEMES[themeColor]) ? themeColor : "nature";
+  const theme = THEMES[validThemeColor];
+
+  if (!theme) {
+    // Ultimate fallback - should never happen but prevents crash
+    console.error(`[Themes] Theme not found: ${themeColor}, using nature`);
+    return THEMES.nature;
+  }
 
   if (darkMode) {
     // Return theme with dark mode colors applied

@@ -15,8 +15,8 @@ const getEncryptionKey = async (): Promise<string> => {
   let key: string | null = null;
   
   try {
-    const { SecureStore } = await import("expo-secure-store");
-    key = await SecureStore.getItemAsync("encryption_key");
+    const SecureStore = await import("expo-secure-store");
+    key = await SecureStore.default.getItemAsync("encryption_key");
   } catch {
     const { default: AsyncStorage } = await import("@react-native-async-storage/async-storage");
     key = await AsyncStorage.getItem("encryption_key");
@@ -30,8 +30,8 @@ const getEncryptionKey = async (): Promise<string> => {
       .join('');
     
     try {
-      const { SecureStore } = await import("expo-secure-store");
-      await SecureStore.setItemAsync("encryption_key", key);
+      const SecureStore = await import("expo-secure-store");
+      await SecureStore.default.setItemAsync("encryption_key", key);
     } catch {
       const { default: AsyncStorage } = await import("@react-native-async-storage/async-storage");
       await AsyncStorage.setItem("encryption_key", key);

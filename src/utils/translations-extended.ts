@@ -899,8 +899,10 @@ export const mergeTranslations = (
 
   Object.keys(extendedTranslations).forEach((lang) => {
     const language = lang as Language;
+    // CRITICAL FIX: Check if merged[language] exists before spreading to prevent crash
+    // If language doesn't exist in mainTranslations, use empty object as base
     merged[language] = {
-      ...merged[language],
+      ...(merged[language] || {}),
       ...extendedTranslations[language],
     };
   });

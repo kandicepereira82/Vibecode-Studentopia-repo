@@ -107,22 +107,8 @@ const HomeScreen = () => {
     return { weekStart: start, weekDays: days };
   }, []); // Only recalculate once per day
 
-  if (!user) {
-    return (
-      <SafeAreaView className="flex-1" style={{ backgroundColor: theme.backgroundGradient[0] }}>
-        <View className="flex-1 items-center justify-center p-6">
-          <Text className="text-2xl font-bold mb-4" style={{ color: theme.textPrimary }}>
-            Welcome to Studentopia
-          </Text>
-          <Text className="text-center" style={{ color: theme.textSecondary }}>
-            Please set up your profile to get started
-          </Text>
-        </View>
-      </SafeAreaView>
-    );
-  }
-
   // OPTIMIZATION: Use memoized tasks instead of recalculating
+  // CRITICAL: All hooks must be called before any early returns
   const todayCompleted = useMemo(() => 
     todayTasks.filter((t) => t.status === "completed").length,
     [todayTasks]
@@ -149,6 +135,21 @@ const HomeScreen = () => {
       .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime())
       .slice(0, 5);
   }, [weekTasks, user?.id]);
+
+  if (!user) {
+    return (
+      <SafeAreaView className="flex-1" style={{ backgroundColor: theme.backgroundGradient[0] }}>
+        <View className="flex-1 items-center justify-center p-6">
+          <Text className="text-2xl font-bold mb-4" style={{ color: theme.textPrimary }}>
+            Welcome to Studentopia
+          </Text>
+          <Text className="text-center" style={{ color: theme.textSecondary }}>
+            Please set up your profile to get started
+          </Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   // Extract first name from username
   const firstName = user.username.split(" ")[0];

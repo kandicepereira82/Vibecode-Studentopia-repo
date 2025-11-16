@@ -50,7 +50,7 @@ export const pickImportFile = async (): Promise<ExportData | null> => {
 
     const file = result.assets[0];
     const fileContent = await FileSystem.readAsStringAsync(file.uri, {
-      encoding: FileSystem.EncodingType.UTF8,
+      encoding: ((FileSystem as any).EncodingType?.UTF8 as any) || 'utf8' as any,
     });
 
     const data = JSON.parse(fileContent);

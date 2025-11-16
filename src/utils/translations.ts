@@ -1385,7 +1385,20 @@ const mergedTranslations = mergeTranslations(translations);
 
 export const useTranslation = (language: Language) => {
   const t = (key: string): string => {
-    return mergedTranslations[language]?.[key] || mergedTranslations.en[key] || key;
+    // CRITICAL FIX: Add safety checks to prevent crashes if mergedTranslations is malformed
+    if (!mergedTranslations) {
+      console.error("[Translations] mergedTranslations is undefined - using fallback");
+      return key;
+    }
+    
+    // Validate language exists, fallback to English
+    const langTranslations = mergedTranslations[language] || mergedTranslations.en;
+    if (!langTranslations) {
+      console.error(`[Translations] No translations found for language: ${language}`);
+      return key;
+    }
+    
+    return langTranslations[key] || mergedTranslations.en?.[key] || key;
   };
 
   return { t };
