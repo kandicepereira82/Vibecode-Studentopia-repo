@@ -225,12 +225,6 @@ index c3a7b692106d9233d508d7dabfc082f091b2d257..37d192543e1b2035cb714b03e1b808ac
  import LogBoxInspectorFooterButton from './LogBoxInspectorFooterButton';
  import * as LogBoxStyle from './LogBoxStyle';
  import * as React from 'react';
-+let Clipboard: any = null;
-+try {
-+  Clipboard = require('expo-clipboard');
-+} catch (e) {
-+  // Clipboard not available (e.g., in Expo Go)
-+}
  
  type Props = $ReadOnly<{
    onDismiss: () => void,
@@ -263,31 +257,8 @@ index c3a7b692106d9233d508d7dabfc082f091b2d257..37d192543e1b2035cb714b03e1b808ac
 +  //   );
 +  // }
 +
-+  const getCopyText = (log: LogBoxLog) => {
-+    const message = log.message.content;
-+    const filePath = log.codeFrame?.fileName;
-+    const codeContent = log.codeFrame?.content;
-+    const copyText = `${message}\n\n${filePath}\n\n${codeContent}`.replaceAll(/\u001b\[[0-9;]*m/g, '');
-+    return copyText;
-+  }
-+
-+  const copyToClipboard = async () => {
-+    if (props.log && Clipboard) {
-+      await Clipboard.setStringAsync(getCopyText(props.log));
-+    }
-+  }
-+
-+  const copyAllToClipboard = async () => {
-+    if (props.logs && Clipboard) {
-+      const copyText = props.logs.map(log => getCopyText(log)).join('\n');
-+      await Clipboard.setStringAsync(copyText);
-+    }
-+  }
- 
    return (
      <View style={styles.root}>
-+      <LogBoxInspectorFooterButton text="Copy" onPress={copyToClipboard} />
-+      <LogBoxInspectorFooterButton text="Copy All" onPress={copyAllToClipboard} />
        <LogBoxInspectorFooterButton
          id="logbox_footer_button_dismiss"
          text="Dismiss"
