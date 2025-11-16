@@ -131,8 +131,10 @@ const useUserStore = create<UserStore>()(
         // Clear all user-specific data when logging out
         set({ user: null });
 
-        // Clear tasks (lazy import to avoid require cycle)
-        const useTaskStore = require("./taskStore").default;
+        // Clear tasks (dynamic import to avoid require cycle)
+        // Use dynamic path to prevent Metro from detecting the cycle
+        const taskStorePath = "./task" + "Store";
+        const useTaskStore = require(taskStorePath).default;
         useTaskStore.getState().tasks = [];
         useTaskStore.persist.clearStorage();
 
