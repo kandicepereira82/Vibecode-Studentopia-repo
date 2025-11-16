@@ -18,7 +18,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL || '';
 const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY || '';
 
-if (!supabaseUrl || !supabaseAnonKey) {
+const hasSupabaseCredentials = !!(supabaseUrl && supabaseAnonKey && supabaseUrl !== '' && supabaseAnonKey !== '');
+
+if (!hasSupabaseCredentials) {
   console.warn('⚠️ Supabase credentials not found. Please add EXPO_PUBLIC_SUPABASE_URL and EXPO_PUBLIC_SUPABASE_ANON_KEY to .env');
 }
 
@@ -52,21 +54,25 @@ const storageAdapter = {
 
 /**
  * Supabase client instance
+ * Only created if credentials are available, otherwise null
  * Configured with secure storage for auth tokens
  */
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    storage: storageAdapter,
-    autoRefreshToken: true,
-    persistSession: true,
-    detectSessionInUrl: false,
-  },
-});
+export const supabase = hasSupabaseCredentials 
+  ? createClient(supabaseUrl, supabaseAnonKey, {
+      auth: {
+        storage: storageAdapter,
+        autoRefreshToken: true,
+        persistSession: true,
+        detectSessionInUrl: false,
+      },
+    })
+  : null;
 
 /**
  * Get current session
  */
 export const getCurrentSession = async () => {
+  if (!supabase) return null;
   const { data: { session } } = await supabase.auth.getSession();
   return session;
 };
@@ -75,6 +81,7 @@ export const getCurrentSession = async () => {
  * Get current user
  */
 export const getCurrentUser = async () => {
+  if (!supabase) return null;
   const { data: { user } } = await supabase.auth.getUser();
   return user;
 };
@@ -83,6 +90,7 @@ export const getCurrentUser = async () => {
  * Check if user is authenticated
  */
 export const isAuthenticated = async (): Promise<boolean> => {
+  if (!supabase) return false;
   const session = await getCurrentSession();
   return !!session;
 };
