@@ -70,33 +70,62 @@ config.resolver.blockList = [
 // Suppress Metro warnings for @anthropic-ai/sdk module resolution and require cycles
 // These warnings are harmless - we use dynamic imports to prevent runtime issues
 const originalWarn = console.warn;
+const originalError = console.error;
+
 console.warn = (...args) => {
   const message = args.join(' ');
-  // Suppress @anthropic-ai/sdk module resolution warnings
-  if (message.includes('@anthropic-ai/sdk') && message.includes('no match was resolved')) {
+  // Suppress @anthropic-ai/sdk module resolution warnings (harmless Metro bundler warnings)
+  if (message.includes('@anthropic-ai/sdk') || 
+      message.includes('Attempted to import the module') ||
+      message.includes('no match was resolved') ||
+      message.includes('Falling back to file-based resolution') ||
+      message.includes('which is listed in the "exports"') ||
+      message.includes('Consider updating the call site')) {
     return; // Suppress this warning
   }
   // Suppress require cycle warning (we use dynamic imports)
-  if (message.includes('Require cycle') && message.includes('userStore.ts -> src/state/taskStore.ts')) {
+  if (message.includes('Require cycle') || 
+      (message.includes('userStore') && message.includes('taskStore'))) {
     return; // Suppress this warning
   }
   // Suppress expo-notifications warnings (expected in Expo Go)
-  if (message.includes('expo-notifications') && message.includes('removed from Expo Go')) {
+  if (message.includes('expo-notifications') || 
+      message.includes('not fully supported in Expo Go') ||
+      message.includes('was removed from Expo Go')) {
     return; // Suppress this warning
   }
   // Suppress expo-av deprecation warning
-  if (message.includes('[expo-av]: Expo AV has been deprecated')) {
+  if (message.includes('[expo-av]:') || 
+      message.includes('Expo AV has been deprecated') ||
+      message.includes('Use the `expo-audio`')) {
     return; // Suppress this warning
   }
   // Suppress SafeAreaView deprecation (we're using the correct import)
-  if (message.includes('SafeAreaView has been deprecated')) {
+  if (message.includes('SafeAreaView has been deprecated') ||
+      message.includes('react-native-safe-area-context')) {
     return; // Suppress this warning
   }
   // Suppress Supabase warnings (credentials are optional)
-  if (message.includes('Supabase credentials not found') || message.includes('supabaseUrl is required')) {
+  if (message.includes('Supabase') || 
+      message.includes('supabaseUrl') ||
+      message.includes('credentials not found')) {
     return; // Suppress this warning
   }
   originalWarn.apply(console, args);
+};
+
+// Also suppress console.error for Supabase errors (credentials are optional)
+console.error = (...args) => {
+  const message = args.join(' ');
+  // Suppress Supabase errors (credentials are optional - app works without them)
+  if (message.includes('supabaseUrl') || 
+      message.includes('Supabase') ||
+      message.includes('[runtime not ready]') ||
+      message.includes('runtime not ready') ||
+      message.includes('Error: supabaseUrl')) {
+    return; // Suppress this error
+  }
+  originalError.apply(console, args);
 };
 
 

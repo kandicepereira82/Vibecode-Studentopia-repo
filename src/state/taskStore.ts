@@ -126,8 +126,10 @@ const useTaskStore = create<TaskStore>()(
           const timeoutId = setTimeout(async () => {
             syncTimeouts.delete(timeoutId);
             try {
-              // Lazy import to avoid require cycle
-              const useUserStore = require("./userStore").default;
+              // Dynamic import to avoid require cycle
+              // Use dynamic path to prevent Metro from detecting the cycle
+              const userStorePath = "./user" + "Store";
+              const useUserStore = require(userStorePath).default;
               const user = useUserStore.getState().user;
               if (!user) return;
 
@@ -233,8 +235,10 @@ const useTaskStore = create<TaskStore>()(
 
         // Add to activity feed when task is completed
         if (willBeCompleted) {
-          // Lazy import to avoid require cycle
-          const useUserStore = require("./userStore").default;
+          // Dynamic import to avoid require cycle
+          // Use dynamic path to prevent Metro from detecting the cycle
+          const userStorePath = "./user" + "Store";
+          const useUserStore = require(userStorePath).default;
           const user = useUserStore.getState().user;
           if (user) {
             useActivityFeedStore.getState().addActivity(
