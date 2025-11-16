@@ -14,6 +14,14 @@
  */
 
 import { supabase, getCurrentSession, getCurrentUser } from '../api/supabase';
+
+// Check if Supabase is available
+const isSupabaseAvailable = () => {
+  if (!supabase) {
+    throw new Error('Supabase is not configured. Please add EXPO_PUBLIC_SUPABASE_URL and EXPO_PUBLIC_SUPABASE_ANON_KEY to .env');
+  }
+  return true;
+};
 import { containsInappropriateContent, validateName } from './contentModeration';
 import { sessionService } from '../services/sessionService';
 import { mfaService } from '../services/mfaService';
@@ -108,6 +116,9 @@ export const authServiceSupabase = {
       }
 
       // Register with Supabase (handles password hashing server-side)
+      if (!supabase) {
+        throw new Error('Supabase is not configured');
+      }
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -164,6 +175,9 @@ export const authServiceSupabase = {
   }> {
     try {
       // Login with Supabase
+      if (!supabase) {
+        throw new Error('Supabase is not configured');
+      }
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -230,6 +244,9 @@ export const authServiceSupabase = {
    */
   async logout(): Promise<void> {
     try {
+      if (!supabase) {
+        throw new Error('Supabase is not configured');
+      }
       await supabase.auth.signOut();
       await clearAuthToken();
     } catch (error) {
@@ -243,6 +260,9 @@ export const authServiceSupabase = {
    */
   async requestPasswordReset(email: string): Promise<{ success: boolean; error?: string }> {
     try {
+      if (!supabase) {
+        throw new Error('Supabase is not configured');
+      }
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: undefined, // Can configure password reset URL
       });
@@ -279,6 +299,9 @@ export const authServiceSupabase = {
       // Supabase handles password reset via session
       // This would typically be called from a password reset page
       // For now, we'll use the updateUser method if user is authenticated
+      if (!supabase) {
+        throw new Error('Supabase is not configured');
+      }
       const { error } = await supabase.auth.updateUser({
         password: newPassword,
       });
@@ -320,6 +343,9 @@ export const authServiceSupabase = {
    */
   async refreshToken(): Promise<{ success: boolean; token?: string }> {
     try {
+      if (!supabase) {
+        throw new Error('Supabase is not configured');
+      }
       const { data, error } = await supabase.auth.refreshSession();
       
       if (error || !data.session) {
