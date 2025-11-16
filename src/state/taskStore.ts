@@ -3,7 +3,7 @@ import { persist, createJSONStorage } from "zustand/middleware";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Task, TaskCategory, TaskStatus } from "../types";
 import useActivityFeedStore from "./activityFeedStore";
-import useUserStore from "./userStore";
+// Lazy import to avoid require cycle with userStore
 import useCalendarStore from "./calendarStore";
 import { syncTaskWithCalendar, deleteCalendarEvent } from "../services/calendarService";
 
@@ -52,6 +52,8 @@ const useTaskStore = create<TaskStore>()(
         const timeoutId = setTimeout(async () => {
           syncTimeouts.delete(timeoutId);
           try {
+            // Lazy import to avoid require cycle
+            const useUserStore = require("./userStore").default;
             const user = useUserStore.getState().user;
             if (!user) return;
 
@@ -122,6 +124,8 @@ const useTaskStore = create<TaskStore>()(
           const timeoutId = setTimeout(async () => {
             syncTimeouts.delete(timeoutId);
             try {
+              // Lazy import to avoid require cycle
+              const useUserStore = require("./userStore").default;
               const user = useUserStore.getState().user;
               if (!user) return;
 
@@ -227,6 +231,8 @@ const useTaskStore = create<TaskStore>()(
 
         // Add to activity feed when task is completed
         if (willBeCompleted) {
+          // Lazy import to avoid require cycle
+          const useUserStore = require("./userStore").default;
           const user = useUserStore.getState().user;
           if (user) {
             useActivityFeedStore.getState().addActivity(

@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { User, Language, ThemeColor, StudyPalAnimal, AvatarCustomization } from "../types";
-import useTaskStore from "./taskStore";
+// Lazy imports to avoid require cycle
 import useStatsStore from "./statsStore";
 import useGroupStore from "./groupStore";
 
@@ -131,7 +131,8 @@ const useUserStore = create<UserStore>()(
         // Clear all user-specific data when logging out
         set({ user: null });
 
-        // Clear tasks
+        // Clear tasks (lazy import to avoid require cycle)
+        const useTaskStore = require("./taskStore").default;
         useTaskStore.getState().tasks = [];
         useTaskStore.persist.clearStorage();
 

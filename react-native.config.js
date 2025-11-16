@@ -7,6 +7,13 @@ module.exports = {
         ios: null, // disable iOS platform, otherwise it will autolink if provided
       },
     },
+    // Exclude @react-native-clipboard/clipboard from autolinking (using expo-clipboard instead)
+    '@react-native-clipboard/clipboard': {
+      platforms: {
+        android: null,
+        ios: null,
+      },
+    },
   },
 };
 
