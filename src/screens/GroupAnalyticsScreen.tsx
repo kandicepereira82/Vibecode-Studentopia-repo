@@ -2,13 +2,11 @@ import React from "react";
 import { View, Text, ScrollView, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
 import useUserStore from "../state/userStore";
 import useGroupStore from "../state/groupStore";
 import useTaskStore from "../state/taskStore";
 import { getTheme } from "../utils/themes";
 import { calculateGroupAnalytics, getGroupEngagementSummary } from "../utils/groupAnalytics";
-import StudyPal from "../components/StudyPal";
 
 interface GroupAnalyticsScreenProps {
   groupId: string;

@@ -5,7 +5,6 @@ import { Ionicons } from "@expo/vector-icons";
 import useUserStore from "../state/userStore";
 import useCalendarStore from "../state/calendarStore";
 import { getTheme } from "../utils/themes";
-import { useTranslation } from "../utils/translations";
 import {
   getOrCreateStudentopiaCalendar,
   getAllStudentopiaCalendars,
@@ -20,20 +19,22 @@ interface AlertState {
   visible: boolean;
   title: string;
   message: string;
-  buttons?: Array<{ text: string; onPress?: () => void; style?: "default" | "cancel" | "destructive" }>;
+  buttons?: { text: string; onPress?: () => void; style?: "default" | "cancel" | "destructive" }[];
 }
 
-const CalendarConnectionsScreen = ({ navigation }: any) => {
+interface CalendarConnectionsScreenProps {
+  navigation: any;
+}
+
+const CalendarConnectionsScreen = ({ navigation }: CalendarConnectionsScreenProps) => {
   const user = useUserStore((s) => s.user);
-  const connections = useCalendarStore((s) => s.connections);
+  const connections: CalendarConnection[] = useCalendarStore((s) => s.connections);
   const addConnection = useCalendarStore((s) => s.addConnection);
-  const updateConnection = useCalendarStore((s) => s.updateConnection);
   const removeConnection = useCalendarStore((s) => s.removeConnection);
   const toggleConnectionVisibility = useCalendarStore((s) => s.toggleConnectionVisibility);
   const toggleConnectionSync = useCalendarStore((s) => s.toggleConnectionSync);
 
   const theme = getTheme(user?.themeColor);
-  const { t } = useTranslation(user?.language || "en");
   const toast = useGlobalToast();
 
   const [loading, setLoading] = useState(false);
@@ -60,7 +61,10 @@ const CalendarConnectionsScreen = ({ navigation }: any) => {
   };
 
   useEffect(() => {
-    loadExistingConnections();
+    const loadData = async () => {
+      await loadExistingConnections();
+    };
+    loadData();
   }, []);
 
   const loadExistingConnections = async () => {

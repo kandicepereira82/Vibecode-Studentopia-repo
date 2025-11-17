@@ -150,7 +150,7 @@ const initializeSupabase = (): any => {
           },
         });
         return supabaseInstance;
-      } catch (createError: any) {
+      } catch {
         // If createClient still throws, catch it here
         // This should never happen with our validation, but be safe
         supabaseInstance = null;
@@ -161,7 +161,7 @@ const initializeSupabase = (): any => {
       supabaseInstance = null;
       return null;
     }
-  } catch (error: any) {
+  } catch {
     // Catch ANY error during initialization (including from createClient or validateSupabaseUrl)
     // Silently fail - Supabase is optional
     // The error is suppressed in metro.config.js and index.ts
@@ -173,7 +173,7 @@ const initializeSupabase = (): any => {
 // Initialize immediately (but with lazy credential reading)
 try {
   supabaseInstance = initializeSupabase();
-} catch (error: any) {
+} catch {
   // Final safety net - if anything goes wrong, set to null
   supabaseInstance = null;
 }

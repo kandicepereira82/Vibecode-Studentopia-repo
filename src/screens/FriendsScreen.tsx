@@ -2,13 +2,11 @@ import React, { useState, useEffect } from "react";
 import { View, Text, ScrollView, Pressable, TextInput, Modal, RefreshControl } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
 import useUserStore from "../state/userStore";
 import useFriendStore from "../state/friendStore";
 import useActivityFeedStore from "../state/activityFeedStore";
 import { getTheme } from "../utils/themes";
 import { useGlobalToast } from "../context/ToastContext";
-import StudyPal from "../components/StudyPal";
 import ClickableCompanion from "../components/ClickableCompanion";
 import { presenceService } from "../services/presenceService";
 import { UserPresence } from "../types";
@@ -18,7 +16,6 @@ const FriendsScreen = () => {
   const theme = getTheme(user?.themeColor);
   const toast = useGlobalToast();
 
-  const friends = useFriendStore((s) => s.friends);
   const getFriends = useFriendStore((s) => s.getFriends);
   const getPendingRequests = useFriendStore((s) => s.getPendingRequests);
   const getSentRequests = useFriendStore((s) => s.getSentRequests);
@@ -28,7 +25,6 @@ const FriendsScreen = () => {
   const removeFriend = useFriendStore((s) => s.removeFriend);
   const searchFriends = useFriendStore((s) => s.searchFriends);
 
-  const activities = useActivityFeedStore((s) => s.activities);
   const getFriendActivities = useActivityFeedStore((s) => s.getFriendActivities);
 
   const [activeTab, setActiveTab] = useState<"friends" | "requests" | "activity">("friends");

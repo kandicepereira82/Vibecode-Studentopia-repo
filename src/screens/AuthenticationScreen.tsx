@@ -7,6 +7,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import useUserStore from "../state/userStore";
 import useStatsStore from "../state/statsStore";
 import useOnboardingStore from "../state/onboardingStore";
+import { useGlobalToast } from "../context/ToastContext";
+import { parseError, logError } from "../utils/errorUtils";
+import { validateName, validateNameRealtime } from "../utils/contentModeration";
+
 // Use Supabase auth if configured, otherwise fall back to local auth
 import { authService } from "../utils/authService";
 import { authServiceSupabase } from "../utils/authServiceSupabase";
@@ -16,9 +20,6 @@ const USE_SUPABASE_AUTH = !!(process.env.EXPO_PUBLIC_SUPABASE_URL && process.env
 
 // Use Supabase auth if configured, otherwise use local auth
 const activeAuthService = USE_SUPABASE_AUTH ? authServiceSupabase : authService;
-import { useGlobalToast } from "../context/ToastContext";
-import { parseError, logError } from "../utils/errorUtils";
-import { validateName, validateNameRealtime } from "../utils/contentModeration";
 
 interface AuthenticationScreenProps {
   onComplete: () => void;

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { View, Text, ScrollView, Pressable, Modal, TextInput, KeyboardAvoidingView, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { startOfMonth, endOfMonth, eachDayOfInterval, format, isSameDay, isToday, addMonths, subMonths, startOfWeek, endOfWeek, addWeeks, subWeeks } from "date-fns";
 import useUserStore from "../state/userStore";
@@ -11,14 +10,12 @@ import { useTranslation } from "../utils/translations";
 import { getTheme } from "../utils/themes";
 import { TaskCategory } from "../types";
 import { cn } from "../utils/cn";
-import StudyPal from "../components/StudyPal";
 import ClickableCompanion from "../components/ClickableCompanion";
 import { useGlobalToast } from "../context/ToastContext";
 
 const CalendarScreen = () => {
   const user = useUserStore((s) => s.user);
   const tasks = useTaskStore((s) => s.tasks);
-  const getTasksByDate = useTaskStore((s) => s.getTasksByDate);
   const addTask = useTaskStore((s) => s.addTask);
   const toast = useGlobalToast();
 
@@ -71,10 +68,6 @@ const CalendarScreen = () => {
     } else {
       setCurrentDate(addWeeks(currentDate, 1));
     }
-  };
-
-  const handleDateSelect = (date: Date) => {
-    setSelectedDate(date);
   };
 
   const handleDateTap = (date: Date) => {
