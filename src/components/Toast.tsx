@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, Animated, Pressable } from "react-native";
+import React, { useEffect } from "react";
+import { View, Text, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import Animated, { useSharedValue, useAnimatedStyle, withTiming, runOnJS } from "react-native-reanimated";
 
 export interface Toast {
   id: string;
@@ -20,32 +21,32 @@ const ToastComponent: React.FC<ToastProps> = ({
   duration = 3000,
   onDismiss,
 }) => {
-  const [fadeAnim] = useState(new Animated.Value(0));
+  const opacity = useSharedValue(0);
 
   useEffect(() => {
     // Fade in
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
+    opacity.value = withTiming(1, { duration: 300 });
 
     // Auto dismiss
     if (duration > 0) {
       const timer = setTimeout(() => {
         // Fade out
-        Animated.timing(fadeAnim, {
-          toValue: 0,
-          duration: 300,
-          useNativeDriver: true,
-        }).start(() => {
-          onDismiss(id);
+        opacity.value = withTiming(0, { duration: 300 }, (finished) => {
+          if (finished) {
+            runOnJS(onDismiss)(id);
+          }
         });
       }, duration);
 
       return () => clearTimeout(timer);
     }
-  }, [duration, fadeAnim, id, onDismiss]);
+  }, [duration, opacity, id, onDismiss]);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: opacity.value,
+    };
+  });
 
   const getBackgroundColor = () => {
     switch (type) {
@@ -79,11 +80,13 @@ const ToastComponent: React.FC<ToastProps> = ({
 
   return (
     <Animated.View
-      style={{
-        opacity: fadeAnim,
-        marginHorizontal: 16,
-        marginVertical: 8,
-      }}
+      style={[
+        animatedStyle,
+        {
+          marginHorizontal: 16,
+          marginVertical: 8,
+        },
+      ]}
     >
       <View
         style={{

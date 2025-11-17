@@ -6,7 +6,7 @@
  */
 
 import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
 
 interface Props {
   children: ReactNode;
@@ -83,9 +83,9 @@ class ErrorBoundary extends Component<Props, State> {
               )}
             </View>
           )}
-          <TouchableOpacity style={styles.button} onPress={this.handleReset}>
+          <Pressable style={styles.button} onPress={this.handleReset}>
             <Text style={styles.buttonText}>Try Again</Text>
-          </TouchableOpacity>
+          </Pressable>
         </View>
       );
     }

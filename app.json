@@ -4,7 +4,6 @@
     "slug": "vibecode",
     "scheme": "vibecode",
     "version": "1.0.0",
-    "main": "index.ts",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
